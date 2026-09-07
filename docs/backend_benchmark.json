@@ -1,0 +1,48 @@
+{
+  "generated_utc": "2026-09-07T11:08:50.381877+00:00",
+  "note": "backend validation benchmark \u2014 NOT research experiment data",
+  "reps": [
+    {
+      "rep": 1,
+      "session_start_s": 2.075,
+      "count_1m_s": 1.245,
+      "agg_1m_groups_s": 0.585,
+      "parquet_write_1m_s": 1.886,
+      "parquet_read_1m_s": 0.519,
+      "shutdown_s": 0.537,
+      "peak_rss_GB": 0.75,
+      "ok": true
+    },
+    {
+      "rep": 2,
+      "session_start_s": 0.046,
+      "count_1m_s": 0.094,
+      "agg_1m_groups_s": 0.29,
+      "parquet_write_1m_s": 0.427,
+      "parquet_read_1m_s": 0.152,
+      "shutdown_s": 0.526,
+      "peak_rss_GB": 0.87,
+      "ok": true
+    },
+    {
+      "rep": 3,
+      "session_start_s": 0.071,
+      "count_1m_s": 0.092,
+      "agg_1m_groups_s": 0.254,
+      "parquet_write_1m_s": 0.344,
+      "parquet_read_1m_s": 0.13,
+      "shutdown_s": 0.17,
+      "peak_rss_GB": 1.03,
+      "ok": true
+    }
+  ],
+  "median": {
+    "session_start_s": 0.071,
+    "count_1m_s": 0.094,
+    "agg_1m_groups_s": 0.29,
+    "parquet_write_1m_s": 0.427,
+    "parquet_read_1m_s": 0.152,
+    "shutdown_s": 0.526
+  },
+  "all_ok": true
+}

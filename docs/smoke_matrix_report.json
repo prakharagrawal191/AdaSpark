@@ -1,0 +1,108 @@
+{
+  "generated_utc": "2026-09-07T11:06:44.796651+00:00",
+  "backend": "native Windows + Python 3.11 + PySpark 3.5.9 + winutils 3.3.6 shim (DEC-007)",
+  "audit": {
+    "HADOOP_HOME": "C:\\Users\\prakh\\hadoop",
+    "winutils_path": "C:\\Users\\prakh\\hadoop\\bin\\winutils.exe",
+    "winutils_size": 119296,
+    "winutils_sha256": "496a591eb1e67df2a620f710d529ba6ddfe1c19149e6647cc4e320bb0efd8553",
+    "winutils_source": "cdarlint/winutils hadoop-3.3.6 (raw.githubusercontent)",
+    "pyspark_version": "3.5.9",
+    "bundled_hadoop_client": "hadoop-client-runtime-3.3.4.jar",
+    "java": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.20.101-hotspot\\"
+  },
+  "tests": [
+    {
+      "id": "K",
+      "name": "HADOOP_HOME + winutils",
+      "status": "PASS",
+      "detail": "C:\\Users\\prakh\\hadoop; winutils 119296 bytes",
+      "seconds": 0.0
+    },
+    {
+      "id": "K",
+      "name": "bundled Hadoop client",
+      "status": "PASS",
+      "detail": "pyspark 3.5.9; hadoop-client-runtime-3.3.4.jar",
+      "seconds": 0.0
+    },
+    {
+      "id": "A0",
+      "name": "session startup time (info)",
+      "status": "PASS",
+      "detail": "2.82s",
+      "seconds": 0.0
+    },
+    {
+      "id": "A",
+      "name": "SparkSession creation",
+      "status": "PASS",
+      "detail": "Spark 3.5.9 local[2], appId=local-1788779192649",
+      "seconds": 0.0
+    },
+    {
+      "id": "B",
+      "name": "DataFrame creation",
+      "status": "PASS",
+      "detail": "schema=struct<id:bigint,k:bigint,v:double>",
+      "seconds": 2.876
+    },
+    {
+      "id": "C",
+      "name": "count operation",
+      "status": "PASS",
+      "detail": "count=100 (expected 100)",
+      "seconds": 0.814
+    },
+    {
+      "id": "D",
+      "name": "small aggregation",
+      "status": "PASS",
+      "detail": "groups=10, sum(v)=618.750, sum of group sums=618.750",
+      "seconds": 2.929
+    },
+    {
+      "id": "E",
+      "name": "Parquet write (small)",
+      "status": "PASS",
+      "detail": "C:\\Users\\prakh\\sparkrl_data\\tmp\\smoke\\small.parquet (4096 bytes)",
+      "seconds": 1.121
+    },
+    {
+      "id": "F",
+      "name": "Parquet read (small)",
+      "status": "PASS",
+      "detail": "count=100",
+      "seconds": 0.459
+    },
+    {
+      "id": "G",
+      "name": "Parquet round-trip 1M",
+      "status": "PASS",
+      "detail": "count=1000000, sum(id) src=62437500.000000 back=62437500.000000, sum(v) src=499999500000.0 back=499999500000.0",
+      "seconds": 2.516
+    },
+    {
+      "id": "J",
+      "name": "clean Spark shutdown",
+      "status": "PASS",
+      "detail": "stopped app local-1788779192649",
+      "seconds": 1.062
+    },
+    {
+      "id": "H",
+      "name": "event-log generation",
+      "status": "PASS",
+      "detail": "local-1788779192649, 977382 bytes",
+      "seconds": 0.0
+    },
+    {
+      "id": "I",
+      "name": "event-log discovery + strict JSON",
+      "status": "PASS",
+      "detail": "240 events parsed, 0 bad lines; first=SparkListenerLogStart, last=SparkListenerApplicationEnd",
+      "seconds": 0.0
+    }
+  ],
+  "verdict": "PASS"
+}
