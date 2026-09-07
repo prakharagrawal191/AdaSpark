@@ -1,0 +1,13 @@
+exp_id,name,planned_day,research_question,status
+EXP-001,"Noise/variance calibration",22,"How noisy are repeated identical Spark runs on this machine?",planned
+EXP-002,"Configuration sensitivity grid (SC1 gate)","23-24","Does the chosen action space move execution time >=10% on >=2 workload families?",planned
+EXP-003,"Static baseline calibration",31,"What are the best static configurations per workload family (validation split only)?",planned
+EXP-004,"RL training (tabular Q, cached, offline-init)","28-29","Can the agent converge within <=500 Spark executions?",planned
+EXP-005,"Main comparison vs 6 baselines","32-33","Does RL beat default/static/heuristic/random-search on the frozen test set?",planned
+EXP-006,"Generalization study","34-35","Does the frozen policy retain its advantage on unseen scale/family/seeds?",planned
+EXP-007,"State ablations A1/A2",36,"Does runtime feedback in the state help?",planned
+EXP-008,"Reward/action/gamma ablations A3/A4/A5",37,"How do reward and action-space design affect the learned policy?",planned
+EXP-009,"Monitoring overhead","21+38","Is adaptation-loop overhead <=5% of job time?",planned
+EXP-010,"Public-dataset external validity","34-35","Does the policy transfer to NYC Taxi data?",planned
+EXP-011,"Reproducibility re-run",45,"Do fresh re-runs agree within +/-5% median?",planned
+EXP-012,"Demo run-book",47,"Is the demo deterministic and under 10 minutes?",planned

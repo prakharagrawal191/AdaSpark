@@ -1,0 +1,93 @@
+{
+  "generated_utc": "2026-09-07T09:27:12.369977+00:00",
+  "verdict": "BLOCKED",
+  "project_root": "C:\\Users\\prakh\\OneDrive\\Desktop\\PDS PROJECT",
+  "platform": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "cpu_model": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "cpu_logical_cores": 24,
+    "ram_total_GB": 31.4,
+    "ram_available_GB": 14.8
+  },
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU, 8151 MiB",
+  "disk": {
+    "project_free_GB": 534.7,
+    "data_free_GB": 534.7,
+    "data_root": "C:\\Users\\prakh\\sparkrl_data"
+  },
+  "java": "openjdk version \"17.0.20.1\" 2026-08-18",
+  "pyspark": "4.0.4",
+  "spark": {
+    "spark_version": "4.0.4",
+    "session_startup_s": 3.8,
+    "count_result": 1000000
+  },
+  "checks": [
+    {
+      "name": "Platform",
+      "status": "PASS",
+      "detail": "Windows-11-10.0.26200-SP0; 24 logical cores"
+    },
+    {
+      "name": "GPU",
+      "status": "PASS",
+      "detail": "NVIDIA GeForce RTX 5070 Laptop GPU, 8151 MiB (detected; NOT used by this project)"
+    },
+    {
+      "name": "Disk",
+      "status": "PASS",
+      "detail": "project volume 534.7 GB free; data root C:\\Users\\prakh\\sparkrl_data 534.7 GB free"
+    },
+    {
+      "name": "Python",
+      "status": "PASS",
+      "detail": "3.12.10 at C:\\Users\\prakh\\sparkrl_env\\Scripts\\python.exe (require >= 3.12)"
+    },
+    {
+      "name": "Java",
+      "status": "PASS",
+      "detail": "openjdk version \"17.0.20.1\" 2026-08-18; JAVA_HOME=C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.20.101-hotspot\\"
+    },
+    {
+      "name": "Git",
+      "status": "PASS",
+      "detail": "git version 2.55.0.windows.4; inside work tree: True"
+    },
+    {
+      "name": "Filesystem",
+      "status": "PASS",
+      "detail": "write/read/delete OK under C:\\Users\\prakh\\sparkrl_data"
+    },
+    {
+      "name": "PySpark import",
+      "status": "PASS",
+      "detail": "pyspark 4.0.4"
+    },
+    {
+      "name": "SparkSession",
+      "status": "PASS",
+      "detail": "Spark 4.0.4 local[2] started in 3.8s"
+    },
+    {
+      "name": "Spark job (count)",
+      "status": "PASS",
+      "detail": "range(1,000,000).count() = 1000000"
+    },
+    {
+      "name": "Spark smoke",
+      "status": "FAIL",
+      "detail": "Py4JJavaError: An error occurred while calling o44.parquet.\n: java.lang.UnsatisfiedLinkError: 'boolean org.apache.hadoop.io.nativeio.NativeIO$Windows.access0(java.lang.String, int)'\r\n\tat org.apache.hadoop.io.nativeio.NativeIO$Windows.acces\u2026"
+    },
+    {
+      "name": "SparkSession stop",
+      "status": "PASS",
+      "detail": "session stopped (Windows file locks released)"
+    },
+    {
+      "name": "Event log",
+      "status": "WARN",
+      "detail": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+    }
+  ]
+}

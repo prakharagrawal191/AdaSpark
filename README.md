@@ -1,0 +1,59 @@
+# AdaSpark — Self-Adaptive Big Data Programming Using Reinforcement Learning and Spark
+
+M.Tech research project. **Status: Day 1 of the approved 50-day plan (Milestone M1 in progress).**
+
+An RL agent observes workload context and Spark runtime feedback, selects an execution
+configuration (shuffle partitions, execution parallelism) before each run, and learns from
+the measured outcome. The learned policy is compared, with statistical validation, against
+Spark defaults, static tuning, a rule-based heuristic, and random search — on multiple
+synthetic workload families plus one public dataset, on single-node local-mode Spark.
+
+## Repository layout
+
+```
+src/sparkrl/        package: spark/ datagen/ workloads/ monitoring/ env/ agent/ runner/ analysis/ utils/
+scripts/            env_check.py (Day 1); runners/trainers/eval scripts from Day 3+
+configs/            cross-cutting configuration (spark.yaml, later rl.yaml, reward.yaml)
+experiments/        experiment registry (registry.csv) + per-experiment YAML configs
+data/ results/ logs/ plots/   generated artifacts (bulk data lives OUTSIDE the repo — see below)
+tests/              unit/ integration/ system/ fixtures/
+docs/               ENVIRONMENT_REPORT.md, DECISIONS.md, report/, figures/, decisions/
+models/policies/    trained policy checkpoints (small JSONs, committed)
+notebooks/          analysis/EDA only — core logic always lives in src/
+```
+
+## Setup (Windows 11 · Python 3.12 · Java 17)
+
+The virtual environment intentionally lives **outside** this repository, because the repo
+sits in a OneDrive-synced folder (see `docs/DECISIONS.md`, DEC-001/DEC-002):
+
+```powershell
+python -m venv "$env:USERPROFILE\sparkrl_env"
+& "$env:USERPROFILE\sparkrl_env\Scripts\Activate.ps1"
+pip install -r requirements.txt
+pip install -e .
+```
+
+Bulk data (datasets, Spark event logs, Spark temp) is written to
+`%USERPROFILE%\sparkrl_data` by default. Override the location with the
+`SPARKRL_DATA_ROOT` environment variable. No absolute paths are hard-coded in code.
+
+## Verify the environment
+
+```powershell
+python scripts/env_check.py     # regenerates docs/ENVIRONMENT_REPORT.md + environment_report.json
+```
+
+## Run the tests
+
+```powershell
+python -m pytest -m unit          # fast, no Spark required
+python -m pytest -m integration   # local-mode Spark smoke tests (PySpark required)
+```
+
+## Research gates (must not be violated)
+
+- No RL implementation before the Day-24 configuration-sensitivity gate (EXP-002) passes.
+- No deep RL (DQN/PPO), no multi-node clusters, no Kubernetes — approved exclusions.
+- AQE is OFF in the main study; AQE-on is a separate comparison condition (EXP-005b).
+- The full approved planning document is committed as `docs/PLAN.md` (Day 2).

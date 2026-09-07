@@ -1,0 +1,52 @@
+# --- Virtual environments (venv lives at %USERPROFILE%\sparkrl_env, see DECISIONS.md DEC-001) ---
+.venv/
+venv/
+env/
+
+# --- Python build/test caches ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- Heavy/generated artifacts (bulk data lives in external SPARKRL_DATA_ROOT) ---
+data/**
+!data/**/
+!data/**/.gitkeep
+results/**
+!results/**/
+!results/**/.gitkeep
+logs/**
+!logs/**/
+!logs/**/.gitkeep
+plots/**
+!plots/**/
+!plots/**/.gitkeep
+
+# --- Spark artifacts (defensive; bulk lives in the external data root) ---
+spark-warehouse/
+metastore_db/
+derby.log
+spark-events/
+*.inprogress
+
+# --- Models: small policy JSONs are tracked; large binary artifacts are not ---
+models/**/*.pkl
+models/**/*.pt
+models/**/*.joblib
+models/**/*.ckpt
+
+# --- IDE / OS / OneDrive noise ---
+.vscode/
+.idea/
+*.code-workspace
+Thumbs.db
+desktop.ini
+~$*

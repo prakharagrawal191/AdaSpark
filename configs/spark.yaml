@@ -1,0 +1,12 @@
+# AdaSpark Spark runtime defaults (Day-1 stub; consumed by sparkrl.spark.session from Day 3).
+# Nothing here is final until the Day-2 smoke matrix and the Day-22/24 calibration runs.
+master: "local[2]"
+app_name: "sparkrl"
+driver_memory: "6g"
+aqe_enabled: false            # AQE OFF in the main study (approved §7); AQE-on is a separate condition (EXP-005b)
+event_log_enabled: true
+event_log_dir: null           # null -> sparkrl.utils.paths.eventlog_dir()
+local_dir: null               # null -> sparkrl.utils.paths.tmp_dir()
+shuffle_partitions_default: 200
+warmup_micro_job: true
+timeout_factor: 5.0           # per-run timeout = factor x default-config median (approved §11)
