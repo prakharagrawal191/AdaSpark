@@ -16,6 +16,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 try:
@@ -39,9 +40,11 @@ def _short(exc: BaseException, limit: int = 240) -> str:
 
 
 def check_python() -> None:
-    ok = sys.version_info >= (3, 12)
+    # Frozen backend (DEC-007): Python 3.11.x is the validated interpreter for PySpark 3.5.9.
+    ok = sys.version_info[:2] == (3, 11)
     _record("Python", "PASS" if ok else "FAIL",
-            f"{platform.python_version()} at {sys.executable} (require >= 3.12)")
+            f"{platform.python_version()} at {sys.executable} "
+            f"(frozen backend requires 3.11.x per DEC-007)")
 
 
 def check_platform() -> dict[str, Any]:
@@ -97,6 +100,28 @@ def check_java() -> str | None:
     except Exception as exc:
         _record("Java", "FAIL", f"java not runnable: {_short(exc)}; JAVA_HOME={java_home}")
         return None
+
+
+def check_hadoop_winutils() -> dict:
+    """Verify the Windows Hadoop compatibility layer (mandatory for local mode)."""
+    import platform as _pl
+
+    info: dict = {}
+    if _pl.system() != "Windows":
+        _record("Hadoop/winutils", "PASS", "non-Windows platform - shim not required")
+        return info
+    hadoop_home = os.environ.get("HADOOP_HOME", "")
+    winutils = Path(hadoop_home) / "bin" / "winutils.exe" if hadoop_home else None
+    info["HADOOP_HOME"] = hadoop_home or "<unset>"
+    if winutils is not None and winutils.exists():
+        info["winutils"] = f"{winutils} ({winutils.stat().st_size} bytes, cdarlint hadoop-3.3.6)"
+        _record("Hadoop/winutils", "PASS",
+                f"HADOOP_HOME={hadoop_home}; winutils.exe present (3.3.6 shim)")
+    else:
+        _record("Hadoop/winutils", "FAIL",
+                "HADOOP_HOME unset or winutils.exe missing - SparkContext startup "
+                "hard-fails on Windows (verified Day 1, DEC-006)")
+    return info
 
 
 def check_git() -> bool:
@@ -167,6 +192,7 @@ def check_spark_smoke() -> dict[str, Any]:
         _record("SparkSession", "PASS", f"Spark {spark.version} local[2] started in {startup_s}s")
         out["spark_version"] = spark.version
         out["session_startup_s"] = startup_s
+        out["app_id"] = spark.sparkContext.applicationId
 
         n = spark.range(1_000_000).count()
         out["count_result"] = n
@@ -184,22 +210,36 @@ def check_spark_smoke() -> dict[str, Any]:
             spark.stop()
             _record("SparkSession stop", "PASS", "session stopped (Windows file locks released)")
 
-    try:
-        files = sorted((p for p in elog.rglob("*") if p.is_file() and p.stat().st_size > 0),
-                       key=lambda p: p.stat().st_mtime, reverse=True)
-        if not files:
-            _record("Event log", "WARN", "no event-log file found after the run")
-            return out
-        newest = files[0]
-        with open(newest, "r", encoding="utf-8", errors="replace") as fh:
-            first = json.loads(fh.readline())
-        n_lines = sum(1 for _ in open(newest, "r", encoding="utf-8", errors="replace"))
-        _record("Event log", "PASS",
-                f"{newest.name}: {n_lines} JSON events; first='{first.get('Event', '?')}'")
-        out["eventlog_file"] = newest.name
-        out["eventlog_events"] = n_lines
-    except Exception as exc:
-        _record("Event log", "WARN", _short(exc))
+    app_id = out.get("app_id", "")
+    cands = ([p for p in elog.rglob(f"*{app_id}*")
+              if p.is_file() and not p.name.endswith(".inprogress")] if app_id else [])
+    if not cands:
+        _record("Event log", "FAIL",
+                "no completed event-log file for this application "
+                "(research monitoring requires clean, finalized logs)")
+        return out
+    log_file = cands[0]
+    bad = n_events = 0
+    first_ev = last_ev = "?"
+    with open(log_file, "r", encoding="utf-8", errors="replace") as fh:
+        for ln, line in enumerate(fh, start=1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                ev = json.loads(line)
+                n_events += 1
+                last_ev = ev.get("Event", "?")
+                first_ev = first_ev if n_events > 1 else last_ev
+            except json.JSONDecodeError:
+                bad += 1
+                if bad == 1:
+                    _record("Event log", "FAIL", f"line {ln} not valid JSON: {line[:80]!r}")
+    ok = bad == 0 and n_events > 0
+    _record("Event log", "PASS" if ok else "FAIL",
+            f"{log_file.name}: {n_events} events, {bad} bad lines; first='{first_ev}', last='{last_ev}'")
+    out["eventlog_file"] = log_file.name
+    out["eventlog_events"] = n_events
     return out
 
 
@@ -212,6 +252,7 @@ def run_all(write_report: bool = True) -> dict[str, Any]:
     disk = check_disk()
     check_python()
     java_line = check_java()
+    hadoop_info = check_hadoop_winutils()
     check_git()
     check_filesystem()
     pyspark_version = check_pyspark_import()
@@ -222,8 +263,8 @@ def run_all(write_report: bool = True) -> dict[str, Any]:
     verdict = "BLOCKED" if failed else ("PASS" if not warned else "PASS_WITH_WARNINGS")
     report = {"generated_utc": started.isoformat(), "verdict": verdict,
               "project_root": str(project_root()), "platform": platform_info, "gpu": gpu,
-              "disk": disk, "java": java_line, "pyspark": pyspark_version,
-              "spark": spark_info, "checks": CHECKS}
+              "disk": disk, "java": java_line, "hadoop": hadoop_info,
+              "pyspark": pyspark_version, "spark": spark_info, "checks": CHECKS}
     if write_report:
         _write_markdown(report)
         (project_root() / "docs" / "environment_report.json").write_text(
@@ -253,6 +294,7 @@ def _write_markdown(rep: dict[str, Any]) -> None:
         f"| GPU | {rep['gpu']} (not used by this project) |",
         f"| Python | {rep['platform']['python']} |",
         f"| Java | {rep['java'] or 'NOT RUNNABLE'} |",
+        f"| Hadoop/winutils | {rep.get('hadoop', {}).get('winutils', rep.get('hadoop', {}).get('HADOOP_HOME', 'n/a'))} |",
         f"| PySpark (installed) | {rep['pyspark'] or 'NOT INSTALLED'} |",
         f"| Spark (runtime) | {rep['spark'].get('spark_version', 'not started')} |",
         f"| Data root | `{rep['disk']['data_root']}` (override with SPARKRL_DATA_ROOT) |",
@@ -273,9 +315,9 @@ def _write_markdown(rep: dict[str, Any]) -> None:
         "",
         "## Notes",
         "",
-        "- Provisional execution backend: **native Windows local-mode Spark**; final confirmation in the Day-2 smoke-test matrix (see `docs/DECISIONS.md`, DEC-005).",
-        "- Fallback chain if native Windows fails: WSL2 Ubuntu → Docker (approved plan §39).",
-        "- Regenerate at any time with: `python scripts/env_check.py`",
+        "- **Backend frozen (DEC-007): native Windows + Python 3.11.9 + PySpark 3.5.9 + winutils 3.3.6 shim.**",
+        "- The Day-1 PySpark 4.0.4 attempt failed on the Windows native-IO gap — see `DECISIONS.md` DEC-006 and `docs/archive/requirements-pyspark404-py312.txt`.",
+        "- Regenerate at any time with: `python scripts/env_check.py` (plus `scripts/spark_smoke_matrix.py` for the full A–K matrix).",
         "",
     ]
     (docs / "ENVIRONMENT_REPORT.md").write_text("\n".join(lines), encoding="utf-8")

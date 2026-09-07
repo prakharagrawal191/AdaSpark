@@ -22,16 +22,18 @@ models/policies/    trained policy checkpoints (small JSONs, committed)
 notebooks/          analysis/EDA only — core logic always lives in src/
 ```
 
-## Setup (Windows 11 · Python 3.12 · Java 17)
+## Setup (Windows 11 · Python 3.11.9 · Java 17 · PySpark 3.5.9 — frozen Day 2, DEC-007)
 
 The virtual environment intentionally lives **outside** this repository, because the repo
-sits in a OneDrive-synced folder (see `docs/DECISIONS.md`, DEC-001/DEC-002):
+sits in a OneDrive-synced folder (see `docs/DECISIONS.md`, DEC-001/DEC-002). The Day-1
+Python 3.12 / PySpark 4.0.4 environment (`%USERPROFILE%\sparkrl_env`) is kept for
+forensics but is **not** the project backend (DEC-006/DEC-007).
 
 ```powershell
-python -m venv "$env:USERPROFILE\sparkrl_env"
-& "$env:USERPROFILE\sparkrl_env\Scripts\Activate.ps1"
+& "$env:LOCALAPPDATA\Programs\Python\Python311\python.exe" -m venv "$env:USERPROFILE\sparkrl_env311"
+& "$env:USERPROFILE\sparkrl_env311\Scripts\Activate.ps1"
 pip install -r requirements.txt
-pip install -e .
+pip install -e . --no-deps
 ```
 
 Bulk data (datasets, Spark event logs, Spark temp) is written to

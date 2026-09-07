@@ -38,8 +38,9 @@ def spark():
     session.stop()
 
 
-def test_spark_version_is_4_x(spark):
-    assert spark.version.startswith("4."), f"unexpected Spark version: {spark.version}"
+def test_spark_version_matches_frozen_backend(spark):
+    # Frozen backend per DEC-007: PySpark 3.5.x on Python 3.11 (native Windows).
+    assert spark.version.startswith("3.5."), f"unexpected Spark version: {spark.version}"
 
 
 def test_parquet_roundtrip(spark):
