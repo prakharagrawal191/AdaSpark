@@ -1,12 +1,28 @@
-# AdaSpark Spark runtime defaults (Day-1 stub; consumed by sparkrl.spark.session from Day 3).
-# Nothing here is final until the Day-2 smoke matrix and the Day-22/24 calibration runs.
-master: "local[2]"
-app_name: "sparkrl"
-driver_memory: "6g"
-aqe_enabled: false            # AQE OFF in the main study (approved §7); AQE-on is a separate condition (EXP-005b)
-event_log_enabled: true
-event_log_dir: null           # null -> sparkrl.utils.paths.eventlog_dir()
-local_dir: null               # null -> sparkrl.utils.paths.tmp_dir()
-shuffle_partitions_default: 200
-warmup_micro_job: true
-timeout_factor: 5.0           # per-run timeout = factor x default-config median (approved §11)
+# AdaSpark Spark runtime + timing configuration (Day 3).
+# Consumed by sparkrl.spark.config.SparkConfig.from_yaml().
+# Backend frozen per DEC-007: PySpark 3.5.9 / Java 17 / native Windows / winutils 3.3.6.
+
+runtime:
+  master: "local[2]"                 # local-mode master; parallelism action space later adjusts N
+  app_name: "sparkrl"
+  driver_memory: "6g"
+  ui_enabled: false
+  event_log_enabled: true            # research monitoring relies on event logs (plan §20)
+  event_log_dir: null                # null -> sparkrl.utils.paths.eventlog_dir()
+  local_dir: null                    # null -> sparkrl.utils.paths.tmp_dir()
+  expected_spark_version_prefix: "3.5"   # per DEC-007; session creation validates this
+  aqe_enabled: false                 # AQE OFF in the main study (plan §7); AQE-on is EXP-005b
+  shuffle_partitions: 200            # Spark SQL default; action space later sets {16,32,64,128}
+  default_parallelism: null          # spark.default.parallelism override; null = leave to Spark
+
+execution:
+  warmup_runs: 2                     # discarded runs before timed observation (plan §23)
+  warmup_micro_job: true             # run a tiny micro-job at session start (JVM/JIT soak)
+  timeout_seconds: 300               # per-run timeout; runaway jobs must never stall the queue
+  timeout_grace_seconds: 10          # post-cancel grace period before we give up on the thread
+  plan_timeout_factor: 5.0           # reserved for EXP-002+ (timeout = factor x default median, plan §11)
+
+workload:
+  baseline_rows: 1000000             # default determinist row count for the Day-3 baseline job
+  baseline_scale: "medium"           # micro | small | medium | large (maps to a row-set; plan §19)
+  seed: 42                           # deterministic seed for any RNG-using workload components
