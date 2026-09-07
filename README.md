@@ -53,6 +53,19 @@ python -m pytest -m unit          # fast, no Spark required
 python -m pytest -m integration   # local-mode Spark smoke tests (PySpark required)
 ```
 
+## Day-3 timing harness (M5 foundation)
+
+The reusable session/config/runner stack lives in `src/sparkrl/spark/` and the
+deterministic baseline workload in `src/sparkrl/workloads/baseline.py`. Validate timing
+stability (target: warm CV < 10%):
+
+```powershell
+python scripts/run_smoke_warm.py --config configs/spark.yaml
+```
+
+Output: `results/validation/day03_timing.json` + `.csv` (labelled validation data, not
+research findings). Design details: `docs/day03_timing_harness.md`.
+
 ## Research gates (must not be violated)
 
 - No RL implementation before the Day-24 configuration-sensitivity gate (EXP-002) passes.
