@@ -50,9 +50,9 @@ REQUIRED_FIELDS = [
     "Verification",
 ]
 
-VALID_CATEGORIES = {"A", "B", "C"}
+VALID_CATEGORIES = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}
 
-MIN_ROWS = 15  # frozen Day-7 target (Days 6–7 block: "15 matrix rows, verified sources"); 16 rows currently
+MIN_ROWS = 15  # frozen Day-7 target; 22 rows currently (Day 8)
 MAX_ROWS = 30  # upper bound of the Day-10 target range (25–30 verified rows)
 MIN_CATEGORY_ROWS = {"A": 3, "B": 3, "C": 5}
 REQUIRED_SECTIONS = [
@@ -78,7 +78,7 @@ def find_rows(content: str) -> list[dict[str, str]]:
         lines = block.splitlines()
         header = lines[0].strip()
         row_id = header.split("\n")[0].strip()
-        if not re.match(r"^[ABC]\d+$", row_id):
+        if not re.match(r"^[A-J]\d+$", row_id):
             continue
         fields: dict[str, str] = {}
         for line in lines[1:]:
@@ -116,7 +116,7 @@ def main() -> int:
         found = cat_counts.get(cat, 0)
         if found < minimum:
             errors.append(f"Category {cat}: expected at least {minimum} rows, found {found}")
-    unexpected_cats = set(cat_counts) - set(MIN_CATEGORY_ROWS)
+    unexpected_cats = set(cat_counts) - VALID_CATEGORIES
     if unexpected_cats:
         errors.append(f"Unexpected categories: {sorted(unexpected_cats)}")
 

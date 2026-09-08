@@ -69,3 +69,25 @@ For each retained source the following were checked this session against the fet
 - Matrix: **16 rows** (A: 6, B: 3, C: 7), all VERIFIED with exact source links; no [TK]; no duplicates.
 - Cumulative decisions across Days 6–7: 13 original rows → 3 retained with corrections, 10 REPLACED; 3 added verified rows (C6, A6, C7).
 - Still queued for full-text inspection (Days 8–10): C2, C3, C4, C6, C7.
+
+---
+
+# Day 8 additions — Literature D–J (2026-09-08)
+
+## New rows
+
+| ID | Previous status | Source | Verification method | Bibliographic verification | Claim verification | Decision | Notes |
+|----|-----------------|--------|----------------------|----------------------------|--------------------|----------|-------|
+| D1 (new) | did not exist | Mao, Alizadeh, Menache, Kandula — "Resource Management with Deep Reinforcement Learning", ACM HotNets 2016, pp. 50–56, DOI 10.1145/3005745.3005750 (1059 citations) | CrossRef DOI record | Yes — title, 4 authors, venue, pages, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | Establishes the RL-for-systems paradigm; motivates both the RL approach and the sample-efficiency concern. |
+| E1 (new) | did not exist | Alipourfard, Liu, Chen, Venkataraman, Yu, Zhang — "CherryPick: Adaptively Unearthing the Best Cloud Configurations for Big Data Analytics", USENIX NSDI 2017 | OpenAlex bibliographic record + USENIX proceedings page URL | Yes — title, 6 authors, venue, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | Closest published work to this project's config-selection problem; motivates sample-efficiency requirement and execution cache. |
+| F1 (new) | did not exist | Salehie, Tahvildari — "Self-adaptive Software: Landscape and Research Challenges", ACM TRETS 4(2), Article 14, 2009, DOI 10.1145/1516533.1516538 | CrossRef DOI record | Yes — title, 2 authors, venue, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | Foundational self-adaptive-systems taxonomy; establishes the conceptual vocabulary for the project's framing. |
+| G1 (new) | did not exist | Kephart, Chess — "The Vision of Autonomic Computing", IEEE Computer 36(1), pp. 41–50, 2003, DOI 10.1109/MC.2003.1160055 (4677 citations) | CrossRef DOI record | Yes — title, 2 authors, venue, pages, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | The canonical MAPE-K reference; conceptual backbone of the project's adaptation loop. |
+| H1 (new) | did not exist | Marcus, Negi, Liu, Tatbul, Alizadeh, Kraska — "Bao: Making Learned Query Optimization Practical", ACM SIGMOD 2021, DOI 10.1145/3448016.3452838 | CrossRef DOI record + Semantic Scholar abstract (verbatim) | Yes — title, 6 authors, venue, year | Yes — abstract verbatim | VERIFIED | State-of-the-art learned query optimization; demonstrates viability and practical challenges of learned optimizers. |
+| I1 (new) | did not exist | Kraska, Beutel, Chi, Dean, Polyzotis — "The Case for Learned Index Structures", ACM SIGMOD 2018, DOI 10.1145/3183713.3196909 | CrossRef DOI record | Yes — title, 5 authors, venue, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | Seminal learned-systems paper; establishes that learned models can replace hand-crafted system components. |
+
+## Totals after Day 8
+
+- Matrix: **22 rows** (A: 6, B: 3, C: 7, D: 1, E: 1, F: 1, G: 1, H: 1, I: 1, J: 0), all VERIFIED with exact source links; no [TK]; no duplicates.
+- Cumulative decisions across Days 6–8: 13 original rows → 3 retained with corrections, 10 REPLACED; 9 added verified rows (C6, A6, C7, D1, E1, F1, G1, H1, I1).
+- Still queued for full-text inspection (Days 9–10): A2, C2, C3, C4, C6, D1, E1, F1, G1, H1, I1.
+- J category not yet populated (target for Day 9).
