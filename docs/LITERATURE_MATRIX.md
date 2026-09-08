@@ -8,7 +8,7 @@
 - Every row distinguishes **SOURCE-REPORTED** claims (directly supported by the fetched abstract/record) from **OUR INTERPRETATION** (this project's reading).
 - Full texts behind paywalls were not fetched; claims for those rows are scoped to verified abstracts/titles and flagged for full-text inspection on Days 8–10.
 
-> **Honesty note (Day 6, updated):** All 14 rows were verified against real, authoritative publication records this session; no [TK] rows remain. Three rows retained in place with corrections (A1, A2, B1 — B1's authors corrected from an unverifiable attribution to the blog's actual authors); nine unverifiable "representative" entries were REPLACED with verified papers (decisions and reasons in docs/research/LITERATURE_VERIFICATION_LOG.md); one verified row was added (C6). Claims not supported by the fetched record were corrected or removed, including the A1 speedup figure (10–100× → 10x per the abstract) and B1's venue (a Databricks blog + Spark docs, not VLDB).
+> **Honesty note (Day 6, updated Day 7):** All 16 rows were verified against real, authoritative publication records (Day 6: 2026-09-08; Day 7 additions: A6, C7). No [TK] rows remain. Three rows retained in place with corrections (A1, A2, B1 — B1's authors corrected from an unverifiable attribution to the blog's actual authors); nine unverifiable "representative" entries were REPLACED with verified papers (decisions and reasons in docs/research/LITERATURE_VERIFICATION_LOG.md); two verified rows were added (C6 on Day 6; A6 and C7 on Day 7). Day-7 audit also corrected A3 (canonical USENIX link, pp. 293–307, and "most stragglers" wording). Claims not supported by the fetched record were corrected or removed, including the A1 speedup figure (10–100× → 10x per the abstract) and B1's venue (a Databricks blog + Spark docs, not VLDB).
 
 ---
 
@@ -75,8 +75,8 @@
 | Paper | Making Sense of Performance in Data Analytics Frameworks |
 | Authors | Kay Ousterhout, Ryan Rasti, Sylvia Ratnasamy, Scott Shenker, Byung-Gon Chun |
 | Year | 2015 |
-| Venue | 12th USENIX Symposium on Networked Systems Design and Implementation (NSDI '15) |
-| DOI / Stable Link | https://amplab.cs.berkeley.edu/wp-content/uploads/2015/04/nsdi15-final147.pdf |
+| Venue | 12th USENIX Symposium on Networked Systems Design and Implementation (NSDI '15), Oakland, CA, pp. 293–307 |
+| DOI / Stable Link | https://www.usenix.org/conference/nsdi15/technical-sessions/presentation/ousterhout |
 | Research Problem | SOURCE-REPORTED (abstract): Much research is devoted to improving the performance of data analytics frameworks, but comparatively little effort has been spent systematically identifying the bottlenecks in these systems. |
 | Method | SOURCE-REPORTED (abstract): Develops "blocked time analysis", a methodology for quantifying bottlenecks in distributed computation, and uses it to analyze the Spark framework's performance on two SQL benchmarks and a production workload. |
 | Context | Performance characterization of Spark; complements tuning studies by explaining where execution time goes. |
@@ -84,11 +84,11 @@
 | Parameters / Knobs | Not a tuning paper; provides bottleneck analysis (CPU, I/O, network, stragglers). |
 | Dataset / Workload | Two SQL benchmarks and a production workload on Spark (per the verified abstract). |
 | Evaluation Metrics | Blocked time (bottleneck quantification), job completion time. |
-| Main Verified Finding | SOURCE-REPORTED (abstract): Contrary to expectations, the study finds that (i) CPU — and not I/O — is often the bottleneck, (ii) network improvements can improve job completion time by a median of at most 2%, and (iii) the causes of stragglers can be identified. |
+| Main Verified Finding | SOURCE-REPORTED (abstract): Contrary to expectations, the study finds that (i) CPU — and not I/O — is often the bottleneck, (ii) improving network performance can improve job completion time by a median of at most 2%, and (iii) the causes of most stragglers can be identified. |
 | Limitation | Analyzes bottlenecks and stragglers; it does not propose automated configuration selection or an adaptive policy. |
 | Relevance | OUR INTERPRETATION: supports the project's measurement discipline (task-duration distributions, bottleneck reporting) and cautions that CPU-side costs matter when interpreting configuration effects on a single machine. |
 | Research Gap | Identifies bottlenecks but does not address configuration selection or adaptation. |
-| Verification | VERIFIED — OpenAlex record with verified abstract (NSDI '15, UC Berkeley/ICSI); PDF link above. |
+| Verification | VERIFIED — USENIX NSDI '15 proceedings page (https://www.usenix.org/conference/nsdi15/technical-sessions/presentation/ousterhout); title, authors, pages (293–307), and abstract read from the page (Day 7 audit); cross-checked via OpenAlex. |
 
 ### A4
 | Field | Content |
@@ -135,6 +135,29 @@
 | Relevance | OUR INTERPRETATION: establishes the in-memory execution model whose costs (memory pressure, spill, shuffle) motivate this project's configuration actions. |
 | Research Gap | Does not address automatic configuration selection or runtime adaptation. |
 | Verification | VERIFIED — USENIX NSDI '12 proceedings page (https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia); full author list, pages, and abstract read from the page; cross-checked via OpenAlex. |
+
+### A6
+| Field | Content |
+|-------|---------|
+| ID | A6 |
+| Category | A |
+| Paper | Shark: SQL and Rich Analytics at Scale |
+| Authors | Reynold S. Xin, Josh Rosen, Matei Zaharia, Michael J. Franklin, Scott Shenker, Ion Stoica |
+| Year | 2013 |
+| Venue | Proceedings of the 2013 ACM SIGMOD International Conference on Management of Data (SIGMOD/PODS '13), New York, NY, pp. 13–24 |
+| DOI / Stable Link | https://doi.org/10.1145/2463676.2465288 |
+| Research Problem | SOURCE-REPORTED (abstract): Marry query processing with complex analytics on large clusters — one unified engine that can run SQL queries and sophisticated functions (e.g., iterative machine learning) at scale, and efficiently recover from failures mid-query. |
+| Method | SOURCE-REPORTED (abstract): A data analysis system built on Spark's distributed memory abstraction, extending Hive with column-oriented in-memory storage and dynamic mid-query replanning, while retaining the MapReduce-like execution engine's fine-grained fault-tolerance properties. |
+| Context | The direct predecessor of Spark SQL (A2 is explicitly built on the authors' Shark experience); 229 citations per CrossRef record at verification time. |
+| Optimization Target | Query and analytics execution time on large clusters. |
+| Parameters / Knobs | Not a tuning paper; establishes the SQL-on-Spark engine lineage. |
+| Dataset / Workload | Large-cluster SQL and analytics workloads (per the verified abstract). |
+| Evaluation Metrics | Execution time relative to Apache Hive and MPP analytic databases. |
+| Main Verified Finding | SOURCE-REPORTED (abstract): Shark runs SQL and iterative ML on one engine with speedups of up to 100X faster than Apache Hive (and faster learning programs than Hadoop), matching speedups reported for MPP analytic databases over MapReduce while retaining fine-grained fault tolerance. |
+| Limitation | Engine paper: no automatic configuration selection; superseded by Spark SQL (A2). |
+| Relevance | OUR INTERPRETATION: completes the SQL-on-Spark execution lineage between the RDD foundation (A5) and Spark SQL (A2), and documents that dynamic mid-query replanning predates AQE in the Spark lineage. |
+| Research Gap | Does not address cross-execution configuration learning. |
+| Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/2463676.2465288), pp. 13–24, 229 citations; abstract verified via OpenAlex. |
 
 ---
 
@@ -351,6 +374,29 @@
 | Research Gap | Scheduling-level, not configuration-level; does not cover cross-workload configuration policies. |
 | Verification | VERIFIED — IEEE/CrossRef DOI record (https://doi.org/10.1109/TPDS.2021.3124670), IEEE TPDS, 2021; bibliographic details verified via OpenAlex. |
 
+### C7
+| Field | Content |
+|-------|---------|
+| ID | C7 |
+| Category | C |
+| Paper | Adaptive Code Learning for Spark Configuration Tuning |
+| Authors | Chen Lin, Junqing Zhuang, Jia-geng Feng, Hui Li, Xuanhe Zhou, Guoliang Li |
+| Year | 2022 |
+| Venue | 38th IEEE International Conference on Data Engineering (ICDE 2022) |
+| DOI / Stable Link | https://doi.org/10.1109/ICDE53745.2022.00195 |
+| Research Problem | SOURCE-REPORTED (abstract): Configuration tuning is vital to optimize the performance of big data analysis platforms like Spark, but Spark's unique characteristics pose new challenges: (C1) application code structures and semantics significantly affect performance and configuration selection; (C2) Spark applications are extremely time-consuming on big data — the authors state it is infeasible for approaches such as Bayesian optimization and reinforcement learning to collect sufficient training instances or repeatedly execute the applications; (C3) tuning systems must adapt to different analytical applications. |
+| Method | SOURCE-REPORTED (abstract): LITE (LIghtweighT knob rEcommender) — a code learning framework that uses code features to learn correlations between application performance and knob values; a lightweight auto-tuning method that migrates knowledge learned from small-scale datasets to large-scale datasets; and an adaptive model-update approach that fine-tunes the model via adversarial learning with newly collected feedback. |
+| Context | Peer-reviewed Spark configuration tuning at a top data-engineering venue (ICDE); the closest published academic problem framing to this project's sample-efficiency concern. |
+| Optimization Target | Performance of Spark analytical applications under tuned configurations. |
+| Parameters / Knobs | Spark configuration knobs (knob values correlated with code features; the specific knob list is in the full text). |
+| Dataset / Workload | Various analytical applications and large-scale datasets (per the verified abstract). |
+| Evaluation Metrics | Tuning performance relative to state-of-the-art auto-tuning methods (per the abstract; specific numbers are in the full text, not fetched). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): Extensive experiments showed that LITE achieves much better performance compared with state-of-the-art auto-tuning methods, including knowledge migration from small-scale to large-scale datasets and adaptive model updates from newly collected feedback. |
+| Limitation | The abstract does not report quantitative speedups or comparisons against RL-based approaches; model-update details are in the full text (not fetched). Author-list caveat: Semantic Scholar lists "Jia-geng Feng" while OpenAlex lists "Jiadong Feng" — to be checked against IEEE Xplore on Days 8–10. |
+| Relevance | OUR INTERPRETATION: the strongest peer-reviewed evidence that (i) code/workload features influence configuration selection (supports RQ1/RQ4), (ii) knowledge transfer across data scales is a recognized technique (adjacent to RQ3), and (iii) the sample-cost limitation of BO/RL on Spark is stated in the literature itself (supports RQ5). This project's tabular, cache-bounded design addresses the same budget concern. |
+| Research Gap | LITE adapts its model to newly collected feedback but is not formulated as a cross-workload decision policy evaluated on unseen workloads; full-text check scheduled for Days 8–10. |
+| Verification | VERIFIED — IEEE/CrossRef DOI record (https://doi.org/10.1109/ICDE53745.2022.00195) + Semantic Scholar abstract (verbatim); DBLP record conf/icde/LinZFLZL22. |
+
 ---
 
 # Synthesis of Literature A–C
@@ -361,7 +407,7 @@ From the verified sources only:
 
 1. **Spark's in-memory execution model is the performance foundation.** The HotCloud '10 paper reports that Spark can outperform Hadoop by 10x for iterative machine-learning jobs (A1), and the NSDI '12 RDD paper reports that keeping data in memory can improve performance by an order of magnitude for iterative and interactive workloads (A5).
 
-2. **Spark SQL's Catalyst optimizer is a static substrate.** The SIGMOD '15 paper presents Catalyst as a highly extensible optimizer built using Scala features (A2); it is the substrate that AQE later extends at runtime.
+2. **The SQL engine lineage culminates in Spark SQL.** Shark (SIGMOD '13) — the direct predecessor built on Spark's memory abstraction — reported speedups of up to 100X over Apache Hive and introduced column-oriented in-memory storage and dynamic mid-query replanning (A6); Spark SQL (SIGMOD '15) then superseded it with a much tighter integration between procedural and declarative processing and the extensible Catalyst optimizer (A2).
 
 3. **Bottlenecks are often not where intuition suggests.** Blocked-time analysis of Spark on SQL benchmarks and a production workload found that CPU — not I/O — is often the bottleneck, that network improvements improve job completion time by a median of at most 2%, and that the causes of stragglers can be identified (A3).
 
@@ -394,7 +440,7 @@ What the verified sources do NOT document (OUR INTERPRETATION):
 - Job-level configuration selection: executor sizing, static parallelism, or caching strategy are not part of the documented AQE feature set.
 - Policy generalization: the sources do not describe a policy that transfers across workloads.
 
-This project therefore treats AQE-on as a dedicated comparison condition (RQ6) to measure complementarity, not as a substitute for a learned configuration policy. Database-literature precedent for runtime plan adaptation is documented in B2; runtime skew mitigation in the MapReduce era in B3.
+This project therefore treats AQE-on as a dedicated comparison condition (RQ6) to measure complementarity, not as a substitute for a learned configuration policy. Database-literature precedent for runtime plan adaptation is documented in B2; runtime skew mitigation in the MapReduce era in B3. Dynamic mid-query replanning itself predates AQE in the Spark lineage (Shark, 2013; A6).
 
 ## E. Role of automated configuration tuning
 
@@ -406,6 +452,7 @@ From the verified sources:
 - Bayesian-optimization-based tuning of Spark applications is an active research line, with empirical work evaluating acquisition-function choices (title-verified, C3).
 - Automated configuration tuning for deployed systems is framed as highly costly and expertise-requiring in its problem statement (SOURCE-REPORTED, C4 abstract).
 - Deep RL has been applied to Spark job scheduling in clouds (title-verified, C6).
+- LITE (ICDE 2022) proposes lightweight, code-feature-based Spark knob recommendation with knowledge migration from small-scale to large-scale datasets and adaptive model updates from new feedback, and reports much better performance than state-of-the-art auto-tuning methods (SOURCE-REPORTED, C7).
 
 OUR INTERPRETATION: the published evidence supports that automated tuning yields measurable gains (C1) and that the field is active (C3, C6), but the verified material does not establish that existing approaches deliver cross-workload, online, sample-efficient configuration policies — this must be checked against full texts on Days 8–10.
 
@@ -433,17 +480,17 @@ This is a scoping statement, not a novelty claim: the survey literature (C5) tre
 |----|----------------------|------------------------|
 | RQ0 (config sensitivity gate) | C1, C4, C5, A3 | C5 (verified abstract): improper settings cause significant degradation; C4 (verified abstract): a good configuration greatly improves performance for certain workloads; C1 (verified abstract): 22.8–40.0% execution-time reductions across 9 applications; A3 (verified abstract): bottleneck structure is measurable. Together these justify EXP-002. |
 | RQ1 (state representation) | C1, C2, B1 | C1: application-specific performance influence models (features → performance); C2: performance prediction model (title-verified); B1: AQE's use of runtime statistics shows runtime signals carry adaptation-relevant information. |
-| RQ2 (RL vs baselines) | C1, C2, C3, C4, C6 | Non-RL baseline families: ML influence models (C1), multi-objective + prediction (C2), BO with acquisition functions (C3), automated configuration tuning (C4); RL applied to adjacent Spark scheduling (C6). Supports the baseline taxonomy and the RL-vs-non-RL comparison. |
-| RQ3 (generalization) | C1, C5 | C1's verified abstract describes application-specific models (influence varies across applications), motivating explicit generalization testing; C5 raises open research problems in automatic parameter tuning. |
-| RQ4 (reward/action design) | C1, C4, B1 | C1: execution-time as the tuning objective with measurable reductions; C4: configuration-parameter framing (tens to hundreds of knobs); B1: AQE's knob families (`spark.sql.adaptive.*`) inform the action-space boundary. |
-| RQ5 (training cost/overhead) | C1, C4, C3 | C1 (verified abstract): the exponential search space is computationally infeasible — motivating sample efficiency; C4 (verified abstract): deciding the best configuration is highly costly; C3: acquisition-function evaluation is explicitly about BO efficiency for Spark tuning. |
+| RQ2 (RL vs baselines) | C1, C2, C3, C4, C6, C7 | Non-RL baseline families: ML influence models (C1), multi-objective + prediction (C2), BO with acquisition functions (C3), automated configuration tuning (C4), code-learning knob recommendation (C7); RL applied to adjacent Spark scheduling (C6). Supports the baseline taxonomy and the RL-vs-non-RL comparison. |
+| RQ3 (generalization) | C1, C5, C7 | C1's verified abstract describes application-specific models (influence varies across applications), motivating explicit generalization testing; C5 raises open research problems in automatic parameter tuning; C7 addresses cross-scale knowledge migration (small→large datasets) — evidence that transfer across workload conditions is a recognized challenge in Spark tuning. |
+| RQ4 (reward/action design) | C1, C4, B1, C7 | C1: execution-time as the tuning objective with measurable reductions; C4: configuration-parameter framing (tens to hundreds of knobs); B1: AQE's knob families (`spark.sql.adaptive.*`) inform the action-space boundary; C7: code/workload features influence configuration selection — informing state/action design. |
+| RQ5 (training cost/overhead) | C1, C4, C3, C7 | C1 (verified abstract): the exponential search space is computationally infeasible — motivating sample efficiency; C4 (verified abstract): deciding the best configuration is highly costly; C3: acquisition-function evaluation is explicitly about BO efficiency for Spark tuning; C7 (verified abstract): the authors state that collecting sufficient training instances or repeatedly executing Spark applications is infeasible for BO/RL — the literature itself identifies the budget barrier this project's cache-bounded design targets. |
 | RQ6 (AQE complementarity) | B1, B2, B3 | B1 (documented AQE scope: within-query adaptation only); B2 (adaptive query processing lineage); B3 (skew handled by runtime mechanisms) — together motivate the AQE-on comparison condition rather than treating AQE as a substitute. |
 
 ---
 
 # Verification Notes
 
-**Verification status (Day 6, 2026-09-08):** All 14 rows are marked **VERIFIED — <source>** with the exact source link in the row. No `[TK]` rows remain.
+**Verification status (Day 6: 2026-09-08; Day 7 additions: A6, C7):** All 16 rows are marked **VERIFIED — <source>** with the exact source link in the row. No `[TK]` rows remain.
 
 **How verification was performed (this session, via web fetch):**
 
@@ -462,6 +509,7 @@ This is a scoping statement, not a novelty claim: the survey literature (C5) tre
 - Per the project's no-fabrication policy: no title, author, year, venue, DOI, method, dataset, metric, finding, or limitation is asserted beyond the fetched source. Rows distinguish SOURCE-REPORTED claims from OUR INTERPRETATION.
 
 **Structural validation:** `scripts/validate_literature_matrix.py` checks structure only (fields, verification status, URLs, duplicates, sections). A "VERIFIED" string is not proof of authenticity; human/source inspection — the checks above — is the verification step.
+- **Day 7 additions:** A6 (Shark, SIGMOD 2013 — CrossRef + OpenAlex abstract) and C7 (LITE, ICDE 2022 — CrossRef + Semantic Scholar abstract) added after targeted searches; A3 upgraded to the canonical USENIX NSDI '15 page (pp. 293–307) with the "most stragglers" wording corrected against the page's own abstract.
 
 ---
 
@@ -481,3 +529,5 @@ This is a scoping statement, not a novelty claim: the survey literature (C5) tre
 [12] Zhu, Liu, Guo, Bao, Ma, Liu, Song, Yang. "BestConfig: Tapping the Performance Potential of Systems via Automatic Configuration Tuning." ACM SoCC '17, pp. 338–350. https://doi.org/10.1145/3127479.3128605 (C4)
 [13] Herodotou, Chen, Lu. "A Survey on Automatic Parameter Tuning for Big Data Processing Systems." ACM Computing Surveys, 2020. https://doi.org/10.1145/3381027 (C5)
 [14] Islam, Karunasekera, Buyya. "Performance and Cost-Efficient Spark Job Scheduling Based on Deep Reinforcement Learning in Cloud Computing Environments." IEEE TPDS, 2021. https://doi.org/10.1109/TPDS.2021.3124670 (C6)
+[15] Xin, Rosen, Zaharia, Franklin, Shenker, Stoica. "Shark: SQL and Rich Analytics at Scale." ACM SIGMOD 2013, pp. 13–24. https://doi.org/10.1145/2463676.2465288 (A6)
+[16] Lin, Zhuang, Feng, Li, Zhou, Li. "Adaptive Code Learning for Spark Configuration Tuning." IEEE ICDE 2022. https://doi.org/10.1109/ICDE53745.2022.00195 (C7)

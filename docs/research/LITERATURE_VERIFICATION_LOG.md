@@ -33,3 +33,39 @@
 ## Quality gate (manual inspection checklist)
 
 For each retained source the following were checked this session against the fetched record: source opens (or DOI record resolves), title matches, authors match, year matches, venue matches, DOI/URL resolves, topic matches, method matches (at abstract/title scope), claimed result is supported (or explicitly scoped), limitation is supported (or explicitly scoped), project relevance is marked as OUR INTERPRETATION, and no information was fabricated. Items that could not be checked (paywalled full texts, unfetched abstracts) are explicitly flagged in the corresponding matrix rows and above.
+
+---
+
+# Day 7 additions and audit (2026-09-08)
+
+## New rows
+
+| ID | Previous status | Source | Verification method | Bibliographic verification | Claim verification | Decision | Notes |
+|----|-----------------|--------|----------------------|----------------------------|--------------------|----------|-------|
+| A6 (new) | did not exist | Xin, Rosen, Zaharia, Franklin, Shenker, Stoica — "Shark: SQL and Rich Analytics at Scale", ACM SIGMOD 2013, pp. 13–24, DOI 10.1145/2463676.2465288 (229 citations) | CrossRef DOI record + OpenAlex abstract reconstruction | Yes — title, 6 authors, venue, pages, year | Yes — abstract verbatim: "up to 100X faster than Apache Hive", "column-oriented in-memory storage", "dynamic mid-query replanning", MPP-comparable speedups with MapReduce-like fault tolerance | VERIFIED | Added to complete the SQL-on-Spark execution lineage (RDD → Shark → Spark SQL) and document that mid-query replanning predates AQE in the Spark lineage. |
+| C7 (new) | did not exist | Lin, Zhuang, Feng, Li, Zhou, Li — "Adaptive Code Learning for Spark Configuration Tuning", IEEE ICDE 2022, DOI 10.1109/ICDE53745.2022.00195 | CrossRef/OpenAlex DOI record + Semantic Scholar abstract (verbatim) + DBLP key conf/icde/LinZFLZL22 | Yes — title, 6 authors, ICDE 2022 | Yes — abstract verbatim: LITE knob recommender; code features ↔ knob correlations; small→large dataset knowledge migration; adaptive model update via adversarial learning; "much better performance compared with state-of-the-art auto-tuning methods"; authors state it is infeasible for BO/RL to collect sufficient training instances for Spark | VERIFIED | The strongest peer-reviewed evidence for the project's sample-efficiency premise (RQ5) and cross-scale transfer (RQ3-adjacent). Fills the hole left by the Day-6 "CherryPie" exclusion with a located, verified ICDE paper. Author-name caveat: S2 gives "Jia-geng Feng", OpenAlex "Jiadong Feng" — IEEE Xplore check queued for Days 8–10. |
+
+## Audit of existing rows (Step 4 re-verification)
+
+| ID | Audit result | Action |
+|----|--------------|--------|
+| A1 | USENIX page re-fetched, live; BibTeX matches row | None |
+| A2 | CrossRef record re-checked (Day 6 fetch retained as evidence) | None |
+| A3 | USENIX NSDI '15 page fetched for the first time — verified; abstract wording is "the causes of **most** stragglers can be identified"; pages 293–307; canonical URL confirmed | CORRECTED — link upgraded from AMPLab PDF to USENIX page, pages added, "most" restored to the finding, venue completed (Oakland, CA) |
+| A4 | Springer page verified Day 6 (full abstract) | None |
+| A5 | USENIX NSDI '12 page verified Day 6 | None |
+| B1 | Blog + Spark docs verified Day 6 | None |
+| B2 | OpenAlex DOI record verified Day 6 | None |
+| B3 | CrossRef record verified Day 6 | None |
+| C1 | Semantic Scholar abstract verified Day 6 (verbatim) | None |
+| C2 | Bibliographic record verified; abstract elided by publisher (claim scope unchanged) | None |
+| C3 | Bibliographic record verified; title-scoped claim (unchanged) | None |
+| C4 | CrossRef + OpenAlex abstract verified Day 6 | None |
+| C5 | Semantic Scholar abstract verified Day 6 (verbatim) | None |
+| C6 | OpenAlex record verified Day 6 (title-scoped claim) | None |
+
+## Totals after Day 7
+
+- Matrix: **16 rows** (A: 6, B: 3, C: 7), all VERIFIED with exact source links; no [TK]; no duplicates.
+- Cumulative decisions across Days 6–7: 13 original rows → 3 retained with corrections, 10 REPLACED; 3 added verified rows (C6, A6, C7).
+- Still queued for full-text inspection (Days 8–10): C2, C3, C4, C6, C7.

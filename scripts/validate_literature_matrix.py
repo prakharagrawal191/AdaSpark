@@ -52,7 +52,7 @@ REQUIRED_FIELDS = [
 
 VALID_CATEGORIES = {"A", "B", "C"}
 
-MIN_ROWS = 14  # verified Day-6 foundation (16 rows currently)
+MIN_ROWS = 15  # frozen Day-7 target (Days 6–7 block: "15 matrix rows, verified sources"); 16 rows currently
 MAX_ROWS = 30  # upper bound of the Day-10 target range (25–30 verified rows)
 MIN_CATEGORY_ROWS = {"A": 3, "B": 3, "C": 5}
 REQUIRED_SECTIONS = [
