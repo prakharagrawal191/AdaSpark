@@ -91,3 +91,31 @@ For each retained source the following were checked this session against the fet
 - Cumulative decisions across Days 6–8: 13 original rows → 3 retained with corrections, 10 REPLACED; 9 added verified rows (C6, A6, C7, D1, E1, F1, G1, H1, I1).
 - Still queued for full-text inspection (Days 9–10): A2, C2, C3, C4, C6, D1, E1, F1, G1, H1, I1.
 - J category not yet populated (target for Day 9).
+
+---
+
+# Day 9 additions — Literature D–J completion (2026-09-08)
+
+**Scope:** Complete the D–J block to the ~30-row Day-9/Day-10 target. Eight rows added: E2, F2, G2, H2, I2, J1, J2, J3. No existing rows were renumbered or modified.
+
+**Methods used (all via live web fetch this session):** CrossRef DOI records (full metadata: title, authors, venue, pages, citation counts), OpenAlex records (including abstract-inverted-index reconstruction and `select=authorships` roster queries), Semantic Scholar Graph API (roster + venue + external IDs), arXiv abstract pages (H2 Neo preprint metadata; J3 ICLR-2021 comment), and dblp was not used (bot-blocked/Anubis as on prior days). CrossRef/OpenAlex were intermittently rate-limited (HTTP 429); affected queries were retried via alternate providers.
+
+**Decision key:** VERIFIED = retained source, bibliographic + claim level checked within the verified scope. No source was REPLACED or EXCLUDED in this pass; no [TK] rows exist.
+
+| ID | Source | Verification route | Bibliographic verification | Claim verification | Decision | Notes |
+|----|--------|--------------------|----------------------------|--------------------|----------|-------|
+| E2 (new) | Mao, Schwarzkopf, Venkatakrishnan, Meng, Alizadeh — "Learning scheduling algorithms for data processing clusters", ACM SIGCOMM 2019, pp. 270–288, DOI 10.1145/3341302.3342080 (594 citations) | CrossRef DOI record + OpenAlex `select=authorships` | Yes — title, 5 authors, venue, pages, year | Abstract via OpenAlex inverted index (verbatim) | VERIFIED | Flagship deep-RL cluster-scheduling paper; establishes that learned policies can replace hand-crafted scheduling heuristics. |
+| F2 (new) | de Lemos, Giese, Müller, Shaw, Andersson, Litoiu, Schmerl, Tamura, Villegas, Vogel, Weyns, et al. — "Software Engineering for Self-Adaptive Systems: A Second Research Roadmap", LNCS 7475 (Software Engineering for Self-Adaptive Systems II), Springer, 2013, pp. 1–32, DOI 10.1007/978-3-642-35813-5_1 (722 citations per OpenAlex; 291 per CrossRef) | CrossRef DOI record + Semantic Scholar paper record | Yes — title, venue/book, pages, year; 42-author roster via Semantic Scholar | Title/venue scope only (chapter full text not fetched) | VERIFIED | Authoritative follow-on roadmap to F1; consolidates the self-adaptive-systems research agenda. |
+| G2 (new) | Huebscher, McCann — "A Survey of Autonomic Computing—Degrees, Models, and Applications", ACM Computing Surveys 40(3), 2008, pp. 1–28, DOI 10.1145/1380584.1380585 (591 citations) | CrossRef DOI record | Yes — title, 2 authors, venue, volume/issue, pages, year | Abstract verbatim via CrossRef | VERIFIED | Canonical autonomic-computing survey organized around the MAPE-K reference model; complements G1. |
+| H2 (new) | Marcus, Negi, Mao, Zhang, Alizadeh, Kraska, Papaemmanouil, Tatbul — "Neo: A Learned Query Optimizer", PVLDB 12(11), 2019, pp. 1705–1718, DOI 10.14778/3342263.3342644 (321 citations) | CrossRef DOI record + arXiv:1904.03711 + Semantic Scholar | Yes — title, 8 authors, venue, pages, year | Abstract verbatim via CrossRef | VERIFIED | Deep-neural-network learned optimizer; bootstraps from existing optimizers and learns from incoming queries; complements H1 (Bao). |
+| I2 (new) | Trummer, Wang, Wei, Maram, Moseley, Jo, Antonakakis, Rayabhari — "SkinnerDB: Regret-bounded Query Evaluation via Reinforcement Learning", ACM TODS 46(3), 2021, pp. 1–45, DOI 10.1145/3464389 | CrossRef DOI record + OpenAlex `select=authorships` | Yes — title, 8 authors, venue, pages, year | Abstract verbatim via CrossRef | VERIFIED | RL learns join orders from scratch during execution with an upper bound on expected execution-cost regret; complements I1. |
+| J1 (new) | Van Aken, Pavlo, Gordon, Zhang — "Automatic Database Management System Tuning Through Large-scale Machine Learning" (OtterTune), ACM SIGMOD 2017, pp. 1009–1024, DOI 10.1145/3035918.3064029 (419 citations) | CrossRef DOI record | Yes — title, 4 authors, venue, pages, year | Title/abstract-scope only (abstract not fetched) | VERIFIED | Prototypical learned DBMS configuration tuning with workload/DBMS transfer; closest established analog to this project's learned Spark tuning. |
+| J2 (new) | Hutter, Hoos, Leyton-Brown — "Sequential Model-Based Optimization for General Algorithm Configuration" (SMAC), LION 5, LNCS 6683, Springer, 2011, pp. 507–523, DOI 10.1007/978-3-642-25566-3_40 (1394 citations) | CrossRef DOI record | Yes — title, 3 authors, venue/book series, pages, year, ISBN | Title/venue scope only (full text not fetched) | VERIFIED | Foundational surrogate-model (random-forest BO) algorithm-configuration paper; sample-efficiency anchor for the non-RL baseline family. |
+| J3 (new) | Wistuba, Grabocka — "Few-Shot Bayesian Optimization with Deep Kernel Surrogates", ICLR 2021, arXiv:2101.07667 | arXiv abstract page (comment: "Published as a conference paper at ICLR 2021") | Yes — title, 2 authors, year, arXiv id, acceptance comment | Abstract verbatim via arXiv | VERIFIED | Few-shot/deep-kernel surrogate meta-learning for sample-efficient black-box optimization across tasks. |
+
+## Totals after Day 9
+
+- Matrix: **30 rows** (A: 6, B: 3, C: 7, D: 1, E: 2, F: 2, G: 2, H: 2, I: 2, J: 3), all VERIFIED with exact source links; no [TK]; no duplicates (validated by `scripts/validate_literature_matrix.py`).
+- Cumulative decisions across Days 6–9: 13 original rows → 3 retained with corrections, 10 REPLACED; 17 added verified rows (C6, A6, C7, D1, E1, F1, G1, H1, I1, E2, F2, G2, H2, I2, J1, J2, J3).
+- Still queued for full-text inspection (Day 10): A2, C2, C3, C4, C6, D1, E1, F1, G1, H1, I1, E2, F2, G2, H2, I2, J1, J2 (all rows whose claims are scoped to title/abstract rather than fetched full text).
+- D–J block complete; Day-10 task (gap note / novelty tiering) can proceed.

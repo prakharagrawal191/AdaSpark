@@ -2,15 +2,16 @@
 
 Checks:
 - file exists
-- row count within the verified-foundation window (14–30 rows; Day-10 target 25–30)
-- unique row IDs in the A/B/C numbering scheme
+- row count within the verified-foundation window (15–30 rows; Day-9 target 30 met)
+- unique row IDs in the A–J numbering scheme
 - no duplicate paper titles
 - no duplicate DOI/stable-link values
 - every row has all required fields (incl. Verification status)
 - Verification is present, is not [TK], and starts with VERIFIED or EXCLUDED
 - VERIFIED rows must carry a source URL in 'DOI / Stable Link'
-- category is A, B, or C
-- synthesis, RQ-relevance, verification-notes, and references sections present
+- category is one of A–J with per-category minimums (A:3 B:3 C:5, D–J:1 each)
+- A–C synthesis, D–J synthesis, cross-domain synthesis, RQ-relevance,
+  verification-notes, and references sections present
 
 NOTE: This validator is STRUCTURAL ONLY. A "VERIFIED" string in the file is not
 proof of academic authenticity; human/source inspection remains the verification
@@ -52,11 +53,13 @@ REQUIRED_FIELDS = [
 
 VALID_CATEGORIES = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}
 
-MIN_ROWS = 15  # frozen Day-7 target; 22 rows currently (Day 8)
-MAX_ROWS = 30  # upper bound of the Day-10 target range (25–30 verified rows)
-MIN_CATEGORY_ROWS = {"A": 3, "B": 3, "C": 5}
+MIN_ROWS = 15  # frozen Day-7 floor
+MAX_ROWS = 30  # upper bound of the Day-10 target range (25–30 verified rows); Day-9 target met at 30
+MIN_CATEGORY_ROWS = {"A": 3, "B": 3, "C": 5, "D": 1, "E": 1, "F": 1, "G": 1, "H": 1, "I": 1, "J": 1}
 REQUIRED_SECTIONS = [
     "# Synthesis of Literature A–C",
+    "# Synthesis of Literature D–J",
+    "# Cross-Domain Synthesis",
     "# Relevance to Frozen Research Problem",
     "# Verification Notes",
     "# References",

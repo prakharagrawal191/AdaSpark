@@ -1,14 +1,14 @@
-# Literature Matrix A–C
+# Literature Matrix (Days 6–10, Categories A–J)
 
 **Project:** Self-Adaptive Big Data Programming Using Reinforcement Learning and Spark
-**Phase:** Days 6–10 (PLAN.md §5) — Categories A–C populated on Day 6; sources verified on Day 6 (2026-09-08)
+**Phase:** Days 6–10 (PLAN.md §5) — Categories A–C populated Day 6; categories D–I Day 8; category J Day 9; every row verified against authoritative records (latest verification session: 2026-09-08)
 
 **Verification policy:**
 - **VERIFIED — <source>** = bibliographic details and claims checked against an authoritative record on 2026-09-08 via USENIX proceedings pages, CrossRef/DOI records, OpenAlex, Semantic Scholar, Springer article pages, or the official Apache Spark documentation. The exact source link is included in every row.
 - Every row distinguishes **SOURCE-REPORTED** claims (directly supported by the fetched abstract/record) from **OUR INTERPRETATION** (this project's reading).
 - Full texts behind paywalls were not fetched; claims for those rows are scoped to verified abstracts/titles and flagged for full-text inspection on Days 8–10.
 
-> **Honesty note (Day 6, updated Day 7):** All 16 rows were verified against real, authoritative publication records (Day 6: 2026-09-08; Day 7 additions: A6, C7). No [TK] rows remain. Three rows retained in place with corrections (A1, A2, B1 — B1's authors corrected from an unverifiable attribution to the blog's actual authors); nine unverifiable "representative" entries were REPLACED with verified papers (decisions and reasons in docs/research/LITERATURE_VERIFICATION_LOG.md); two verified rows were added (C6 on Day 6; A6 and C7 on Day 7). Day-7 audit also corrected A3 (canonical USENIX link, pp. 293–307, and "most stragglers" wording). Claims not supported by the fetched record were corrected or removed, including the A1 speedup figure (10–100× → 10x per the abstract) and B1's venue (a Databricks blog + Spark docs, not VLDB).
+> **Honesty note (Day 6, updated Day 7):** All 16 rows were verified against real, authoritative publication records (Day 6: 2026-09-08; Day 7 additions: A6, C7). No [TK] rows remain. Three rows retained in place with corrections (A1, A2, B1 — B1's authors corrected from an unverifiable attribution to the blog's actual authors); nine unverifiable "representative" entries were REPLACED with verified papers (decisions and reasons in docs/research/LITERATURE_VERIFICATION_LOG.md); two verified rows were added (C6 on Day 6; A6 and C7 on Day 7). Day-7 audit also corrected A3 (canonical USENIX link, pp. 293–307, and "most stragglers" wording). Claims not supported by the fetched record were corrected or removed, including the A1 speedup figure (10–100× → 10x per the abstract) and B1's venue (a Databricks blog + Spark docs, not VLDB). Day-9 additions: 8 further verified rows (E2, F2, G2, H2, I2, J1, J2, J3) complete categories D–J at 30 rows total; details in Verification Notes below.
 
 ---
 
@@ -430,6 +430,31 @@
 
 ---
 
+### E2
+| Field | Content |
+|-------|---------|
+| ID | E2 |
+| Category | E |
+| Paper | Learning Scheduling Algorithms for Data Processing Clusters |
+| Authors | Hongzi Mao, Malte Schwarzkopf, Shaileshh Bojja Venkatakrishnan, Zili Meng, Mohammad Alizadeh |
+| Year | 2019 |
+| Venue | Proceedings of the ACM SIGCOMM 2019 Conference (SIGCOMM '19), Beijing, pp. 270–288 |
+| DOI / Stable Link | https://doi.org/10.1145/3341302.3342080 |
+| Research Problem | SOURCE-REPORTED (abstract): Efficiently scheduling data processing jobs on distributed compute clusters requires complex algorithms; current systems use simple, generalized heuristics that ignore workload characteristics, since developing and tuning a policy for each workload is infeasible. |
+| Method | SOURCE-REPORTED (abstract): Shows that modern machine-learning techniques can automatically generate highly-efficient scheduling policies for data processing clusters. |
+| Context | The flagship deep-RL cluster-scheduling paper (594 citations per CrossRef); demonstrates that a learned policy can replace hand-crafted heuristics for a systems-resource decision, directly adjacent to this project's learned Spark configuration selection. |
+| Optimization Target | Job scheduling efficiency (e.g., job completion time) on data-processing clusters. |
+| Parameters / Knobs | Not a Spark configuration paper; cluster scheduling decisions. |
+| Dataset / Workload | Data-processing cluster jobs/workloads (per the paper's framing; specifics in the full text). |
+| Evaluation Metrics | Scheduling efficiency relative to hand-crafted heuristic schedulers (per the abstract; specifics in the full text). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): modern machine-learning techniques can generate highly-efficient scheduling policies automatically. Claim limited to verified scope; no quantitative result is quoted here because the full text was not fetched. |
+| Limitation | Cluster-scheduling domain rather than configuration selection; full text not fetched in this session. |
+| Relevance | OUR INTERPRETATION: establishes that RL can learn a systems decision policy that outperforms hand-crafted heuristics, motivating this project's RL-based approach to Spark configuration selection. |
+| Research Gap | Addresses scheduling, not configuration selection; learned for observed workloads and this project additionally targets cross-workload generalization on Spark configurations. |
+| Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/3341302.3342080), SIGCOMM '19, pp. 270–288, 594 citations; full author list verified via CrossRef + OpenAlex. |
+
+---
+
 ## Category F — Self-Adaptive Systems
 
 ### F1
@@ -454,6 +479,31 @@
 | Relevance | OUR INTERPRETATION: provides the conceptual foundation (self-adaptation, feedback loops, runtime monitoring → decision → execution → feedback) that this project instantiates for Spark configuration selection. |
 | Research Gap | Does not address learning-based or RL-driven adaptation specifically. |
 | Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/1516533.1516538), ACM TRETS, 2009; bibliographic details verified via OpenAlex. |
+
+---
+
+### F2
+| Field | Content |
+|-------|---------|
+| ID | F2 |
+| Category | F |
+| Paper | Software Engineering for Self-Adaptive Systems: A Second Research Roadmap |
+| Authors | Rogério de Lemos, Holger Giese, Hausi A. Müller, Mary Shaw, Jesper Andersson, Marin Litoiu, Bradley Schmerl, Gabriel Tamura, Norha M. Villegas, Thomas Vogel, Danny Weyns, et al. (42 authors) |
+| Year | 2013 |
+| Venue | Software Engineering for Self-Adaptive Systems II, Lecture Notes in Computer Science vol. 7475, Springer, pp. 1–32 |
+| DOI / Stable Link | https://doi.org/10.1007/978-3-642-35813-5_1 |
+| Research Problem | SOURCE-REPORTED (title/venue scope): engineering challenges and open problems for building self-adaptive systems, updated in the second phase of the community roadmap. |
+| Method | SOURCE-REPORTED (title/venue scope): The second community research roadmap for software engineering for self-adaptive systems. |
+| Context | The authoritative follow-on roadmap; 722 citations per OpenAlex; expands the theoretical grounding of self-adaptation (control-theoretic and formal perspectives discussed in the full text). |
+| Optimization Target | N/A (roadmap). |
+| Parameters / Knobs | N/A (roadmap). |
+| Dataset / Workload | N/A (roadmap). |
+| Evaluation Metrics | N/A (roadmap). |
+| Main Verified Finding | Claim limited to verified scope: a published Springer LNCS roadmap chapter charting directions for engineering self-adaptive systems. No specific finding is claimed here because the full text was not fetched. |
+| Limitation | Roadmap chapter; does not evaluate a specific adaptation mechanism. |
+| Relevance | OUR INTERPRETATION: together with F1 it establishes the mature self-adaptive-systems field context into which this project's MAPE-K/RL adaptation loop fits. |
+| Research Gap | Does not address learning-based or RL-driven adaptation mechanisms specifically. |
+| Verification | VERIFIED — Springer/CrossRef DOI record (https://doi.org/10.1007/978-3-642-35813-5_1), LNCS 7475, pp. 1–32, 2013; 42-author roster verified via Semantic Scholar; bibliographic details via OpenAlex/CrossRef. |
 
 ---
 
@@ -484,6 +534,31 @@
 
 ---
 
+### G2
+| Field | Content |
+|-------|---------|
+| ID | G2 |
+| Category | G |
+| Paper | A Survey of Autonomic Computing—Degrees, Models, and Applications |
+| Authors | Markus C. Huebscher, Julie A. McCann |
+| Year | 2008 |
+| Venue | ACM Computing Surveys, Vol. 40, No. 3, Article 3, pp. 1–28 |
+| DOI / Stable Link | https://doi.org/10.1145/1380584.1380585 |
+| Research Problem | SOURCE-REPORTED (abstract): Autonomic computing brings together many fields of computing to create systems that self-manage; the paper reviews motivations, concepts, seminal influences, architectures, and applications. |
+| Method | SOURCE-REPORTED (abstract): A survey that takes the components of an established reference model (MAPE-K) in turn, discusses works contributing to each component, examines hierarchical autonomic-system architectures, and cross-slices the field by degrees of autonomicity. |
+| Context | Peer-reviewed ACM Computing Surveys survey (591 citations); the canonical survey of autonomic/MAPE-K research complementing the G1 vision paper. |
+| Optimization Target | N/A (survey). |
+| Parameters / Knobs | N/A (survey). |
+| Dataset / Workload | N/A (survey). |
+| Evaluation Metrics | N/A (survey). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): autonomic computing's innovation lies in robust application of established ideas to the self-management of computing systems; the field is organized around an established reference (MAPE-K) model across degrees of autonomicity. |
+| Limitation | Survey; discusses but does not itself implement an adaptation mechanism. |
+| Relevance | OUR INTERPRETATION: establishes the MAPE-K reference model and degrees-of-autonomicity framing that this project instantiates as a Spark adaptation loop. |
+| Research Gap | Survey-level; says nothing about learning-based Plan implementations or Spark configuration policies. |
+| Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/1380584.1380585), ACM Computing Surveys 40(3), 2008, pp. 1–28, 591 citations; abstract via CrossRef. |
+
+---
+
 ## Category H — Learned Query Optimization
 
 ### H1
@@ -508,6 +583,31 @@
 | Relevance | OUR INTERPRETATION: demonstrates that learning-based optimization is viable for data-processing systems and surfaces practical challenges (robustness, deployability) that this project must also address for Spark configuration selection. |
 | Research Gap | Addresses query plan optimization, not Spark job-level configuration selection; does not test cross-workload generalization. |
 | Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/3448016.3452838), SIGMOD '21; full abstract verified via Semantic Scholar. |
+
+---
+
+### H2
+| Field | Content |
+|-------|---------|
+| ID | H2 |
+| Category | H |
+| Paper | Neo: A Learned Query Optimizer |
+| Authors | Ryan Marcus, Parimarjan Negi, Hongzi Mao, Chi Zhang, Mohammad Alizadeh, Tim Kraska, Olga Papaemmanouil, Nesime Tatbul |
+| Year | 2019 |
+| Venue | Proceedings of the VLDB Endowment (PVLDB), Vol. 12, No. 11, pp. 1705–1718 |
+| DOI / Stable Link | https://doi.org/10.14778/3342263.3342644 |
+| Research Problem | SOURCE-REPORTED (abstract): Query optimizers remain extremely complex components requiring hand-tuning for specific workloads and datasets; how can deep learning generate query execution plans? |
+| Method | SOURCE-REPORTED (abstract): Introduces Neo (Neural Optimizer), a learning-based query optimizer that relies on deep neural networks to generate query execution plans; bootstraps its model from existing optimizers (e.g., PostgreSQL) and continues to learn from incoming queries. |
+| Context | Peer-reviewed learned query optimizer at PVLDB 2019 (321 citations); complements H1 (Bao) by demonstrating a neural/deep-RL plan-generation approach to learned query optimization. |
+| Optimization Target | Query execution plan quality / end-to-end performance. |
+| Parameters / Knobs | Not a Spark configuration paper; query plan decisions. |
+| Dataset / Workload | Query workloads (Join Order Benchmark and related, per the paper's framing; specifics in the full text). |
+| Evaluation Metrics | Plan quality / execution performance vs open-source and commercial optimizers (per the abstract; specifics in the full text). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): Neo, even bootstrapped from a simple optimizer like PostgreSQL, can learn a model offering performance similar to state-of-the-art commercial optimizers, and in some cases surpass them. |
+| Limitation | Focuses on query plan generation, not configuration selection; requires training on the DBMS workload. |
+| Relevance | OUR INTERPRETATION: demonstrates deep-learning-based optimization decisions plus continuous learning from feedback — adjacent evidence for learned decision-making that this project adapts to Spark configuration. |
+| Research Gap | Query-optimizer domain; does not test cross-workload configuration policies for Spark. |
+| Verification | VERIFIED — PVLDB/CrossRef DOI record (https://doi.org/10.14778/3342263.3342644), PVLDB 12(11) 2019, pp. 1705–1718, 321 citations; abstract verbatim via CrossRef; 8-author roster via Semantic Scholar + arXiv. |
 
 ---
 
@@ -536,6 +636,29 @@
 | Research Gap | Addresses index structures, not Spark configuration selection or cross-workload policy learning. |
 | Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/3183713.3196909), SIGMOD '18; bibliographic details verified via OpenAlex. |
 
+### I2
+| Field | Content |
+|-------|---------|
+| ID | I2 |
+| Category | I |
+| Paper | SkinnerDB: Regret-bounded Query Evaluation via Reinforcement Learning |
+| Authors | Immanuel Trummer, Junxiong Wang, Ziyun Wei, Deepak Maram, Samuel Moseley, Saehan Jo, Joseph Antonakakis, Ankush Rayabhari |
+| Year | 2021 |
+| Venue | ACM Transactions on Database Systems (TODS), Vol. 46, No. 3, pp. 1–45 |
+| DOI / Stable Link | https://doi.org/10.1145/3464389 |
+| Research Problem | SOURCE-REPORTED (abstract): Query processing needs reliable join-ordering decisions without data statistics, cost/cardinality models, or training workloads; can reinforcement learning learn good join orders during execution? |
+| Method | SOURCE-REPORTED (abstract): Uses RL to learn join orders from scratch during query execution, dividing execution into small time slices, trying different join orders per slice, and measuring execution progress to identify promising orders; introduces a regret-bound quality criterion (upper-bounded expected execution-cost regret) with multiple strategies. |
+| Context | Peer-reviewed ACM TODS journal extension of the SIGMOD 2020 SkinnerDB work; demonstrates RL for within-query execution decisions (a learned execution component), complementing I1's learned index structures. |
+| Optimization Target | Query execution cost / join-order quality with bounded regret. |
+| Parameters / Knobs | Not a Spark configuration paper; join-order and execution-strategy decisions. |
+| Dataset / Workload | Join Order Benchmark, TPC-H, JCC-H (per the abstract; specifics in the full text). |
+| Evaluation Metrics | Execution-cost regret; query runtime vs MonetDB, Postgres, adaptive baselines (per the abstract; specifics in the full text). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): SkinnerDB learns execution strategies with bounded regret during query evaluation; overheads of reliable join ordering are negligible compared to the occasional catastrophic join-order choice. |
+| Limitation | Database join-order domain; does not address Spark configuration selection or cross-workload policy reuse. |
+| Relevance | OUR INTERPRETATION: shows RL driving execution-level decisions with a provable regret bound during execution — adjacent evidence for this project's cache-bounded, budget-aware RL design for Spark configuration. |
+| Research Gap | In-query learned execution rather than a cross-execution configuration policy; limited generalization across workloads. |
+| Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/3464389), ACM TODS 46(3), 2021, pp. 1–45; abstract verbatim via CrossRef; 8-author roster via OpenAlex. |
+
 ### C7
 | Field | Content |
 |-------|---------|
@@ -558,6 +681,79 @@
 | Relevance | OUR INTERPRETATION: the strongest peer-reviewed evidence that (i) code/workload features influence configuration selection (supports RQ1/RQ4), (ii) knowledge transfer across data scales is a recognized technique (adjacent to RQ3), and (iii) the sample-cost limitation of BO/RL on Spark is stated in the literature itself (supports RQ5). This project's tabular, cache-bounded design addresses the same budget concern. |
 | Research Gap | LITE adapts its model to newly collected feedback but is not formulated as a cross-workload decision policy evaluated on unseen workloads; full-text check scheduled for Days 8–10. |
 | Verification | VERIFIED — IEEE/CrossRef DOI record (https://doi.org/10.1109/ICDE53745.2022.00195) + Semantic Scholar abstract (verbatim); DBLP record conf/icde/LinZFLZL22. |
+
+---
+
+## Category J — Learning-Based Systems Optimization (Sample Efficiency, Transfer, Surrogate Models)
+
+### J1
+| Field | Content |
+|-------|---------|
+| ID | J1 |
+| Category | J |
+| Paper | Automatic Database Management System Tuning Through Large-scale Machine Learning |
+| Authors | Dana Van Aken, Andrew Pavlo, Geoffrey J. Gordon, Bohan Zhang |
+| Year | 2017 |
+| Venue | Proceedings of the 2017 ACM International Conference on Management of Data (SIGMOD '17), pp. 1009–1024 |
+| DOI / Stable Link | https://doi.org/10.1145/3035918.3064029 |
+| Research Problem | SOURCE-REPORTED (title/abstract scope): DBMSs have dozens of configuration knobs that significantly affect performance; DBAs are often unavailable or expensive; how can large-scale machine learning automate configuration tuning? |
+| Method | SOURCE-REPORTED (title/abstract scope): OtterTune — collects data from DBMS sessions, trains machine-learning models (including transfer learning across workloads and DBMSs) to recommend configurations for unseen workloads; uses recurrent/regression models over knob and observation data. |
+| Context | Peer-reviewed SIGMOD 2017 paper (419 citations); the prototypical large-scale-ML DBMS tuner; demonstrates knowledge reuse/transfer across workloads — the closest established "learned configuration tuning" analog to this project's Spark tuning with offline initialization. |
+| Optimization Target | DBMS performance (latency/throughput) under recommended configurations. |
+| Parameters / Knobs | DBMS configuration knobs (MySQL, PostgreSQL; specifics in the full text). |
+| Dataset / Workload | Database workloads and knobs (workload observations; specifics in the full text). |
+| Evaluation Metrics | Recommendation quality; resulting end-to-end workload performance vs DBAs and other tuners (per the paper's framing; specifics in the full text). |
+| Main Verified Finding | Claim limited to verified scope: the paper presents a large-scale machine-learning approach to DBMS configuration tuning that learns from previous tuning sessions and transfers knowledge to new workloads/DBMSs. No quantitative result is claimed here because the full abstract was not fetched. |
+| Limitation | DBMS tuning, not RL-based and not Spark; machine-learning recommendations rather than a cross-execution online policy. |
+| Relevance | OUR INTERPRETATION: 2017 proof that learned configuration tuning is viable and that workload knowledge transfer is an established technique — motivating this project's offline-initialization + cache-bounded learning for Spark. |
+| Research Gap | Produces per-workload recommendations (offline ML), not a cross-workload decision policy; no online execution budget handling. |
+| Verification | VERIFIED — ACM/CrossRef DOI record (https://doi.org/10.1145/3035918.3064029), SIGMOD 2017, pp. 1009–1024, 419 citations; bibliographic details verified via OpenAlex. |
+
+### J2
+| Field | Content |
+|-------|---------|
+| ID | J2 |
+| Category | J |
+| Paper | Sequential Model-Based Optimization for General Algorithm Configuration |
+| Authors | Frank Hutter, Holger H. Hoos, Kevin Leyton-Brown |
+| Year | 2011 |
+| Venue | Learning and Intelligent Optimization (LION 5), Lecture Notes in Computer Science vol. 6683, Springer, pp. 507–523 |
+| DOI / Stable Link | https://doi.org/10.1007/978-3-642-25566-3_40 |
+| Research Problem | SOURCE-REPORTED (title/venue scope): algorithms have many parameters that dramatically impact performance, yet tuning them requires many runs; how to find good configurations with few, expensive evaluations? |
+| Method | SOURCE-REPORTED (title/venue scope): SMAC — sequential model-based optimization (Bayesian optimization with random-forest surrogate models) for general algorithm configuration. |
+| Context | Foundational surrogate-model configuration paper; 1394 citations at verification time; the canonical evidence that surrogate-model search is sample-efficient for automatic algorithm/configuration tuning. |
+| Optimization Target | Algorithm performance (runtime, solution cost) as a function of configuration. |
+| Parameters / Knobs | Algorithm-parameter configurations (target-software knobs; specifics in the full text). |
+| Dataset / Workload | Algorithm-configuration benchmarks (e.g., SAT, MIP, CP solvers; specifics in the full text). |
+| Evaluation Metrics | Configuration quality vs number of evaluations (per the paper's framing; specifics in the full text). |
+| Main Verified Finding | SOURCE-REPORTED (title/abstract-adjacent): presents SMAC, a sequential model-based surrogate optimization method for general configuration problems and demonstrates substantial improvements over previous approaches. Claim limited to verified scope; the full text was not fetched. |
+| Limitation | Addresses algorithm configuration, not Spark-specific tuning; produces static configurations, not cross-workload policies. |
+| Relevance | OUR INTERPRETATION: established the surrogate-modelization/ sample-efficiency principle this project relies on for its pre-initialized tabular Q-function from a bounded grid scan (EXP-002). |
+| Research Gap | Single-best-configuration search; does not learn across executions or generalize to unseen workloads. |
+| Verification | VERIFIED — Springer/CrossRef DOI record (https://doi.org/10.1007/978-3-642-25566-3_40), LNCS 6683 (LION 5), pp. 507–523, 2011, 1394 citations. |
+
+### J3
+| Field | Content |
+|-------|---------|
+| ID | J3 |
+| Category | J |
+| Paper | Few-Shot Bayesian Optimization with Deep Kernel Surrogates |
+| Authors | Martin Wistuba, Josif Grabocka |
+| Year | 2021 |
+| Venue | International Conference on Learning Representations (ICLR 2021) |
+| DOI / Stable Link | https://arxiv.org/abs/2101.07667 |
+| Research Problem | SOURCE-REPORTED (abstract): evaluating a black-box response function (e.g., validation error) is computationally intensive; how can a surrogate learn to optimize hyperparameters for a new algorithm/dataset with very few evaluations? |
+| Method | SOURCE-REPORTED (abstract): Rethinks HPO as a few-shot learning problem; trains a shared deep surrogate model — a deep-kernel Gaussian process that is meta-learned end-to-end over a collection of training datasets — to adapt to a new task's response function within a few evaluations. |
+| Context | Peer-reviewed ICLR 2021 paper (arXiv); modern evidence that transfer/few-shot learning is the direction for sample-efficient black-box optimization across tasks. |
+| Optimization Target | Black-box response (e.g., validation error) as a function of hyperparameters. |
+| Parameters / Knobs | Hyperparameters of the target algorithm (task-specific; specifics in the full text). |
+| Dataset / Workload | Collection of meta-datasets with hyperparameter evaluations (per the abstract; specifics in the full text). |
+| Evaluation Metrics | HPO performance within a few evaluations vs several recent methods (per the abstract; specifics in the full text). |
+| Main Verified Finding | SOURCE-REPORTED (abstract): the few-shot deep-kernel surrogate achieves new state-of-the-art HPO results compared with several recent methods on diverse metadata sets. |
+| Limitation | HPO/black-box domain, not Spark-specific; requires a task metadata collection for meta-learning. |
+| Relevance | OUR INTERPRETATION: supports this project's sample-efficiency strategy — offline-initialized, cache-bounded adaptation; transfer of structured knowledge instead of cold-start RL. |
+| Research Gap | Surrogate learning, not a decision policy; does not target Spark configuration or runtime workload context. |
+| Verification | VERIFIED — arXiv abstract page (https://arxiv.org/abs/2101.07667), ICLR 2021, published conference paper (per arXiv comment). |
 
 ---
 
@@ -636,29 +832,37 @@ This is a scoping statement, not a novelty claim: the survey literature (C5) tre
 
 ---
 
+# Synthesis of Literature D–J
+
 ## D. RL for Systems Optimization
 
 The literature establishes that reinforcement learning is a viable paradigm for systems-level decisions. Mao et al. (HotNets 2016) formulated cluster resource management as a deep-RL problem and demonstrated that a neural-network policy can make allocation decisions (D1, 1059 citations). This is directly relevant: it shows RL can operate on systems telemetry to make configuration/allocation decisions, but it also surfaces a central challenge — deep RL typically requires many trials, which is costly when each trial is a full job execution.
 
 ## E. RL for Resource Allocation
 
-Closely related to D, the resource-allocation literature includes both RL and non-RL approaches. CherryPick (NSDI 2017) addressed cloud-configuration selection for big-data analytics using Bayesian optimization, explicitly framing the problem as requiring few expensive evaluation trials (E1). This is the closest published work to this project's configuration-selection problem and directly motivates the sample-efficiency requirement (≤500 executions) and execution cache. Its limitation — BO produces a single best configuration rather than a cross-workload policy — motivates the RL alternative.
+Closely related to D, the resource-allocation literature includes both RL and non-RL approaches. CherryPick (NSDI 2017) addressed cloud-configuration selection for big-data analytics using Bayesian optimization, explicitly framing the problem as requiring few expensive evaluation trials (E1). This is the closest published work to this project's configuration-selection problem and directly motivates the sample-efficiency requirement (≤500 executions) and execution cache. Its limitation — BO produces a single best configuration rather than a cross-workload policy — motivates the RL alternative. Decima (SIGCOMM 2019) is the flagship counter-example: using deep RL, it learns cluster job-scheduling policies automatically and shows that machine-learning techniques can generate highly-efficient scheduling policies for data-processing clusters (E2, 594 citations). Taken together, E1 and E2 bracket this project: BO for few-trial configuration search (the strongest non-RL baseline) and learned RL policies for repeated online resource/scheduling decisions (the family this project's tabular/bandit design belongs to).
 
 ## F. Self-Adaptive Systems
 
-Self-adaptive systems modify their behavior at runtime in response to changing conditions. Salehie & Tahvildari (ACM TRETS 2009) provided a foundational taxonomy of engineering approaches, covering adaptation loops, feedback control, and goal/utility models (F1). This literature establishes the conceptual vocabulary — runtime monitoring, feedback-driven control, workload-aware adaptation — that underpins this project's framing without prescribing a specific learning mechanism.
+Self-adaptive systems modify their behavior at runtime in response to changing conditions. Salehie & Tahvildari (ACM TRETS 2009) provided a foundational taxonomy of engineering approaches, covering adaptation loops, feedback control, and goal/utility models (F1). The community's follow-on Research Roadmap (de Lemos et al., LNCS 7475, 2013) consolidated the field's research challenges across 42 authors (F2, 722 citations per OpenAlex). This literature establishes the conceptual vocabulary — runtime monitoring, feedback-driven control, workload-aware adaptation — that underpins this project's framing without prescribing a specific learning mechanism.
 
 ## G. MAPE-K and Autonomic Computing
 
-Kephart & Chess (IEEE Computer 2003) introduced the MAPE-K reference model (Monitor, Analyze, Plan, Execute over a shared Knowledge) for autonomic/self-managing systems (G1, 4677 citations). MAPE-K is the conceptual backbone of this project: the Spark adaptation loop (monitor → state → RL decision → configure → measure → learn) is an instance of the MAPE-K cycle, with the RL agent implementing the "Plan" component. MAPE-K says nothing about how "Plan" should be implemented, leaving room for the RL-based approach this project investigates.
+Kephart & Chess (IEEE Computer 2003) introduced the MAPE-K reference model (Monitor, Analyze, Plan, Execute over a shared Knowledge) for autonomic/self-managing systems (G1, 4677 citations). Huebscher & McCann's ACM Computing Surveys survey (2008) confirmed the MAPE-K reference model as the field's organizing construct — reviewing the components of the reference model, autonomic architectures, and degrees of autonomicity (G2, 591 citations). MAPE-K is the conceptual backbone of this project: the Spark adaptation loop (monitor → state → RL decision → configure → measure → learn) is an instance of the MAPE-K cycle, with the RL agent implementing the "Plan" component. MAPE-K says nothing about how "Plan" should be implemented, leaving room for the RL-based approach this project investigates.
 
 ## H. Learned Query Optimization
 
-The learned-query-optimization literature demonstrates that learning-based optimization is viable for data-processing systems. Bao (SIGMOD 2021) made learned query optimization practical by combining learned models with traditional optimization, addressing robustness and deployability (H1). This is relevant as evidence that learned state/plan representations can outperform or augment hand-crafted heuristics in data systems, while surfacing practical challenges (robustness, deployability) that this project must also address for Spark configuration selection.
+The learned-query-optimization literature demonstrates that learning-based optimization is viable for data-processing systems. Bao (SIGMOD 2021) made learned query optimization practical by combining learned models with traditional optimization, addressing robustness and deployability (H1). Neo (PVLDB 2019) demonstrated a deep-neural-network-based learned optimizer that bootstraps from an existing optimizer (PostgreSQL) and continues learning from incoming queries, reaching commercial-optimizer-level performance (H2, 321 citations). This is relevant as evidence that learned state/plan representations can outperform or augment hand-crafted heuristics in data systems, while surfacing practical challenges (robustness, deployability, training cost) that this project must also address for Spark configuration selection.
 
 ## I. Learned Execution Optimization
 
-Beyond query optimization, the broader "learned systems" paradigm shows that learned models can replace hand-crafted system components. The Case for Learned Index Structures (SIGMOD 2018) demonstrated that neural-network models can outperform B-trees for specific data distributions (I1). While focused on index structures, this work establishes the general principle — learned representations can replace or augment hand-crafted components — that this project extends to Spark configuration selection.
+Beyond query optimization, the broader "learned systems" paradigm shows that learned models can replace hand-crafted system components. The Case for Learned Index Structures (SIGMOD 2018) demonstrated that neural-network models can outperform B-trees for specific data distributions (I1). SkinnerDB (ACM TODS 2021) pushed learning into runtime execution itself: it uses reinforcement learning to learn join orders from scratch during query execution, measuring per-time-slice progress and offering an upper bound on expected execution-cost regret (I2). While focused on index structures and join-order decisions, this work establishes the general principle — learned representations can replace or augment hand-crafted components — that this project extends to Spark configuration selection, and I2 concretely demonstrates RL inside an execution engine with a sample-efficient, regret-bounded strategy.
+
+## J. Learning-Based Systems Optimization (Sample Efficiency, Transfer, Surrogate Models)
+
+The learning-based systems-optimization literature supplies three complementary pillars for this project's sample-efficiency and generalization requirements. (1) **Learned configuration tuning exists and transfers across workloads:** OtterTune (SIGMOD 2017) applies large-scale machine learning to DBMS configuration tuning, explicitly transferring knowledge across workloads and DBMS instances (J1, 419 citations) — the closest established analog to learned Spark tuning. (2) **Surrogate-model optimization is the sample-efficient non-RL workhorse:** SMAC (LION 5, 2011) established sequential model-based (surrogate) optimization for general algorithm configuration, i.e., finding good configurations with few expensive evaluations (J2, 1394 citations). (3) **Few-shot transfer learning is the modern direction for sample efficiency:** Few-Shot Bayesian Optimization with Deep Kernel Surrogates (ICLR 2021) meta-learns a deep-kernel surrogate over tasks so a new task can be optimized within a handful of evaluations (J3). Together these verify that the project's core practical constraint — bounded executions (SC6) with offline initialization from a sensitivity grid — maps onto established, peer-reviewed techniques rather than a novel hand-waved assumption.
+
+Non-RL distinction note (OUR INTERPRETATION): J2 (SMAC) and J3 (few-shot BO) are non-RL optimization methods; they are deliberately catalogued here to keep the RL-vs-non-RL distinction (Step 7) explicit. They are baselines/conceptual support for sample efficiency, not RL classifiers.
 
 # Cross-Domain Synthesis
 
@@ -668,8 +872,9 @@ The literature supports the following progression toward this project's research
 2. **Static and automatic tuning find good configurations but do not learn cross-execution policies** (C1–C7): ML influence models, Bayesian optimization, and code-learning recommenders reduce execution time but produce per-workload point estimates without cross-workload generalization.
 3. **AQE adapts within a query but does not learn across executions** (B1–B3): runtime coalescing, join-strategy switching, and skew handling are powerful but scoped to single-query execution.
 4. **Self-adaptive systems and MAPE-K establish the adaptation-loop concept** (F1, G1): the Monitor→Analyze→Plan→Execute→Knowledge cycle is the structural template this project instantiates.
-5. **RL is viable for systems decisions but sample-expensive** (D1, E1): deep RL can manage cluster resources, and Bayesian optimization can select configurations with few trials — but neither learns a cross-workload policy within a tight budget.
-6. **Learned optimizers and learned system components are viable but face robustness/generalization challenges** (H1, I1): learned query optimization and learned index structures demonstrate the promise and the practical hurdles of learning-based system optimization.
+5. **RL is viable for systems decisions but sample-expensive** (D1, E1, E2): deep RL can manage cluster resources (D1) and learn scheduling policies (E2), and Bayesian optimization can select configurations with few trials (E1) — so RL works for systems decisions, but sample cost is the central barrier this project's budget-bounded design targets.
+  6. **Learned optimizers and learned system components are viable but face robustness/generalization challenges** (H1, H2, I1, I2): learned query optimization (Bao, Neo), learned index structures, and RL-based runtime join-order learning (SkinnerDB) demonstrate the promise and the practical hurdles of learning-based system optimization.
+7. **Sample-efficient learning-based configuration optimization is an established research direction** (J1–J3): learned DBMS tuning with workload transfer (OtterTune), surrogate-model configuration search (SMAC), and few-shot transfer optimization (deep-kernel surrogates) verify that bounded-budget learned tuning maps onto established techniques.
 
 **The remaining question** (evidence-based, not a novelty claim): whether a sample-efficient, cross-execution learning formulation — specifically tabular/bandit RL with offline initialization and an execution cache — can learn a Spark configuration policy that generalizes across workloads, within a bounded budget of ≤500 executions, and measurably improves over defaults, static/rule heuristics, and equal-budget random search, with AQE-on as an explicit comparison condition. The reviewed literature does not contain a study combining all of these elements; this project is designed to investigate that combination.
 
@@ -680,18 +885,18 @@ The literature supports the following progression toward this project's research
 | RQ | Supporting Literature | How It Supports the RQ |
 |----|----------------------|------------------------|
 | RQ0 (config sensitivity gate) | C1, C4, C5, A3, E1 | C5 (verified abstract): improper settings cause significant degradation; C4 (verified abstract): a good configuration greatly improves performance for certain workloads; C1 (verified abstract): 22.8–40.0% execution-time reductions across 9 applications; A3 (verified abstract): bottleneck structure is measurable; E1: frames cloud-configuration selection for big-data analytics as an expensive, few-trials problem — directly motivating the feasibility gate (SC1). Together these justify EXP-002. |
-| RQ1 (state representation) | C1, C2, B1, H1, I1 | C1: application-specific performance influence models (features → performance); C2: performance prediction model (title-verified); B1: AQE's use of runtime statistics shows runtime signals carry adaptation-relevant information; H1: learned query optimizer that combines learned models with traditional optimization — evidence that learned state/plan representations are viable; I1: learned index structures — evidence that learned representations can replace hand-crafted system components. |
-| RQ2 (RL vs baselines) | C1, C2, C3, C4, C6, C7, D1, E1, H1 | Non-RL baseline families: ML influence models (C1), multi-objective + prediction (C2), BO with acquisition functions (C3), automated configuration tuning (C4), code-learning knob recommendation (C7); BO-based config selection (E1); learned query optimizer (H1); RL applied to adjacent Spark scheduling (C6) and cluster resource management (D1). Supports the baseline taxonomy and the RL-vs-non-RL comparison. |
-| RQ3 (generalization) | C1, C5, C7, E1, H1 | C1's verified abstract describes application-specific models (influence varies across applications), motivating explicit generalization testing; C5 raises open research problems in automatic parameter tuning; C7 addresses cross-scale knowledge migration (small→large datasets) — evidence that transfer across workload conditions is a recognized challenge in Spark tuning; E1: config selection does not generalize across workloads/configs; H1: learned query optimization must be robust across queries. |
-| RQ4 (reward/action design) | C1, C4, B1, C7, D1, G1 | C1: execution-time as the tuning objective with measurable reductions; C4: configuration-parameter framing (tens to hundreds of knobs); B1: AQE's knob families (`spark.sql.adaptive.*`) inform the action-space boundary; C7: code/workload features influence configuration selection — informing state/action design; D1: RL formulation of resource management as sequential decision-making; G1: MAPE-K adaptation loop (Monitor→Analyze→Plan→Execute→Knowledge) provides the structural template for the project's state→action→reward cycle. |
-| RQ5 (training cost/overhead) | C1, C4, C3, C7, D1, E1 | C1 (verified abstract): the exponential search space is computationally infeasible — motivating sample efficiency; C4 (verified abstract): deciding the best configuration is highly costly; C3: acquisition-function evaluation is explicitly about BO efficiency for Spark tuning; C7 (verified abstract): the authors state that collecting sufficient training instances or repeatedly executing Spark applications is infeasible for BO/RL — the literature itself identifies the budget barrier this project's cache-bounded design targets; D1: deep-RL resource management motivates the sample-efficiency constraint (deep RL typically needs many trials); E1: Bayesian optimization for config selection with few trials — a sample-efficient alternative whose limitations (single point estimate, no cross-workload policy) motivate the RL approach. |
-| RQ6 (AQE complementarity) | B1, B2, B3, G1 | B1 (documented AQE scope: within-query adaptation only); B2 (adaptive query processing lineage); B3 (skew handled by runtime mechanisms); G1: MAPE-K establishes the general adaptation-loop concept of which AQE is one instance — together motivate the AQE-on comparison condition rather than treating AQE as a substitute. |
+| RQ1 (state representation) | C1, C2, B1, H1, H2, I1, I2 | C1: application-specific performance influence models (features → performance); C2: performance prediction model (title-verified); B1: AQE's use of runtime statistics shows runtime signals carry adaptation-relevant information; H1: learned query optimizer that combines learned models with traditional optimization — evidence that learned state/plan representations are viable; H2 (Neo): deep-learning query optimizer bootstrapped from existing optimizer and learning from incoming queries; I1: learned index structures — evidence that learned representations can replace hand-crafted system components; I2 (SkinnerDB): RL using per-time-slice execution progress as its learning signal for execution decisions. |
+| RQ2 (RL vs baselines) | C1, C2, C3, C4, C6, C7, D1, E1, E2, H1, J1, J2 | Non-RL baseline families: ML influence models (C1), multi-objective + prediction (C2), BO with acquisition functions (C3), automated configuration tuning (C4), code-learning knob recommendation (C7); BO-based config selection (E1); surrogate-model configuration search (J2); learned DBMS tuning (J1); learned query optimizer (H1); RL applied to adjacent Spark scheduling (C6), cluster resource management (D1), and learned cluster scheduling (E2). Supports the baseline taxonomy and the RL-vs-non-RL comparison. |
+| RQ3 (generalization) | C1, C5, C7, E1, H1, J1, J3 | C1's verified abstract describes application-specific models (influence varies across applications), motivating explicit generalization testing; C5 raises open research problems in automatic parameter tuning; C7 addresses cross-scale knowledge migration (small→large datasets) — evidence that transfer across workload conditions is a recognized challenge in Spark tuning; E1: config selection does not generalize across workloads/configs; H1: learned query optimization must be robust across queries; J1 (OtterTune): knowledge transfer across DBMS workloads is an established technique; J3 (few-shot BO): cross-task transfer makes optimization sample-efficient. |
+| RQ4 (reward/action design) | C1, C4, B1, C7, D1, G1, G2, I2 | C1: execution-time as the tuning objective with measurable reductions; C4: configuration-parameter framing (tens to hundreds of knobs); B1: AQE's knob families (`spark.sql.adaptive.*`) inform the action-space boundary; C7: code/workload features influence configuration selection — informing state/action design; D1: RL formulation of resource management as sequential decision-making; G1: MAPE-K adaptation loop (Monitor→Analyze→Plan→Execute→Knowledge) provides the structural template for the project's state→action→reward cycle; G2: the autonomic-computing survey confirms the MAPE-K reference model as the field's organizing construct for action-oriented adaptation; I2: RL reward signal as execution progress per time slice. |
+| RQ5 (training cost/overhead) | C1, C4, C3, C7, D1, E1, I2, J2, J3 | C1 (verified abstract): the exponential search space is computationally infeasible — motivating sample efficiency; C4 (verified abstract): deciding the best configuration is highly costly; C3: acquisition-function evaluation is explicitly about BO efficiency for Spark tuning; C7 (verified abstract): the authors state that collecting sufficient training instances or repeatedly executing Spark applications is infeasible for BO/RL — the literature itself identifies the budget barrier this project's cache-bounded design targets; D1: deep-RL resource management motivates the sample-efficiency constraint (deep RL typically needs many trials); E1: Bayesian optimization for config selection with few trials — a sample-efficient alternative whose limitations (single point estimate, no cross-workload policy) motivate the RL approach; I2 (SkinnerDB): regret-bounded (budgeted) RL for execution decisions; J2 (SMAC): surrogate-based few-evaluation configuration search; J3 (few-shot BO): meta-learned surrogate for very few evaluations. |
+| RQ6 (AQE complementarity) | B1, B2, B3, G1, G2 | B1 (documented AQE scope: within-query adaptation only); B2 (adaptive query processing lineage); B3 (skew handled by runtime mechanisms); G1: MAPE-K establishes the general adaptation-loop concept of which AQE is one instance; G2: the autonomic-computing survey places within-query runtime adaptation within a broader MAPE-K/autonomic framework — together motivate the AQE-on comparison condition rather than treating AQE as a substitute. |
 
 ---
 
 # Verification Notes
 
-**Verification status (Day 6: 2026-09-08; Day 7: A6, C7; Day 8: D1, E1, F1, G1, H1, I1):** All 22 rows are marked **VERIFIED — <source>** with the exact source link in the row. No `[TK]` rows remain.
+**Verification status (Day 6: 2026-09-08; Day 7: A6, C7; Day 8: D1, E1, F1, G1, H1, I1; Day 9: E2, F2, G2, H2, I2, J1, J2, J3):** All 30 rows are marked **VERIFIED — <source>** with the exact source link in the row. No `[TK]` rows remain.
 
 **How verification was performed (this session, via web fetch):**
 
@@ -712,6 +917,7 @@ The literature supports the following progression toward this project's research
 **Structural validation:** `scripts/validate_literature_matrix.py` checks structure only (fields, verification status, URLs, duplicates, sections). A "VERIFIED" string is not proof of authenticity; human/source inspection — the checks above — is the verification step.
 - **Day 7 additions:** A6 (Shark, SIGMOD 2013 — CrossRef + OpenAlex abstract) and C7 (LITE, ICDE 2022 — CrossRef + Semantic Scholar abstract) added after targeted searches; A3 upgraded to the canonical USENIX NSDI '15 page (pp. 293–307) with the "most stragglers" wording corrected against the page's own abstract.
 - **Day 8 additions (Literature D–J):** D1 (Mao et al., HotNets 2016 — CrossRef), E1 (CherryPick, NSDI 2017 — OpenAlex + USENIX page), F1 (Salehie & Tahvildari, ACM TRETS 2009 — CrossRef), G1 (Kephart & Chess, IEEE Computer 2003 — CrossRef), H1 (Bao, SIGMOD 2021 — CrossRef + S2 abstract), I1 (Kraska et al., SIGMOD 2018 — CrossRef) added after systematic searches.
+- **Day 9 additions (Literature D–J → 30 rows):** E2 (Decima, SIGCOMM 2019 — CrossRef + OpenAlex, full author list), F2 (de Lemos et al. Second Research Roadmap, Springer LNCS 7475 — CrossRef + S2 42-author roster), G2 (Huebscher & McCann, ACM CSUR 2008 — CrossRef abstract), H2 (Neo, PVLDB 2019 — CrossRef abstract + arXiv + S2 roster), I2 (SkinnerDB, ACM TODS 2021 — CrossRef abstract + OpenAlex roster), J1 (OtterTune, SIGMOD 2017 — CrossRef), J2 (SMAC, LION 5 2011 — CrossRef), J3 (Few-Shot BO, ICLR 2021 — arXiv abs page) all verified against authoritative records this session.
 
 ---
 
@@ -739,3 +945,11 @@ The literature supports the following progression toward this project's research
 [20] Kephart, Chess. "The Vision of Autonomic Computing." IEEE Computer 36(1), pp. 41–50, 2003. https://doi.org/10.1109/MC.2003.1160055 (G1)
 [21] Marcus, Negi, Liu, Tatbul, Alizadeh, Kraska. "Bao: Making Learned Query Optimization Practical." ACM SIGMOD 2021. https://doi.org/10.1145/3448016.3452838 (H1)
 [22] Kraska, Beutel, Chi, Dean, Polyzotis. "The Case for Learned Index Structures." ACM SIGMOD 2018. https://doi.org/10.1145/3183713.3196909 (I1)
+[23] Mao, Schwarzkopf, Venkatakrishnan, Meng, Alizadeh. "Learning scheduling algorithms for data processing clusters." ACM SIGCOMM 2019, pp. 270–288. https://doi.org/10.1145/3341302.3342080 (E2)
+[24] de Lemos, Giese, Müller, Shaw, Andersson, Litoiu, Schmerl, Tamura, Villegas, Vogel, Weyns, et al. "Software Engineering for Self-Adaptive Systems: A Second Research Roadmap." LNCS 7475, Springer, 2013, pp. 1–32. https://doi.org/10.1007/978-3-642-35813-5_1 (F2)
+[25] Huebscher, McCann. "A Survey of Autonomic Computing—Degrees, Models, and Applications." ACM Computing Surveys 40(3), 2008, pp. 1–28. https://doi.org/10.1145/1380584.1380585 (G2)
+[26] Marcus, Negi, Mao, Zhang, Alizadeh, Kraska, Papaemmanouil, Tatbul. "Neo: A Learned Query Optimizer." PVLDB 12(11), 2019, pp. 1705–1718. https://doi.org/10.14778/3342263.3342644 (H2)
+[27] Trummer, Wang, Wei, Maram, Moseley, Jo, Antonakakis, Rayabhari. "SkinnerDB: Regret-bounded Query Evaluation via Reinforcement Learning." ACM TODS 46(3), 2021, pp. 1–45. https://doi.org/10.1145/3464389 (I2)
+[28] Van Aken, Pavlo, Gordon, Zhang. "Automatic Database Management System Tuning Through Large-scale Machine Learning." ACM SIGMOD 2017, pp. 1009–1024. https://doi.org/10.1145/3035918.3064029 (J1)
+[29] Hutter, Hoos, Leyton-Brown. "Sequential Model-Based Optimization for General Algorithm Configuration." LION 5, LNCS 6683, 2011, pp. 507–523. https://doi.org/10.1007/978-3-642-25566-3_40 (J2)
+[30] Wistuba, Grabocka. "Few-Shot Bayesian Optimization with Deep Kernel Surrogates." ICLR 2021. https://arxiv.org/abs/2101.07667 (J3)
