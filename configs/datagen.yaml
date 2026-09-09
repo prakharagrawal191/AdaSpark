@@ -1,0 +1,16 @@
+# Day-13 datagen defaults (implementation conventions, NOT frozen research).
+
+dataset_id: adaspark-datagen-v1
+seed: 42
+skew: 1.0
+key_cardinality: null      # null -> 10_000 (orders) | orders-rows (lineitem)
+part_cardinality: 2000
+chunk_rows: 100000
+output_format: parquet
+output_root: null          # null -> external SPARKRL_DATA_ROOT/generated
+scales:                    # research ladder targets (PLAN 0.3-3 GB)
+  micro: {lineitem_rows: 5000, note: "fixture-only, not research"}
+  small: {lineitem_rows: 3000000, target_gb: 0.3}
+  medium: {lineitem_rows: 10000000, target_gb: 1.0}
+  large: {lineitem_rows: 30000000, target_gb: 3.0}
+lineitem_to_orders: 4
