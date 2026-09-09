@@ -164,3 +164,50 @@ After the Day 11/12 architecture freeze, substantive architectural changes
 require a new DECISIONS.md entry specifying previous design, new design,
 reason, affected experiments (EXP-ids), affected documentation, and migration
 impact. Editorial clarifications need only a commit message note.
+## DEC-009 | 2026-09-09 | Architecture freeze — Candidate C contracts and interfaces
+
+**Decision.** Freeze Candidate C (Hybrid offline-init + bounded online adapt +
+cache) as the implementation blueprint: 12 components, 14 interfaces, 12 data
+contracts, 6 diagrams (ARCHITECTURE_FREEZE.md + COMPONENT_CONTRACTS.md +
+ARCHITECTURE_CHECKLIST.md).
+
+**Context.** DEC-008 provisionally selected C; Day-12 open questions (Q-table
+schema, cache keys, v1.5 state, 12-action table shape, R3 inputs, guard/cache
+interplay, AQE surface, manifest formats, seed + test guard) are answered in
+FREEZE §§9–14. No implementation begun (design files only).
+
+**Frozen architecture.** §§5–15: components COMP-SPARK-01…COMP-EXP-12;
+RL formulation (v1.5 state, 12 actions, R3 primary, ε-greedy tabular Q,
+≤500 cached, grid Q-init); cache key (workload, seed, fingerprint, code +
+env versions); baselines B0/B0′/B1–B4/RL identical protocol; AQE flag-only
+(off main, on 005b); split tags + Day-31 test gate; F-FAIL (failed configs
+never rewarded).
+
+**Component contracts.** Responsibility/Inputs/Outputs/Dependencies/
+Configuration/Failure/Logging/Test/Research-role per component
+(CONTRACTS §2); conceptual signatures (§1, §3); field tables (§4).
+**Data contracts.** 12 objects JSON-serializable with determinism rules.
+**Architectural invariants.** Single-node, seeded manifests, config-driven,
+12-action bound, T_ref-gated reward, ≤500 guard, deterministic cache,
+identical baselines, AQE control, frozen test set, ±5% repro, Plan-B
+recoverability; no cluster/K8s/cloud/microservices, no deep RL, no GPU path.
+**Experiment compatibility.** EXP-001…EXP-012 (+005b) executable unchanged
+(§17 matrix). **Plan-B compatibility.** 4-action bandit subset + benchmark
+framing via config selectors, no rewrite (§16).
+
+**Risks.** Cache-key collision/omission (→ fingerprint + versions) ·
+leakage (→ split tags + init provenance + date gate) · reward shaping
+(→ R3 + A3–A5) · overhead creep (→ overhead_s accounting, EXP-009) ·
+schedule (incremental from Day 13: cache → workloads → monitoring → env →
+agent; session/config/runner exist).
+
+**Consequences.** Implementation proceeds from these contracts; deviations
+need a new DEC entry. Day 13 begins incremental build (NOT full-system).
+
+**Change-control rule.** After this freeze, substantive architecture changes
+require a new DECISIONS.md entry: previous design, new design, reason,
+affected components, affected experiments, affected docs,
+migration/reimplementation impact. Editorial notes need only a commit msg.
+
+**Status.** ARCHITECTURE FROZEN FOR IMPLEMENTATION (design freeze; NOT
+empirical validation — performance decided by EXP-004/005).
