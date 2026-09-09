@@ -96,3 +96,71 @@ kept for forensics); all 49 subsequent days run against this stack.
 smoke matrix; (b) WSL2 Ubuntu + PySpark 3.5.x (same pip wheel) if native Windows ever
 regresses; (c) Docker Spark image. All paths require re-passing the smoke matrix.
 
+## DEC-008 | 2026-09-09 | Architecture candidate selection (Day 11)
+
+**Selected architecture.** Candidate C — Hybrid offline-init + online adapt + cache
+— selected for implementation (provisional, pending Day-12 contracts).
+Full evaluation: `docs/architecture/ARCHITECTURE_CANDIDATES.md`.
+
+**Context.** PLAN §31 Day-11 task ("Architecture candidates | A/B/C vs 8
+criteria (DEC) | criteria table"); frozen study (RQ0–RQ6, H1–H4, SC1–SC8,
+EXP-001…EXP-012 + 005b) must be answerable unchanged on the DEC-007 backend
+(single-node PySpark 3.5.9, ≤500 cached executions, 12 actions, AQE-off main).
+
+**Candidates considered.** A: Offline surrogate (grid/BO → static config) —
+measure first, deploy one static config, no online learning. B: Pure online
+RL — cold-start ε-greedy tabular Q-learning from live executions only.
+C: Hybrid — EXP-002 grid calibrates T_ref + pre-initializes Q, then bounded
+(≤500) cached online adaptation. (A/B/C headers per PLAN §9 line 97.)
+
+**Eight evaluation criteria (derived — PLAN names no eight explicitly; §5 of
+the candidate doc cites the frozen source per criterion; unweighted 1–5 is a
+Day-11 convention).** K1 RQ/EXP answerability (§5/§23) · K2 sample efficiency
+under budget (§11/§23/§38) · K3 experimental control & reproducibility
+(§22/§23/§33) · K4 adaptivity to drift (§2/§6) · K5 schedule/feasibility
+(§31/§38–39, DEC-007) · K6 measurement validity (§7/§11/§20) · K7 risk &
+Plan-B recoverability (§38–§39) · K8 AQE/baseline comparability (§7/§21–§23).
+
+**Comparison summary (unweighted totals: A 27 · B 27 · C 38; C ≥4 on every
+criterion).** A cannot answer RQ1–RQ4 (no policy/state/reward) and concedes
+the study untested. B is most adaptive in principle but pays full live cost
+per update, starts with uncalibrated T_ref, and has no graceful fallback.
+C alone keeps every frozen EXP meaningful unchanged, enforces the ≤500
+budget structurally via cache + guard, calibrates reward before learning,
+and carries Plan B as a pre-designed operating point (grid + statics
+reportable; 4-action/bandit shrink without rewrite).
+
+**Rejected alternatives.** A — rejected: static output cannot test learning,
+generalization, or ablations (EXP-004/006/007/008 void). B — rejected:
+cold-start cost/variance unfair vs equal-budget baselines; failure strands
+sunk RL plumbing with no artifact.
+
+**Research implications.** None — RQs, Hx, SCs, EXPs, scope unchanged (drift
+audit clean). EXP-002 becomes load-bearing (sensitivity proof + T_ref + init).
+
+**Engineering implications.** Day-12 contracts must specify: Q-table
+schema/init mapping, cache keys, v1.5 state vector, 12-action→SparkConf
+table, R3 reward inputs, budget-guard/cache interplay, AQE control surface,
+manifest/fingerprint formats, seed + test-set guard. Reuses Day-3
+SparkConfig/session/runner/timing/baseline.
+
+**Risks.** Gate fail (→ Plan-B benchmark, no rewrite) · cache
+non-determinism (→ fingerprints/manifests/EXP-011) · reward misspecification
+(→ R3 primary + A3–A5 ablations) · schedule (phased grid→env/agent→demo).
+
+**Fallback.** Pre-authorized §39 tier 3: 12→4 actions, drop multi-step/LinUCB,
+narrow ablations; grid + baseline evidence intact.
+
+**Consequences.** Day 12 freezes component contracts/data flow for C only.
+Substantive later changes need a new DEC entry (previous/new design, reason,
+affected EXPs/docs, migration impact).
+
+**Status.** DECIDED 2026-09-09 (provisional pending Day-12 freeze; NOT a claim
+of empirical superiority — performance decided by EXP-004/005).
+
+## Architecture change control (Day 11/12 freeze rule)
+
+After the Day 11/12 architecture freeze, substantive architectural changes
+require a new DECISIONS.md entry specifying previous design, new design,
+reason, affected experiments (EXP-ids), affected documentation, and migration
+impact. Editorial clarifications need only a commit message note.
