@@ -13,6 +13,32 @@ from __future__ import annotations
 import bisect
 import random
 
+# CDF is a pure function of (key_cardinality, skew). Day-14: build once and
+# reuse across rows/datasets — avoids O(K*N) rebuilds in replay-validated
+# samplers (critical at K=750k..7.5M, e.g. full_validation's row sampler).
+_CDF_CACHE: dict[tuple[int, float], tuple[list[float], float]] = {}
+
+
+def _build_cdf(key_cardinality: int, skew: float) -> tuple[list[float], float]:
+    """Canonical cumulative distribution for Zipf(s, K) with s > 0.
+
+    Returns (cdf, total) where cdf[-1] == 1.0 (float error absorbed). The
+    result is cached globally because it depends only on (K, s).
+    """
+    key = (key_cardinality, skew)
+    hit = _CDF_CACHE.get(key)
+    if hit is not None:
+        return hit
+    total = sum((k + 1) ** -skew for k in range(key_cardinality))
+    cumulative = 0.0
+    cdf: list[float] = [0.0] * key_cardinality
+    for k in range(key_cardinality):
+        cumulative += ((k + 1) ** -skew) / total
+        cdf[k] = cumulative
+    cdf[-1] = 1.0  # absorb float error so bisect never overruns
+    _CDF_CACHE[key] = (cdf, total)
+    return (cdf, total)
+
 
 class ZipfSampler:
     """Precomputed-CDF Zipf sampler over a bounded key domain."""
@@ -29,14 +55,7 @@ class ZipfSampler:
         self.skew = float(skew)
         self._cdf: list[float] | None = None
         if self.skew > 0:
-            total = sum((k + 1) ** -self.skew for k in range(self.key_cardinality))
-            cumulative = 0.0
-            cdf: list[float] = []
-            for k in range(self.key_cardinality):
-                cumulative += ((k + 1) ** -self.skew) / total
-                cdf.append(cumulative)
-            cdf[-1] = 1.0  # absorb float error so bisect never overruns
-            self._cdf = cdf
+            self._cdf = _build_cdf(self.key_cardinality, self.skew)[0]
 
     def sample(self, rng: random.Random) -> int:
         """Draw one key in [0, K) using the caller's RNG (uniform if s=0)."""

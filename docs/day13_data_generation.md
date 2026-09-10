@@ -35,6 +35,20 @@ One reusable schema (`datagen-v1`) with two tables — `orders` and `lineitem` �
 | medium | 10,000,000 | ~1.0 GB | Yes |
 | large | 30,000,000 | ~3.0 GB | Yes |
 
+## Scale Ladder
+
+| Scale | Lineitem rows | Target size | Research ladder |
+|-------|---------------|-------------|-----------------|
+| micro | 5,000 | fixture-only | No (test fixture only) |
+| small | 3,000,000 | ~0.3 GB | Yes |
+| medium | 10,000,000 | ~1.0 GB | Yes |
+| large | 30,000,000 | ~3.0 GB | Yes |
+
+Lineitem:orders row ratio = 4:1. `micro` is fixture-only and not part of the research ladder. Actual output sizes are recorded in each dataset manifest.
+
+### Scale row target derivation
+
+Row counts come from the frozen PLAN.md §11 target sizes (0.3 / 1.0 / 3.0 GB) converted to lineitem row counts using the generator convention **lineitem rows : orders rows = 4 : 1** and an approximate per-row raw footprint. These are the **row-count anchors** the generator implements; Parquet-compressed on-disk size is recorded per dataset in the manifest and inventory.
 Lineitem:orders row ratio = 4:1. `micro` is fixture-only and not part of the research ladder. Actual output sizes are recorded in each dataset manifest.
 Schema fingerprint: SHA-256 over the canonical DDL string `table(col:type,...)@datagen-v1`.
 ## Generation Algorithm

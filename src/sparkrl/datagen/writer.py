@@ -8,10 +8,12 @@ order); content identity comes from the canonical checksum, NOT file bytes.
 """
 from __future__ import annotations
 
+import random
 from pathlib import Path
 from typing import Any
 
 from sparkrl.datagen.checksums import checksum_rows, encode_row
+from sparkrl.datagen.distributions import ZipfSampler
 from sparkrl.datagen.generator import GenerationSpec
 from sparkrl.datagen.rows import iter_chunks, lineitem_row, orders_row
 from sparkrl.datagen.schema import column_names, to_spark_schema
@@ -29,19 +31,28 @@ def generate_table(spark, spec: GenerationSpec, out_dir: str | Path,
 
     Writes part-00000{i}.parquet per chunk under out_dir/data. Caller passes
     n_orders for the lineitem FK domain (orders rows of the same dataset).
+
+    Streaming: one deterministic (rng, sampler) is advanced in row order for
+    the whole table, so total work is O(N) (the reference replay path also
+    matches this stream, so row content is chunking-independent).
     """
     out = Path(out_dir)
     data_dir = out / "data"
     data_dir.mkdir(parents=True, exist_ok=True)
     schema = to_spark_schema(spec.table)
     columns = column_names(spec.table)
-    row_fn = _row_fn(spec, n_orders)
+    rng = random.Random(spec.seed)
+    sampler = ZipfSampler(spec.key_cardinality, spec.skew)
     from sparkrl.datagen.checksums import _FNV_OFFSET, _fnv1a_64
     state = _FNV_OFFSET
     count = 0
     first = True
     for chunk_id, (start, end) in enumerate(iter_chunks(spec)):
-        rows = [row_fn(i) for i in range(start, end)]
+        if spec.table == "orders":
+            rows = [orders_row(i, spec, rng, sampler) for i in range(start, end)]
+        else:
+            rows = [lineitem_row(i, spec, n_orders, rng, sampler)
+                    for i in range(start, end)]
         for row in rows:
             state = _fnv1a_64(encode_row(row), state)
             state = _fnv1a_64(b"\n", state)
