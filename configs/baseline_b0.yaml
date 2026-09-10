@@ -1,0 +1,39 @@
+# AdaSpark B0 default baseline configuration (Day 17, PLAN §17).
+#
+# B0 = "Spark default | out-of-box settings, pinned | vendor reality".
+# This file pin is the FROZEN default for all baseline runs. Every value here
+# is either (a) observability/execution metadata required for reproduction
+# (event logs, app name, timing policy) or (b) Spark's own out-of-box setting.
+# It deliberately introduces NO performance tuning beyond Spark defaults.
+#
+# AQE is OFF in the main study (PLAN §7, §11): B0 runs AQE-off so the
+# pre-execution configuration-selection problem is well defined. AQE-on is a
+# separate comparison condition (B0' / RQ6 / EXP-005b), never here.
+
+baseline_id: "B0"
+description: "Spark default, out-of-box settings pinned (AQE off, main study)"
+
+runtime:
+  master: "local[2]"                 # Spark local default; NOT tuned
+  app_name: "sparkrl-b0"
+  driver_memory: "6g"                # unchanged from Day-3 frozen default
+  ui_enabled: false                  # observability: no UI needed
+  event_log_enabled: true            # observability: research monitoring (plan §20)
+  event_log_dir: null                # observability: -> sparkrl.utils.paths.eventlog_dir()
+  local_dir: null                    # observability: -> sparkrl.utils.paths.tmp_dir()
+  expected_spark_version_prefix: "3.5"   # DEC-007 frozen backend
+  aqe_enabled: false                 # AQE OFF (main study) — NOT a tuning choice
+  shuffle_partitions: 200            # Spark SQL out-of-box default (NOT tuned)
+  default_parallelism: null          # null = leave to Spark (out-of-box)
+
+execution:
+  warmup_runs: 2                     # discarded warm-up runs (plan §23)
+  warmup_micro_job: true             # JVM/JIT soak at session start (Day-3 policy)
+  timeout_seconds: 300               # per-run timeout; runaway never stalls queue
+  timeout_grace_seconds: 10
+
+# Day-3 harness settings retained for parity
+workload:
+  baseline_rows: 1000000
+  baseline_scale: "medium"
+  seed: 42
