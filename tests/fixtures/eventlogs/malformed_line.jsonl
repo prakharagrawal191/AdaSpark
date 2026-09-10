@@ -1,0 +1,4 @@
+{"Event": "SparkListenerLogStart", "Spark Version": "3.5.9"}
+{broken json line
+{"Event": "SparkListenerApplicationStart", "App ID": "app-fixture-0004", "Timestamp": 1000}
+{"Event": "SparkListenerApplicationEnd", "Timestamp": 2000}
