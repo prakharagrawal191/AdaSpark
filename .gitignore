@@ -23,6 +23,14 @@ data/**
 results/**
 !results/**/
 !results/**/.gitkeep
+# EXP-002 (Day 22) exception: the raw run manifests, the pre-registered spec snapshot,
+# the attempt log and the gate result ARE the scientific record of the sensitivity gate.
+# They are small (~2 MB of JSON) and are kept under version control so the PASS/FAIL
+# verdict is reproducible from the repository alone. Spark event logs and datasets stay
+# outside the repo (DEC-002) and are still excluded.
+!results/experiments/exp-002/**/*.json
+!results/experiments/exp-002/**/*.md
+!results/experiments/exp-002/attempts.jsonl
 logs/**
 !logs/**/
 !logs/**/.gitkeep

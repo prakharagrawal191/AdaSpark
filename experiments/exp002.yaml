@@ -1,0 +1,119 @@
+# EXP-002 - Configuration-Sensitivity Study (Day 22)
+#
+# PRE-REGISTERED DESIGN. Every value below was fixed BEFORE the first measured
+# observation. The gate criterion in particular comes from the frozen plan and is
+# not derived from, or adjusted after, any result.
+#
+# Authority:
+#   PLAN section 33  EXP-002 | RQ0 (H1/SC1 gate) | ">=10% spread on >=2 families"
+#                    | "12-config grid x F1,F2,F3,F5 x S,M" | 192 runs
+#                    | "GO/pivot decision"
+#   PLAN section 14  configuration set: shuffle.partitions {16,32,64,128}
+#                    x parallelism (local[N] + default.parallelism=N) {2,4,8}
+#   PLAN section 17  B0 = Spark default, out-of-box, pinned (the reference)
+#   PLAN section 18  leakage-guarded train/validation/test split
+#   PLAN section 7   AQE OFF in the main study
+#
+# EXP-002 is a calibration / feasibility gate. It selects nothing, tunes nothing,
+# and implements no RL.
+
+experiment_id: "EXP-002"
+spec_version: "exp002-spec/v1"
+
+# --- scope (PLAN section 33) -------------------------------------------------
+# F4_ski is deliberately ABSENT: PLAN section 18 reserves the skewed family as an
+# unseen TEST family. "large" is deliberately ABSENT: it is the unseen TEST scale.
+families: ["F1_agg", "F2_join", "F3_rdd", "F5_mixed"]
+scales:   ["small", "medium"]
+seeds:    [0]                  # TRAIN seed (PLAN section 18 train seeds = {0,1,2})
+
+# --- repeated-measures design ------------------------------------------------
+# PLAN section 33 budgets EXP-002 at 192 runs for the 12-configuration grid:
+#   12 configs x 4 families x 2 scales x 2 repetitions = 192.
+# The plan fixes the run count but not the rep/seed decomposition; this spec uses
+# 2 measured repetitions at a single TRAIN seed so that a configuration effect is
+# never confounded with dataset-instance variation. See notes.repetition_rationale.
+# Including the B0 reference adds 4 x 2 x 2 = 16 runs -> 208 planned runs.
+repetitions: 2
+include_b0: true
+
+# --- frozen controls ---------------------------------------------------------
+aqe_enabled: false             # PLAN section 7 - never overridden by EXP-002
+warmup_runs: 2                 # identical to B0 (configs/baseline_b0.yaml); warm-up
+                               # runs are executed, discarded, and NEVER measured
+base_config_path: "configs/baseline_b0.yaml"
+
+# --- run order (PLAN prescribes none for EXP-002) ----------------------------
+# Randomized complete block design. Block = (family, scale, rep); each of the 13
+# configurations appears exactly once per block in a seeded-permuted order, so
+# machine drift over a block cannot systematically favour any configuration.
+# The seed below fully reproduces the execution order.
+order_seed: 20022
+
+# --- timeouts (declared in advance, never tuned after observation) -----------
+# PLAN section 11 defines timeout = 5x default-config median. B0 medians are not
+# yet measured at every cell, so a fixed conservative per-scale ceiling is declared
+# up front instead; a timed-out run is recorded as an INVALID observation and is
+# never silently dropped. See notes.timeout_rationale.
+timeouts_by_scale:
+  small: 300.0
+  medium: 900.0
+
+result_root: "results/experiments/exp-002"
+
+# --- sensitivity gate (PLAN H1 / SC1 / section 33 / risk R2) -----------------
+gate:
+  criterion_id: "H1/SC1"
+  metric: "execution_time_s"        # frozen Day-3 authoritative timing
+  statistic: "median"               # PLAN section 22 primary statistic
+  # PLAN H1: "the action space spans >=10% median execution-time difference"
+  min_relative_spread: 0.10
+  # PLAN section 33: ">=10% spread on >=2 families"
+  min_families: 2
+  # H1 speaks about "the action space" = the 12 varied configurations. B0 is the
+  # reference, not a candidate, so the gate statistic excludes it. The
+  # including-reference spread is still computed and reported.
+  scope: "varied_only"
+  # A family counts as sensitive if the criterion holds at one or more of its
+  # measured scales.
+  family_rule: "any_scale"
+  # Noise guard: the observed spread must exceed run-to-run noise. PLAN risk R3 /
+  # EXP-001 fixes the noise criterion at CV <= 10%; EXP-001 has NOT been executed
+  # (see notes.exp001_not_run), so the noise band is estimated from EXP-002's own
+  # within-configuration repetitions and the comparison is reported explicitly.
+  noise_rule: "spread_must_exceed_pooled_within_config_cv"
+  # Minimum usable observations per configuration cell for it to enter the
+  # configuration-level medians at all.
+  min_valid_runs_per_config: 1
+  # A (family, scale) panel is only evaluated if every configuration in the grid
+  # has at least min_valid_runs_per_config usable observations.
+  require_complete_panel: true
+
+notes:
+  repetition_rationale: >
+    PLAN section 33 fixes EXP-002 at 192 runs over the 12-config grid, which
+    decomposes uniquely as 12 x 4 families x 2 scales x 2 repetitions. The plan
+    does not state whether the factor 2 is repetitions or seeds. This spec reads
+    it as 2 measured repetitions at one TRAIN seed: holding the dataset instance
+    fixed isolates the configuration effect, which is exactly what the RQ0
+    sensitivity question asks. Cross-seed robustness is a separate question and
+    is not claimed by EXP-002.
+  timeout_rationale: >
+    PLAN section 11 timeout = 5x default-config median cannot be applied before
+    the reference medians exist at every cell, and deriving it from this study's
+    own early observations would make the stopping rule outcome-dependent. Fixed
+    per-scale ceilings are therefore declared in advance. The measured B0 small
+    medians (Day 17: 1.9-16.7 s) sit far below the 300 s small ceiling.
+  exp001_not_run: >
+    PLAN day 22 schedules EXP-001 (20-run noise profile, median CV <= 10%) before
+    EXP-002. EXP-001 has NOT been executed. EXP-002 therefore estimates run-to-run
+    noise internally from its own within-configuration repetitions (n=2 per cell,
+    pooled across the 13 configurations of a panel). This is a documented
+    deviation and a stated limitation, not a substitute for EXP-001.
+  b0_relationship: >
+    B0 (local[2], shuffle.partitions=200, default.parallelism unset, AQE off) is
+    included as the reference condition and is not one of the 12 candidates. Its
+    medians are also the T_ref calibration source named in PLAN sections 15/33.
+  no_selection: >
+    EXP-002 establishes sensitivity only. It does not select a configuration, does
+    not tune anything, and does not touch the VALIDATION or TEST splits.
