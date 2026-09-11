@@ -1,0 +1,14 @@
+# Frozen reward weights (PLAN section 15). Validated against
+# sparkrl.rl.reward.FROZEN_WEIGHTS at load time - any disagreement is a hard
+# error. These are research constants, NOT tuning parameters.
+reward_schema: "reward/v1"
+formula: "R3"
+
+w_time_improvement: 1.0
+w_task_imbalance: 0.2
+task_cv_reference: 0.5
+w_spill_waste: 0.2
+spill_ratio_reference: 0.10
+w_failure: 1.0
+clip_low: -1.0
+clip_high: 1.0

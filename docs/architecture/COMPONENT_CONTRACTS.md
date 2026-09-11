@@ -53,3 +53,16 @@ ExperimentManifest: exp_id, strategy_id, seeds[], config_fingerprints[], aqe_mod
 CacheKey: workload_id, seed, config_fingerprint, code_version (git sha), env_version (spark|python|java). Key change → miss.
 BaselineResult: strategy_id enum[B0,B0p,B1,B2,B3,B4,RL], manifest_ref.
 EvaluationResult: medians{}, wilcoxon{p}, cliffs_delta, holm_decision, figure_refs[].
+
+## 9. Implemented contract — Day 25 (RL environment) — 2026-09-11
+
+The Day-25 implementation realizes the frozen COMP-RL-06..09 contracts exactly as specified above. Authoritative implementation record: `docs/research/DAY25_RL_ENVIRONMENT_AUDIT.md`. Frozen plan sections: §12 (bandit mode), §13 (state), §14 (actions), §15 (reward), §16 (budget), §18 (splits).
+
+| Frozen contract | Implemented by | Notes |
+|---|---|---|
+| COMP-RL-06 State Encoder | `sparkrl.rl.state.StateEncoder` / `StateVector` | v1 (15) + v1.5 (30) discrete states; bins from dataset manifests; no-history feedback convention `le0` (pinned by tests); unknown schema -> error; missing input size -> error |
+| COMP-RL-07 Action Mapper | `sparkrl.rl.action.ActionMapper` | reuses the frozen EXP-002 grid (12 points, fingerprint-verified); mode4 subset {0,3,6,9}; pre-execution rejection of out-of-domain actions; B0 is reference, never an action |
+| COMP-RL-08 Reward Calculator | `sparkrl.rl.reward.RewardCalculator` + `configs/reward.yaml` | frozen R3 formula; weights frozen-validated at load (tamper -> error); failed/timeout -> exactly -1.0; missing CV/input_bytes -> term 0 + recorded; missing T_ref -> `TRefMissing` BEFORE execution |
+| COMP-RL-09 RL Environment | `sparkrl.rl.env.SparkTuningEnv` | bandit-mode reset/step; guards: split (TRAIN only, `SplitViolation`), budget (default 500, `BudgetExhausted` at episode boundary), episode (`EpisodeDone`); execution fully delegated to `sparkrl.experiments.runner.execute_run`; transition records atomic + deterministic; `cached=False` is the stable COMP-EXP-11 boundary; NO learning/policy/cache implemented |
+
+T_ref source: `sparkrl.rl.tref.TRefStore` (read-only over the EXP-002 gate artifact `t_ref_calibration`, seed 0). Deferred to Day 26+: COMP-RL-10 agent, COMP-EXP-11 cache + durable budget enforcement, COMP-EXP-12 orchestrator.
