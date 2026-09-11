@@ -160,4 +160,25 @@ no orchestration — later components consume `RuntimeMetrics` as-is.
   must use `failed_task_count` to filter deliberately.
 - No claim is made that monitoring overhead ≤5% (EXP-009 decides that), and
   no scientific validation of metric usefulness is claimed.
+## Day-18 Hardening Notes
+
+Day 18 reviewed the parser without redefining any semantic and added:
+
+- `tests/fixtures/eventlogs/valid.expected.json`: hand-checked expectations
+  (21 fields, 21/21 match exactly; pinned by
+  `test_hand_checked_expected_file_matches_parser`).
+- New edge fixtures: `incomplete_nostart.jsonl` (missing LogStart ->
+  INCOMPLETE), `unknown_event.jsonl` (explicit future-type event tolerated),
+  `wallclock_vs_executor.jsonl` (proves wall-clock Finish-Launch is used,
+  NEVER `Executor Run Time` — pinned by
+  `test_task_duration_uses_wall_clock_not_executor_run_time`).
+- Explicit EMPTY vs MALFORMED test (`test_empty_log_distinguished_from_garbage`
+  for the empty-file; garbage-only logs stay MALFORMED).
+- Shuffle double-counting guard (`test_shuffle_stage_level_values_never_summed`):
+  task-level is the single aggregation level; stage handlers read no byte fields.
+- Real-log cross-check (Day-17 `local-1789057871232`, 11.9 MB): COMPLETE,
+  3,757 events, 0 malformed, 0.366 s / 0.49 MB peak, deterministic reparse.
+- Structural validator `scripts/validate_eventlog_parser.py`; full audit in
+  `docs/research/DAY18_EVENTLOG_AUDIT.md`.
+- No parser, workload, B0, RL, or architecture changes on Day 18.
 

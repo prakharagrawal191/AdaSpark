@@ -145,3 +145,83 @@ def test_find_event_log_prefers_application_id(tmp_path):
     (tmp_path / "app-xyz_333").write_text("{}", encoding="utf-8")
     assert find_event_log(tmp_path, "app-xyz").name == "app-xyz_333"
     assert find_event_log(tmp_path / "nope") is None
+
+
+def test_hand_checked_expected_file_matches_parser():
+    """Day-18: the canonical fixture must match valid.expected.json (hand-calc)."""
+    import json
+    expected = json.loads((FIXTURES / "valid.expected.json").read_text())["expected"]
+    log = parse("valid.jsonl")
+    assert log.status.value == expected["status"]
+    assert log.spark_version == expected["spark_version"]
+    assert log.application_id == expected["application_id"]
+    assert log.application_start_ms == expected["application_start_ms"]
+    assert log.application_end_ms == expected["application_end_ms"]
+    assert log.stage_count == expected["stage_count"]
+    assert log.task_end_count == expected["task_count"]
+    assert log.failed_task_count == expected["failed_task_count"]
+    assert log.shuffle_read_bytes == expected["shuffle_read_bytes"]
+    assert log.shuffle_write_bytes == expected["shuffle_write_bytes"]
+    assert log.memory_spill_bytes == expected["memory_spill_bytes"]
+    assert log.disk_spill_bytes == expected["disk_spill_bytes"]
+    assert log.memory_spill_bytes + log.disk_spill_bytes == expected["total_spill_bytes"]
+    assert log.task_duration_mean_s == pytest.approx(expected["task_duration_mean_s"])
+    assert log.task_duration_median_s == pytest.approx(expected["task_duration_median_s"])
+    assert log.task_duration_std_s == pytest.approx(expected["task_duration_std_s"])
+    assert log.task_duration_cv == pytest.approx(expected["task_duration_cv"])
+    assert ((log.application_end_ms - log.application_start_ms) / 1000
+            == pytest.approx(expected["applicaton_wall_time_s"]))
+    assert sum(log.unknown_event_types.values()) == expected["unknown_event_count"]
+    assert log.malformed_lines == expected["malformed_lines"]
+    assert log.aqe_enabled == expected["aqe_enabled"]
+
+
+def test_incomplete_log_missing_log_start():
+    """AppStart + AppEnd but no SparkListenerLogStart -> INCOMPLETE."""
+    log = parse("incomplete_nostart.jsonl")
+    assert log.status == EventLogStatus.INCOMPLETE
+    assert log.application_id == "app-fixture-nostart"
+    assert log.task_end_count == 1  # metrics still extracted for diagnostics
+    assert log.shuffle_write_bytes == 7
+
+
+def test_unknown_event_tolerated_and_counted():
+    """Explicit unknown event type: tolerated, counted, metrics intact."""
+    log = parse("unknown_event.jsonl")
+    assert log.status == EventLogStatus.COMPLETE
+    assert log.unknown_event_types == {"SparkListenerFutureOrUnknownEvent": 1}
+    assert log.task_end_count == 1
+    assert log.shuffle_write_bytes == 100
+
+
+def test_task_duration_uses_wall_clock_not_executor_run_time():
+    """Durations = Finish-Launch, NOT 'Executor Run Time' (they differ here)."""
+    # wall-clock [3.0, 1.0] -> mean 2.0, median 2.0, std 1.4142, cv 0.7071
+    log = parse("wallclock_vs_executor.jsonl")
+    assert log.task_duration_mean_s == pytest.approx(2.0)
+    assert log.task_duration_median_s == pytest.approx(2.0)
+    assert log.task_duration_std_s == pytest.approx(2.0 ** 0.5)
+    assert log.task_duration_cv == pytest.approx(2.0 ** 0.5 / 2.0)
+    # Would differ if Executor Run Time (0.75s, 0.25s) were used instead.
+
+
+def test_shuffle_stage_level_values_never_summed():
+    """StageSubmitted carries 'Stage Info' with no task metrics; shuffle comes
+    only from TaskEnd metrics (single authoritative level)."""
+    log = parse("valid.jsonl")
+    # If stage-level values had been summed the totals could not stay 1350/1200:
+    # Stage IDs 0 and 1 have no byte fields, so any stage-level contribution
+    # would have corrupted the hand-checked totals.
+    assert log.shuffle_read_bytes == 1350
+    assert log.shuffle_write_bytes == 1200
+    by_task = 350 + 0 + 1000
+    assert log.shuffle_read_bytes == by_task
+
+
+def test_empty_log_distinguished_from_garbage():
+    empty = parse("empty.jsonl")
+    garbage = parse("garbage.jsonl")
+    assert empty.total_lines == 0 and empty.parsed_lines == 0
+    assert empty.status == EventLogStatus.INCOMPLETE  # missing both markers
+    assert garbage.total_lines > 0 and garbage.parsed_lines == 0
+    assert garbage.status == EventLogStatus.MALFORMED
