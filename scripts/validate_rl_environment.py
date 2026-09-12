@@ -122,10 +122,37 @@ def _part2() -> int:
     exp_files = [p.name for p in (PROJECT / "scripts").glob("*exp00[135]*")]
     check("12 no_exp001_003_005", not exp_files, str(exp_files))
 
-    # 13. agent module still empty (COMP-RL-10 is Day 26+)
-    agent_init = PROJECT / "src" / "sparkrl" / "agent" / "__init__.py"
-    ok = agent_init.exists() and len(agent_init.read_text(encoding="utf-8").strip()) == 0
-    check("13 agent_placeholder_empty", ok)
+    # 13. agent package holds the Day-26 learner and NOTHING from a future day.
+    #     Day 25 asserted this package was EMPTY (COMP-RL-10 was Day 26+). Day 26
+    #     legitimately populated it, so the empty-file assertion is STALE and was
+    #     corrected on Day 28. The invariant that survives the Day-26 freeze is
+    #     narrower but not weaker: the COMP-RL-10 learner is present and exported,
+    #     only the three Day-26 modules exist, and no prohibited future learning
+    #     component (deep RL, replay, target network, cache) has appeared.
+    agent_dir = PROJECT / "src" / "sparkrl" / "agent"
+    agent_init = agent_dir / "__init__.py"
+    modules = sorted(f.name for f in agent_dir.glob("*.py"))
+    allowed = {"__init__.py", "q_learning.py", "q0.py", "policy_store.py"}
+    unexpected = sorted(set(modules) - allowed)
+    exports = ("QLearningAgent", "AgentConfig", "build_q0_from_exp002",
+               "save_policy", "load_policy")
+    init_src = agent_init.read_text(encoding="utf-8") if agent_init.exists() else ""
+    missing = [e for e in exports if e not in init_src]
+    forbidden = re.compile(
+        r"DQN|PPO|actor_critic|ActorCritic|policy_gradient|"
+        r"replay_buffer|ReplayBuffer|target_network|TargetNetwork|"
+        r"torch|tensorflow|keras|stable_baselines|"
+        r"cache_hit|cache_lookup|CacheKey")
+    fneg = re.compile(r"no (DQN|PPO|replay|target|cache|neural|deep)", re.IGNORECASE)
+    drift = []
+    for f in sorted(agent_dir.glob("*.py")):
+        for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            if forbidden.search(line) and not line.lstrip().startswith("#")                     and not fneg.search(line):
+                drift.append(f"{f.name}:{i}: {line.strip()[:70]}")
+    ok = not unexpected and not missing and not drift
+    check("13 agent_package_day26_only", ok,
+          f"modules={modules}; missing COMP-RL-10 exports={missing or 'none'}; "
+          f"unexpected={unexpected or 'none'}; forbidden={drift[:2] or 'none'}")
 
     # 14. EXP-002 gate artifact intact (untouched by Day 25)
     try:
