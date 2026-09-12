@@ -17,3 +17,18 @@ training_seeds: [0, 1, 2]  # frozen training seeds (PLAN section 16)
 live_execution_cap: 500    # frozen cap (PLAN section 16 / SC6); env owns the guard
 
 policy_dir: "models/policies"
+
+# --- Day-27 training loop (additive; PLAN section 16 / PLAN line 273) ---------
+# Operational run lengths (episode counts) are deliberately NOT here: PLAN
+# freezes no episode count, so they live on the CLI and can never masquerade
+# as frozen constants.
+training:
+  loop_version: "training-loop/v1"
+  epoch_definition: "one_full_pass_over_the_planned_cell_cycle"  # Day-27 D1
+  checkpoint_every_episodes: 25   # PLAN section 16 (frozen-validated == 25)
+  early_stop_stable_epochs: 2     # PLAN section 16 (frozen-validated == 2)
+  dataset_seed: 0                 # MEASURED: T_ref is calibrated for DATASET
+                                  # seed 0 only; TRefStore.get returns None
+                                  # otherwise and env.step raises TRefMissing
+  run_root: "results/training"
+  smoke_run_root: "results/training/smoke"

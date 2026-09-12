@@ -79,3 +79,67 @@ Day-26 implementation realizes COMP-RL-10 (frozen PLAN section 16). See `docs/re
 | Offline Q0 | `sparkrl.agent.q0.build_q0_from_exp002` | EXP-002 TRAIN records only (LeakageError otherwise); per-observation frozen R3 reward vs T_ref; median aggregation (PLAN section 22); B0 excluded; unnormalizable counted+skipped; evidence-free pairs default +0.5 |
 | Policy store | `sparkrl.agent.policy_store` | `policy/v1` JSON, fingerprint identity (excludes policy_id/created_utc); immutable (PolicyExistsError); verified load (PolicyCorrupt / PolicyVersionMismatch) |
 | Deferred | COMP-EXP-11 cache + durable budget; orchestrator | not implemented |
+
+## 11. Implemented contract — Day 27 (training loop) — 2026-09-12
+
+
+
+Day-27 implementation realizes PLAN line 273 (epsilon schedule; checkpoints; budget guard; smoke training) over the frozen COMP-RL-09 environment and COMP-RL-10 agent. It adds no new frozen contract: the loop is the driver that composes them. See `docs/research/DAY27_TRAINING_LOOP_AUDIT.md`.
+
+
+
+| Frozen element | Implemented by | Notes |
+
+|---|---|---|
+
+| Training loop | `sparkrl.training.loop.run_training` (`training-loop/v1`) | owns the schedule, episode log, manifest, checkpoint cadence, epoch/early-stop rule and the `last_reward` thread; owns no Spark, no reward, no T_ref, no budget counter; `env` is duck-typed (real env or unit-test fake) |
+
+| Episode schedule | `trainable_cells` + `plan_episodes` | DERIVED from `TRefStore.calibrated_keys()` x `split_of() == TRAIN` at dataset seed 0 (7 cells; `F3_rdd|medium` excluded, reason `t_ref_null`); fixed RNG-free round-robin over sorted cells; `rep = epoch index` keeps each transition record path unique |
+
+| Epsilon schedule | `agent.end_episode()` | called exactly once per completed episode, after the update; the loop performs no epsilon arithmetic; `epsilon_used` on line k == `epsilon_after` on line k-1 |
+
+| Checkpoints | `policy_store.build_policy_artifact` + `save_policy` | every 25 episodes AFTER `end_episode()`, plus one final checkpoint on any clean stop; none after a mid-step interrupt or an abort; write-only (resume deferred to Day 28+); written to `<run_dir>/checkpoints`, never `models/policies/`; `init_provenance` stays pure Q0 provenance so ids remain content-addressed |
+
+| Early stop | `greedy_snapshot` over `agent.q_table()` | epoch = one full pass over the planned cell cycle (`episodes_per_epoch = len(cells)`, derived); fires on 3 identical consecutive snapshots (2 stable comparisons); never probes via `select_action`/`q_values` (both would perturb the run); a budget-saving heuristic, never evidence of convergence |
+
+| Budget guard | `env.budget_remaining` / `BudgetExhausted` | the loop keeps no counter; `--budget` may only LOWER the frozen 500 cap; pre-flight refuses `episodes > budget_limit` before any Spark; `BudgetExhausted` is a clean stop (`truncated`, exit 0); smoke executions COUNT against SC6; cross-run totals are REPORTED by `scripts/validate_rl_training.py`, enforcement is COMP-EXP-11 (deferred) |
+
+| Records | `episodes.jsonl` (append + flush + fsync) + `manifest.json` (tmp + `os.replace`) | `rl-training-episode/v1` and `rl-training-run/v1`; join via `env_run_id` + `transition_record_relpath` (and `episode_key`/`rep` back from the env record); reward is COPIED from `env.step` and names its source; no metrics and no `execution_time_s` copied; every manifest carries a machine-readable `learning_claim` block asserting no learning/convergence claim |
+
+| Configuration | `configs/rl.yaml` `training:` block + `TrainingConfig.from_yaml` | additive block only; hard-errors (`RLConfigError`) on drift of 25 / 2 / dataset seed 0 / the epoch definition / `live_execution_cap: 500` / `training_seeds: [0,1,2]`; episode counts deliberately live on the CLI, not in config |
+
+| Seeds | `agent_rng_seed` vs `dataset_seed` | `agent_rng_seed` = PLAN section 16 training seed = EXPLORATION replicate (reaches `QLearningAgent(rng_seed=)` only); `dataset_seed` = workload instance seed, fixed 0 because T_ref is calibrated for dataset seed 0 only; both names appear on every record, no bare `seed` key, and the CLI has no `--seed` flag |
+
+| Deferred | resume-from-checkpoint; COMP-EXP-11 cache + durable budget; COMP-EXP-12 orchestrator | not implemented |
+
+
+
+Open item for the operator, recorded not resolved: section 3's *conceptual*
+
+signature list above says `Agent.update(...)` is "skipped on failure
+
+episodes", while PLAN sections 10/13/15 make a failure a first-class
+
+observation with reward -1. The Day-27 loop follows PLAN and applies the
+
+update on failed episodes; sign-off is requested before the Day-28 run
+
+(`DAY27_TRAINING_LOOP_AUDIT.md` section 12).
+
+Review record (Day 27). The workflow's Fix agent and its frozen-drift review
+lens were rate-limited and never ran; the remaining findings were verified and
+applied by the operator afterwards. Applied: a pre-execution `env.step` guard
+(`TRefMissing` / `SplitViolation` / `EpisodeDone` / `BudgetExhausted`) no
+longer stamps `interrupted_mid_step` or an uncertain budget story, because the
+execution counter is exact in that case; `visited_state_keys` is now reset at
+each epoch boundary (it had been ACCUMULATING across epochs, so epoch 2
+reported keys it never visited - caught by
+`test_visited_state_keys_are_scoped_to_their_own_epoch`); the calibration
+refusal for dataset seeds 1/2 no longer reads as a split refusal; the rep
+handed to `env.reset` is now pinned by a test; and the audit's abort-coverage
+and test-count claims were corrected. One review test that asserted a mid-step
+`KeyboardInterrupt` propagates was removed: the loop catches it and returns
+exit 130, which `test_interrupt_during_step_writes_no_checkpoint` already
+covers. NOT independently reviewed: the frozen-drift lens (its one known
+defect, a UTF-8 double-encode of this file, was found and reverted by the
+operator).
