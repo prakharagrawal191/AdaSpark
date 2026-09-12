@@ -1,0 +1,19 @@
+# Frozen RL learner configuration (PLAN section 16; COMP-RL-10).
+# Validated at load against the frozen values - these are research constants,
+# NOT tuning parameters. Any disagreement is a hard error.
+rl_config_schema: "rl-config/v1"
+learner: "tabular-q"
+
+alpha: 0.2                 # frozen learning rate (PLAN section 16)
+gamma: 0.0                 # bandit mode (PLAN section 12); 0.9 = multi-step, gated Day 30
+epsilon_start: 1.0         # frozen epsilon schedule
+epsilon_min: 0.05
+epsilon_decay: 0.95        # applied per episode
+q0_default: 0.5            # optimistic init for evidence-free pairs (PLAN section 16)
+q0_source: "exp002"        # offline Q0 from authorized EXP-002 TRAIN records only
+q0_aggregation: "median"   # PLAN section 22 primary statistic
+
+training_seeds: [0, 1, 2]  # frozen training seeds (PLAN section 16)
+live_execution_cap: 500    # frozen cap (PLAN section 16 / SC6); env owns the guard
+
+policy_dir: "models/policies"

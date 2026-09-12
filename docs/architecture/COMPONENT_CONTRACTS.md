@@ -66,3 +66,16 @@ The Day-25 implementation realizes the frozen COMP-RL-06..09 contracts exactly a
 | COMP-RL-09 RL Environment | `sparkrl.rl.env.SparkTuningEnv` | bandit-mode reset/step; guards: split (TRAIN only, `SplitViolation`), budget (default 500, `BudgetExhausted` at episode boundary), episode (`EpisodeDone`); execution fully delegated to `sparkrl.experiments.runner.execute_run`; transition records atomic + deterministic; `cached=False` is the stable COMP-EXP-11 boundary; NO learning/policy/cache implemented |
 
 T_ref source: `sparkrl.rl.tref.TRefStore` (read-only over the EXP-002 gate artifact `t_ref_calibration`, seed 0). Deferred to Day 26+: COMP-RL-10 agent, COMP-EXP-11 cache + durable budget enforcement, COMP-EXP-12 orchestrator.
+
+## 10. Implemented contract — Day 26 (tabular Q agent + policy store) — 2026-09-x
+
+Day-26 implementation realizes COMP-RL-10 (frozen PLAN section 16). See `docs/research/DAY26_RL_AGENT_AUDIT.md`.
+
+| Frozen element | Implemented by | Notes |
+|---|---|---|
+| Agent | `sparkrl.agent.q_learning.QLearningAgent` (`tabular-q/v1`) | Q key = `StateVector.key()`; rows 12-wide (frozen action order); alpha=0.2, gamma in {0.0, 0.9}, eps 1.0 -> 0.05 @ 0.95/episode, Q0 default +0.5 (configs/rl.yaml, frozen-validated) |
+| Update rule | `QLearningAgent.update` | Q += alpha*(r + gamma*maxQ(s'') - Q); terminal never bootstraps; invalid transition -> Q untouched + raise |
+| Epsilon-greedy | `select_action` / `end_episode` | seeded RNG owned by the agent; lowest-index tie-break; mode4 = selection subset {0,3,6,9} |
+| Offline Q0 | `sparkrl.agent.q0.build_q0_from_exp002` | EXP-002 TRAIN records only (LeakageError otherwise); per-observation frozen R3 reward vs T_ref; median aggregation (PLAN section 22); B0 excluded; unnormalizable counted+skipped; evidence-free pairs default +0.5 |
+| Policy store | `sparkrl.agent.policy_store` | `policy/v1` JSON, fingerprint identity (excludes policy_id/created_utc); immutable (PolicyExistsError); verified load (PolicyCorrupt / PolicyVersionMismatch) |
+| Deferred | COMP-EXP-11 cache + durable budget; orchestrator | not implemented |
