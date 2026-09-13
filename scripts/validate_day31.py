@@ -715,6 +715,10 @@ def main(argv: list[str] | None = None) -> int:
     unknown = sorted(p.name for p in ARTIFACT_DIR.glob("*.json")
                      if p.name not in ("evaluation_spec.json",
                                        "baseline_selection.json",
+                                       # forensic recovery of the 96 run
+                                       # identities; carries NO authoritative
+                                       # timing and no research claim
+                                       "validation_observations.json",
                                        "test_freeze.json")) \
         if ARTIFACT_DIR.is_dir() else []
     check("26 no EXP-005/005b/006 artifact", not future and not stored_executed
