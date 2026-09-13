@@ -568,3 +568,94 @@ Supervisor counter-signature follows the same pending path as the M2 freeze
 signature"); this entry is the artifact to counter-sign.
 
 **Status.** **DECIDED** - mode gate resolved NO; multi-step not enabled; gamma = 0.0 retained; ablation A5 not run; scope-tier rung 1 under risk R8 consumed; plan defect (a frozen gate with no criterion) recorded. No code, test, configuration, hyperparameter or stored result changed. Day-30 execution budget spent: ZERO (ledger unchanged at 232 of 500).
+
+## DEC-012 | 2026-09-13 | EXP-003 budget reconciliation — B1/B2 selection is a separate authorized phase (Day 31)
+
+**Decision.** **APPROVED — Option B.** The PLAN line 310 register estimate of
+"~30" is interpreted as the B0/B1/B2 comparison at ONE repetition (3 strategies ×
+8 validation cells = 24), and the 96-run B1/B2 selection grid is authorized as a
+SEPARATE, REQUIRED phase that the register never budgeted. Authorized validation
+spend: **96 (selection) + 120 (EXP-003 comparison at the frozen 5 repetitions) =
+216 executions.**
+
+**Context.** Day 31 built the evaluation harness and froze the TEST identity but
+could not freeze B1/B2: no seed-3 observation exists anywhere in the repository
+(EXP-002 is seed 0/train, training is seeds 0/1/2, baseline is seed 0). B2 is
+defined at PLAN line 154 as "best validation-grid config per family", which
+cannot be evaluated without a validation grid the register does not fund.
+
+**Plan defect recorded.** PLAN line 310 budgets ~30 for EXP-003 while its own
+B1/B2 definitions require 216 — a difference of 186, or 7.2x. The estimate covers
+the comparison alone at one repetition and omits the selection grid entirely.
+This is recorded, in the manner DEC-010 recorded the missing precedence rule and
+DEC-011 the missing gate criterion, so the omission cannot recur silently.
+
+**Budget scope.** EXP-003 is a separate register line and is NOT charged to SC6's
+≤500 TRAINING cap (PLAN line 45), which stands at 232/500 and is untouched by
+this decision.
+
+**Affected.** EXP-003; Day 31's "configs frozen" deliverable; Day 32 (EXP-005),
+which stays blocked until B1/B2 are empirically frozen. No code, hyperparameter or
+stored result changes under this entry.
+
+**Approval.** Recorded by the operator on 2026-09-13. Working record:
+`docs/research/DEC_012_EXP003_B1B2_RECONCILIATION.md`. Supervisor
+counter-signature follows the M2-freeze path.
+
+**Status.** **DECIDED** — 216 validation executions authorized; budget
+discrepancy reconciled and recorded as a plan defect.
+
+
+## DEC-013 | 2026-09-13 | Validation execution gate (Model B) and selection repetitions (1 rep)
+
+**Decision.** Two linked questions, both **APPROVED**:
+
+1. **Selection repetitions — ONE.** Candidate-grid selection is TUNING, not
+   evaluation, so the frozen median-of-5 rule does not bind it. B1/B2 selection
+   runs at 1 repetition (96 runs); the EXP-003 comparison remains at the frozen 5
+   repetitions (120). Textual basis: PLAN line 163 describes the validation split
+   as "B1/B2 **tuning** + hyperparameters", while the 5-repetition rule is scoped
+   to evaluation (PLAN line 141 "evaluation uses median-of-5 repetitions only";
+   line 184 "all evaluation = 5 repetitions"). PLAN never states which rule
+   governs selection; that silence is the defect recorded here.
+
+2. **Execution gate — Model B.** The EXP-003 calibration stage supplies its OWN
+   split authorization, admitting VALIDATION only. `assert_train_only` is NOT
+   widened and keeps its exact semantics: it still refuses every validation and
+   every test cell, and still accepts train.
+
+**Why a separate authorization was needed.** Authorizing a BUDGET is not
+authorizing an EXECUTION PATH. Verified by running the code:
+`sparkrl.experiments.runner.execute_run` called `assert_train_only` first, which
+raises `ValueError` for every seed-3 cell, so Spark never started. Approving
+DEC-012 alone would have unblocked nothing.
+
+**Implementation, stated precisely.** Model B as drafted said "frozen path
+untouched". That is achievable in BEHAVIOUR but not in file bytes: the only
+alternatives were an additive parameter on `execute_run` or duplicating the
+runner, and duplication is forbidden by the architecture (COMP-SPARK-04 owns
+execution). `execute_run` therefore gained ONE keyword-only parameter,
+`split_guard`, defaulting to `assert_train_only`, so every pre-existing caller
+retains identical behaviour; the default is pinned by a unit test. The
+calibration entry point `sparkrl.evaluation.orchestration.execute_validation_run`
+passes `authorize_validation_cell` instead. This deviation from the drafted
+wording is recorded rather than glossed.
+
+**TEST is unaffected and remains sealed.** No guard admits TEST.
+`assert_test_execution_permitted()` raises `TestSplitSealed` unconditionally and
+`execute_test_run` is unreachable. TEST execution belongs to EXP-005 (Days 32-33)
+and EXP-006 (Day 34), and crossing that boundary needs its own decision.
+
+**Affected.** `sparkrl/experiments/runner.py` (one additive parameter, default
+behaviour preserved); `sparkrl/evaluation/orchestration.py`; `.gitignore` (a
+Day-31 exception so the TEST-freeze and evaluation-spec artifacts that Days 32-34
+must verify fingerprints against are version-controlled, as the EXP-002 record
+already is). No hyperparameter, no reward, no policy, no stored result changes.
+
+**Approval.** Recorded by the operator on 2026-09-13. Working record:
+`docs/research/DEC_013_VALIDATION_EXEC_GATE_AND_SELECTION_REPS.md`. Supervisor
+counter-signature follows the M2-freeze path.
+
+**Status.** **DECIDED** — selection at 1 repetition; validation execution
+authorized via a dedicated calibration guard; TRAIN semantics and the TEST seal
+both unchanged.

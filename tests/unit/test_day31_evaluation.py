@@ -465,3 +465,96 @@ def test_evaluation_specification_is_reproducible(monkeypatch):
     # The declared design must stay tied to the real frozen grid.
     assert [c["name"] for c in spec["frozen_configurations"]["candidates"]] == \
         [c.name for c in CANDIDATES]
+
+
+# --- DEC-013 Model B: the calibration execution gate -------------------------
+# These pin the ONE thing that could go wrong when a frozen guard is made
+# pluggable: that the default silently stops being TRAIN-only.
+
+def test_execute_run_split_guard_defaults_to_the_untouched_train_guard():
+    import inspect
+
+    from sparkrl.experiments.runner import execute_run
+    from sparkrl.experiments.spec import assert_train_only
+
+    default = inspect.signature(execute_run).parameters["split_guard"].default
+    assert default is assert_train_only
+
+
+def test_the_train_guard_itself_is_semantically_unchanged():
+    """assert_train_only must still refuse validation AND test, and accept train."""
+    from sparkrl.experiments.spec import assert_train_only
+
+    assert_train_only("F1_agg", "small", 0)                 # TRAIN: accepted
+    for cell in (("F1_agg", "small", 3),                    # VALIDATION
+                 ("F4_ski", "small", 0),                    # TEST family
+                 ("F1_agg", "large", 0),                    # TEST scale
+                 ("F1_agg", "small", 4)):                   # TEST seed
+        with pytest.raises(ValueError):
+            assert_train_only(*cell)
+
+
+def test_calibration_path_supplies_a_validation_guard_and_never_runs_spark(
+        monkeypatch):
+    """execute_validation_run must reach execute_run with the VALIDATION guard."""
+    import sparkrl.experiments.runner as runner
+    from sparkrl.evaluation.orchestration import execute_validation_run
+    from sparkrl.evaluation.spec import authorize_validation_cell
+    from sparkrl.experiments.spec import assert_train_only
+
+    seen = {}
+
+    # the fake must honour the real contract, or preflight_blockers() correctly
+    # reports the substitute as unable to take a caller-supplied guard
+    def fake_execute_run(run_spec, base_config, *,
+                         split_guard=assert_train_only, **kwargs):
+        seen["guard"] = split_guard
+        seen["cell"] = (run_spec.family, run_spec.scale, run_spec.seed)
+        return ("metrics-sentinel", {"provenance": True})
+
+    monkeypatch.setattr(runner, "execute_run", fake_execute_run)
+
+    spec_obj = _validation_run_spec()          # helper defined below
+    out = execute_validation_run(spec_obj, base_config=None)
+
+    assert out == ("metrics-sentinel", {"provenance": True})
+    assert seen["guard"] is authorize_validation_cell
+    assert seen["cell"][2] == 3                # seed 3 == VALIDATION
+
+
+def test_calibration_path_still_refuses_a_test_cell(monkeypatch):
+    import sparkrl.experiments.runner as runner
+    from sparkrl.evaluation.orchestration import execute_validation_run
+
+    def must_not_run(run_spec, base_config, *,
+                     split_guard=None, **k):   # pragma: no cover - must not fire
+        raise AssertionError("Spark path reached for a TEST cell")
+
+    monkeypatch.setattr(runner, "execute_run", must_not_run)
+    with pytest.raises(Exception):
+        execute_validation_run(_test_run_spec(), base_config=None)
+
+
+def test_preflight_reports_no_blocker_once_the_gate_is_authorized():
+    from sparkrl.evaluation.orchestration import preflight_blockers
+
+    assert preflight_blockers() == []
+
+
+def _run_spec_for(family, scale, seed):
+    from sparkrl.experiments.grid import build_grid
+    from sparkrl.experiments.spec import RunSpec, split_of
+
+    point = [p for p in build_grid(include_b0=False)][0]
+    return RunSpec(run_id=f"cal-{family}-{scale}-s{seed}", family=family,
+                   scale=scale, seed=seed, rep=1, config=point,
+                   split=split_of(family, scale, seed), timeout_seconds=60.0,
+                   order_index=0, block_id="calibration")
+
+
+def _validation_run_spec():
+    return _run_spec_for("F1_agg", "small", 3)
+
+
+def _test_run_spec():
+    return _run_spec_for("F4_ski", "large", 4)

@@ -31,6 +31,12 @@ results/**
 !results/experiments/exp-002/**/*.json
 !results/experiments/exp-002/**/*.md
 !results/experiments/exp-002/attempts.jsonl
+# Day-31 evaluation freeze exception (DEC-013): the TEST-split identity freeze and
+# the evaluation specification are the artifacts Days 32-34 must verify their
+# fingerprints against. Like the EXP-002 record they are small JSON and belong in
+# version control, or the freeze is not reproducible from the repository alone.
+# Measured evaluation OBSERVATIONS are not covered here and stay excluded.
+!results/evaluation/*.json
 logs/**
 !logs/**/
 !logs/**/.gitkeep

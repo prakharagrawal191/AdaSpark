@@ -263,13 +263,23 @@ def verify_applied(run_spec: RunSpec, applied: dict[str, Any]) -> list[str]:
 
 def execute_run(run_spec: RunSpec, base_config, *,
                 sysmon_enabled: bool = True,
-                version: str | None = None) -> tuple[RunMetrics, dict[str, Any]]:
+                version: str | None = None,
+                split_guard: Callable[[str, str, int], None] = assert_train_only,
+                ) -> tuple[RunMetrics, dict[str, Any]]:
     """Execute exactly one measured observation. Returns (metrics, provenance).
 
     Raises nothing for workload/Spark failures: those surface as a RunMetrics with
     ``usable=False``. Only programming/environment errors propagate.
+
+    ``split_guard`` is the split authorization applied BEFORE anything runs. It
+    defaults to ``assert_train_only``, so every pre-existing caller keeps exactly
+    the TRAIN-only behaviour it had; the default is pinned by a unit test. DEC-013
+    (Model B) authorizes the EXP-003 calibration stage to pass
+    ``sparkrl.evaluation.spec.authorize_validation_cell`` instead, which admits
+    VALIDATION cells and nothing else. No guard admits TEST: the test split stays
+    sealed behind ``TestSplitSealed`` until EXP-005/006.
     """
-    assert_train_only(run_spec.family, run_spec.scale, run_spec.seed)
+    split_guard(run_spec.family, run_spec.scale, run_spec.seed)
 
     cfg = run_spec.config.apply_to(base_config).with_overrides(
         timeout_seconds=run_spec.timeout_seconds)

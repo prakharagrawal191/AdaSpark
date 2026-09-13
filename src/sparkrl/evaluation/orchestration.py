@@ -81,20 +81,34 @@ def preflight_blockers() -> list[str]:
     Probed at runtime rather than asserted in prose, so the answer cannot drift
     from the code. Nothing here weakens or edits a guard; it only reports.
     """
+    import inspect
+
+    from sparkrl.experiments.runner import execute_run
     from sparkrl.experiments.spec import assert_train_only
 
     blockers: list[str] = []
     family, scale, seed = validation_cells()[0]
+
+    # 1. the calibration authorization must admit this validation cell
     try:
-        assert_train_only(family, scale, seed)
-    except ValueError as exc:
+        authorize_validation_cell(family, scale, seed)
+    except Exception as exc:                       # noqa: BLE001 - reported, not raised
         blockers.append(
-            "sparkrl.experiments.runner.execute_run calls "
-            "sparkrl.experiments.spec.assert_train_only, an EXP-002-scoped guard "
-            "that refuses VALIDATION cells: " + str(exc) + " Executing the EXP-003 "
-            "validation queue therefore requires the operator to widen that guard "
-            "to admit EXP-003 validation cells (a frozen-module change recorded as "
-            "a DEC). Day 31 reports this and does not weaken the guard.")
+            "the DEC-013 calibration authorization refuses the validation cell "
+            f"{family}/{scale}/seed{seed}: {exc}")
+
+    # 2. execute_run must accept a caller-supplied guard (DEC-013 Model B), and
+    #    its DEFAULT must still be the untouched TRAIN-only guard.
+    params = inspect.signature(execute_run).parameters
+    if "split_guard" not in params:
+        blockers.append(
+            "sparkrl.experiments.runner.execute_run does not accept split_guard, "
+            "so the calibration stage cannot supply its own authorization "
+            "(DEC-013 Model B). The EXP-003 validation queue cannot execute.")
+    elif params["split_guard"].default is not assert_train_only:
+        blockers.append(
+            "execute_run's split_guard default is not assert_train_only; the "
+            "frozen TRAIN-only behaviour of every other caller is not preserved.")
     return blockers
 
 
@@ -107,6 +121,10 @@ def execute_validation_run(run_spec: RunSpec, base_config: Any, **kwargs: Any):
 
     from sparkrl.experiments.runner import execute_run   # lazy: keeps import light
 
+    # DEC-013 Model B: the calibration stage supplies its OWN authorization,
+    # which admits VALIDATION only. assert_train_only is untouched and remains
+    # execute_run's default for every other caller.
+    kwargs.setdefault("split_guard", authorize_validation_cell)
     return execute_run(run_spec, base_config, **kwargs)
 
 

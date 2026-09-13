@@ -1,0 +1,521 @@
+{
+  "aqe_enabled": false,
+  "artifact_id": "e9c4777047cf4454ffe5f318b3b8883dea89535ce585ebdc5af9f735fd85ae16",
+  "baselines": {
+    "B0": {
+      "definition": "Spark default, out-of-box settings pinned",
+      "selected": false,
+      "source": "configs/baseline_b0.yaml"
+    },
+    "B1": {
+      "definition": "Static global: one config tuned on validation, used everywhere",
+      "scope": "global",
+      "selected_on": "validation"
+    },
+    "B2": {
+      "definition": "Static per-family: best validation-grid config per family",
+      "scope": "per_family",
+      "selected_on": "validation"
+    }
+  },
+  "created_utc": "2026-09-13T09:09:51.501860+00:00",
+  "declared_on": "Day 31 (PLAN line 277)",
+  "eligibility": {
+    "min_usable_per_cell": 1,
+    "note": "medians over different cell panels are not comparable, so a candidate missing a cell is reported ineligible, not ranked"
+  },
+  "executed": false,
+  "experiment_id": "EXP-003",
+  "failure_handling": {
+    "statuses": [
+      "COMPLETED",
+      "INCOMPLETE",
+      "FAILED",
+      "SKIPPED"
+    ],
+    "timeout_seconds": 300.0,
+    "unusable_runs": "counted and reported, never silently dropped",
+    "validity_rule": "an observation counts only when RunMetrics.usable is true (sparkrl.monitoring.merge, Day 19)"
+  },
+  "fairness": "identical code path, seeds, repetitions, warm-up and timeouts for every strategy (PLAN section 17)",
+  "fingerprint": "e9c4777047cf4454ffe5f318b3b8883dea89535ce585ebdc5af9f735fd85ae16",
+  "frozen_configurations": {
+    "candidate_count": 12,
+    "candidates": [
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 2,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 2
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 16
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "9040c9139a0790e54b2777cf59a64b70eb935cf2468676e2f8b2ee7773968566",
+        "grid_index": 0,
+        "is_reference": false,
+        "master": "local[2]",
+        "name": "G-p2-sp16",
+        "parallelism": 2,
+        "shuffle_partitions": 16
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 2,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 2
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 32
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "4ccee9de90da3c7490f7b15fce7af1dc038fcd167914e5b0da93bfeda2dd5040",
+        "grid_index": 1,
+        "is_reference": false,
+        "master": "local[2]",
+        "name": "G-p2-sp32",
+        "parallelism": 2,
+        "shuffle_partitions": 32
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 2,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 2
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 64
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "1f0354b413cd4b6c1bdc58e119f7d8202b7c4c184b48b6b7bb892c2f6be1762d",
+        "grid_index": 2,
+        "is_reference": false,
+        "master": "local[2]",
+        "name": "G-p2-sp64",
+        "parallelism": 2,
+        "shuffle_partitions": 64
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 2,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 2
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 128
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "921abcca4f95a777f47aa8d1c6ee17fbccf75b9917b3092ad2a5d54c5d02fe9b",
+        "grid_index": 3,
+        "is_reference": false,
+        "master": "local[2]",
+        "name": "G-p2-sp128",
+        "parallelism": 2,
+        "shuffle_partitions": 128
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 4,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 4
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[4]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 16
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "b50eb9bb4715b8781183cb1895cbf28e56e124b0f042215c21d81310913766c4",
+        "grid_index": 4,
+        "is_reference": false,
+        "master": "local[4]",
+        "name": "G-p4-sp16",
+        "parallelism": 4,
+        "shuffle_partitions": 16
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 4,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 4
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[4]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 32
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "4d5cc9734c803120b0ad75a651dda34fce2e55a661e6bdc15e2e2596cd9447eb",
+        "grid_index": 5,
+        "is_reference": false,
+        "master": "local[4]",
+        "name": "G-p4-sp32",
+        "parallelism": 4,
+        "shuffle_partitions": 32
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 4,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 4
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[4]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 64
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "1a0b1a51173785a97d50401fc668f988025b83e5b12ec26db7b18c3eb502e2ae",
+        "grid_index": 6,
+        "is_reference": false,
+        "master": "local[4]",
+        "name": "G-p4-sp64",
+        "parallelism": 4,
+        "shuffle_partitions": 64
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 4,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 4
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[4]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 128
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "450e6504c0238ef4b457c79f0d5c60ef0dc5518d8f4f2e9ea1899c7166406c99",
+        "grid_index": 7,
+        "is_reference": false,
+        "master": "local[4]",
+        "name": "G-p4-sp128",
+        "parallelism": 4,
+        "shuffle_partitions": 128
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 8,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 8
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[8]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 16
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "f857d8de346b88fc1a849b9d5bec6f7e67060d80633621f2cc62e0b33e58204c",
+        "grid_index": 8,
+        "is_reference": false,
+        "master": "local[8]",
+        "name": "G-p8-sp16",
+        "parallelism": 8,
+        "shuffle_partitions": 16
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 8,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 8
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[8]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 32
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "cb591f00b2a57716cf49533c8c02187c0284afecfdd09a1db3111b8c823e17ae",
+        "grid_index": 9,
+        "is_reference": false,
+        "master": "local[8]",
+        "name": "G-p8-sp32",
+        "parallelism": 8,
+        "shuffle_partitions": 32
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 8,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 8
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[8]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 64
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "7b30740603f2484171b80b25df4e747eaca242ec04482fdd143509bda63ae830",
+        "grid_index": 10,
+        "is_reference": false,
+        "master": "local[8]",
+        "name": "G-p8-sp64",
+        "parallelism": 8,
+        "shuffle_partitions": 64
+      },
+      {
+        "aqe_enabled": false,
+        "default_parallelism": 8,
+        "delta_from_b0": {
+          "spark.default.parallelism": {
+            "b0": null,
+            "candidate": 8
+          },
+          "spark.master": {
+            "b0": "local[2]",
+            "candidate": "local[8]"
+          },
+          "spark.sql.shuffle.partitions": {
+            "b0": 200,
+            "candidate": 128
+          }
+        },
+        "driver_memory": "6g",
+        "fingerprint": "4d90017a3b93db5bceeb11cb37aa1afaafd90477a1479d40d9cc004000b73d65",
+        "grid_index": 11,
+        "is_reference": false,
+        "master": "local[8]",
+        "name": "G-p8-sp128",
+        "parallelism": 8,
+        "shuffle_partitions": 128
+      }
+    ],
+    "grid_fingerprint": "e7ff388d89e6eb9dcff46f807e48d5ecb279bf79dc6b5f2c54324681e830bd16",
+    "grid_version": "exp002-grid/v1"
+  },
+  "metrics": {
+    "authority": "PLAN section 22",
+    "direction": "lower_is_better",
+    "primary": "execution_time_s",
+    "primary_statistic": "median",
+    "secondary": [
+      "task duration CV",
+      "spill_disk_MB per input GB"
+    ]
+  },
+  "projection": {
+    "b1_b2_selection": {
+      "formula": "candidates x validation_cells x 1_repetition",
+      "note": "Independently verified: 12 configs x 8 cells x 1 rep = 96 executions. One repetition per cell suffices to identify the best grid config.",
+      "repetitions": 1,
+      "runs": 96
+    },
+    "budget_note": "EXP-003 is a SEPARATE register line (PLAN line 310) and is NOT charged to the frozen 500-execution TRAINING cap (SC6).",
+    "candidate_configurations": [
+      "G-p2-sp16",
+      "G-p2-sp32",
+      "G-p2-sp64",
+      "G-p2-sp128",
+      "G-p4-sp16",
+      "G-p4-sp32",
+      "G-p4-sp64",
+      "G-p4-sp128",
+      "G-p8-sp16",
+      "G-p8-sp32",
+      "G-p8-sp64",
+      "G-p8-sp128"
+    ],
+    "candidate_count": 12,
+    "executed": false,
+    "exp003_comparison": {
+      "additional_runs_beyond_selection": 120,
+      "formula": "strategies x validation_cells x repetitions",
+      "repetitions": 5,
+      "reuse_note": "Selection uses 1 rep, comparison uses 5 reps; at different repetition counts the selection grid cannot be reused for the comparison, so every comparison run is additional. Combined cost is the sum of both phases (96 + 120 = 216).",
+      "runs": 120,
+      "strategies": [
+        "B0",
+        "B1",
+        "B2"
+      ]
+    },
+    "minimum_total_runs": 216,
+    "plan_estimate_runs": 30,
+    "plan_estimate_source": "PLAN line 310, EXP-003 register row ('~30')",
+    "projection_version": "eval-spec/v1",
+    "repetitions": 5,
+    "repetitions_authority": "PLAN section 23: all evaluation = 5 repetitions x fixed seeds, medians analyzed",
+    "shortfall_note": "PLANNING-BUDGET DISCREPANCY: the independently verified combined projection is 216 runs (96 selection + 120 comparison); PLAN line 310 estimates ~30 runs. The gap of 186 runs is reported, not resolved: how much of it to spend is an operator / supervisor decision, not a Day-31 code change.",
+    "shortfall_runs": 186,
+    "spark_executions_performed_by_this_projection": 0,
+    "validation_cell_count": 8,
+    "validation_cells": [
+      {
+        "family": "F1_agg",
+        "scale": "small",
+        "seed": 3
+      },
+      {
+        "family": "F1_agg",
+        "scale": "medium",
+        "seed": 3
+      },
+      {
+        "family": "F2_join",
+        "scale": "small",
+        "seed": 3
+      },
+      {
+        "family": "F2_join",
+        "scale": "medium",
+        "seed": 3
+      },
+      {
+        "family": "F3_rdd",
+        "scale": "small",
+        "seed": 3
+      },
+      {
+        "family": "F3_rdd",
+        "scale": "medium",
+        "seed": 3
+      },
+      {
+        "family": "F5_mixed",
+        "scale": "small",
+        "seed": 3
+      },
+      {
+        "family": "F5_mixed",
+        "scale": "medium",
+        "seed": 3
+      }
+    ]
+  },
+  "provenance": {
+    "code_version": "f9d765d-dirty",
+    "produced_by": "scripts/run_evaluation.py (Day 31)",
+    "spark_executions": 0,
+    "split_authority": "sparkrl.experiments.spec.split_of"
+  },
+  "repetitions": 5,
+  "schema_version": "eval-spec/v1",
+  "selection_split": "validation",
+  "spec_version": "eval-spec/v1",
+  "split_authority": "sparkrl.experiments.spec.split_of",
+  "test_cell_count": 43,
+  "test_split_status": "DECLARED_AND_SEALED (identity in test_freeze.json)",
+  "tie_break": {
+    "note": "PLAN freezes no tie-break rule for B1/B2 selection. This rule was declared on Day 31 BEFORE any validation observation was measured, and mirrors the frozen Day-26 agent rule 'ties break to the LOWEST action index'. Grid order is frozen by sparkrl.experiments.grid (GRID_VERSION exp002-grid/v1).",
+    "rule": "lowest_grid_index"
+  },
+  "timing_semantics": {
+    "clock": "Day-3 runner clock, warm-up excluded",
+    "metric": "execution_time_s",
+    "note": "a run whose execution_time_source is not the runner clock is refused as unusable by sparkrl.experiments.runner",
+    "required_source": "runner"
+  },
+  "validation_cells": [
+    {
+      "family": "F1_agg",
+      "scale": "small",
+      "seed": 3
+    },
+    {
+      "family": "F1_agg",
+      "scale": "medium",
+      "seed": 3
+    },
+    {
+      "family": "F2_join",
+      "scale": "small",
+      "seed": 3
+    },
+    {
+      "family": "F2_join",
+      "scale": "medium",
+      "seed": 3
+    },
+    {
+      "family": "F3_rdd",
+      "scale": "small",
+      "seed": 3
+    },
+    {
+      "family": "F3_rdd",
+      "scale": "medium",
+      "seed": 3
+    },
+    {
+      "family": "F5_mixed",
+      "scale": "small",
+      "seed": 3
+    },
+    {
+      "family": "F5_mixed",
+      "scale": "medium",
+      "seed": 3
+    }
+  ],
+  "validation_families": [
+    "F1_agg",
+    "F2_join",
+    "F3_rdd",
+    "F5_mixed"
+  ],
+  "warmup_policy": {
+    "owner": "sparkrl.spark.runner (Day 3, frozen)",
+    "warmup_excluded_from_timing": true,
+    "warmup_micro_job": true,
+    "warmup_runs": 2
+  }
+}

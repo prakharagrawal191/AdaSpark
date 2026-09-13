@@ -1,0 +1,458 @@
+{
+  "artifact_id": "699e98dfe6e706cede7a0dc11d66c54beeb5a629fc8437c5c68182fef4e5b67f",
+  "cell_count": 43,
+  "cells": [
+    {
+      "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+      "dataset_id": "skew1_large_s0",
+      "family": "F1_agg",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+      "dataset_id": "skew1_large_s1",
+      "family": "F1_agg",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+      "dataset_id": "skew1_large_s2",
+      "family": "F1_agg",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "030fda480417612ac68bde6f52d57054fc15cee78f1e88f0d51f00f9a611688b",
+      "dataset_id": "skew1_large_s3",
+      "family": "F1_agg",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+      "dataset_id": "skew1_large_s4",
+      "family": "F1_agg",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+      "dataset_id": "skew1_medium_s4",
+      "family": "F1_agg",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+      "dataset_id": "skew1_small_s4",
+      "family": "F1_agg",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+      "dataset_id": "skew1_large_s0",
+      "family": "F2_join",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+      "dataset_id": "skew1_large_s1",
+      "family": "F2_join",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+      "dataset_id": "skew1_large_s2",
+      "family": "F2_join",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "030fda480417612ac68bde6f52d57054fc15cee78f1e88f0d51f00f9a611688b",
+      "dataset_id": "skew1_large_s3",
+      "family": "F2_join",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+      "dataset_id": "skew1_large_s4",
+      "family": "F2_join",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+      "dataset_id": "skew1_medium_s4",
+      "family": "F2_join",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+      "dataset_id": "skew1_small_s4",
+      "family": "F2_join",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+      "dataset_id": "skew1_large_s0",
+      "family": "F3_rdd",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+      "dataset_id": "skew1_large_s1",
+      "family": "F3_rdd",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+      "dataset_id": "skew1_large_s2",
+      "family": "F3_rdd",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "030fda480417612ac68bde6f52d57054fc15cee78f1e88f0d51f00f9a611688b",
+      "dataset_id": "skew1_large_s3",
+      "family": "F3_rdd",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+      "dataset_id": "skew1_large_s4",
+      "family": "F3_rdd",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+      "dataset_id": "skew1_medium_s4",
+      "family": "F3_rdd",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+      "dataset_id": "skew1_small_s4",
+      "family": "F3_rdd",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "87ed7ae2e2d82d6de119995494c0be604947ee3178e3d577e99647d1e78bc034",
+      "dataset_id": "skew1.5_large_s0",
+      "family": "F4_ski",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "fdc7de51023050da51bf912559b722a0e89a80e4f4553729e0b1773c472c68b6",
+      "dataset_id": "skew1.5_large_s1",
+      "family": "F4_ski",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "43755275e1e5f7be1e94a07832b6f5f51c27007b99a13d5d871684175dc294ae",
+      "dataset_id": "skew1.5_large_s2",
+      "family": "F4_ski",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "76cd8e64c77d68ddf282955adafe22074958e583f5757cc4cb4f8208231af117",
+      "dataset_id": "skew1.5_large_s3",
+      "family": "F4_ski",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "fc44e583ec7139f7d01bb6d410d824f30850ace92405b5f3bfbb2a57d494a0dd",
+      "dataset_id": "skew1.5_large_s4",
+      "family": "F4_ski",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "1fd36ea55a4987d560b1ec1a3d4dfd4be6243607b498d66cd8a39efdac092277",
+      "dataset_id": "skew1.5_medium_s0",
+      "family": "F4_ski",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f5fd0057bc431aa16b76c2a97882242a1c57f9153552db975adc8526ae64bfea",
+      "dataset_id": "skew1.5_medium_s1",
+      "family": "F4_ski",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "4498078685cdd3fe3a3e795fb43ba53351cd39603bdbdd3af937730cf96a1611",
+      "dataset_id": "skew1.5_medium_s2",
+      "family": "F4_ski",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "debcd23fae6a96e0ad206150f4158d0c114a51c937be8158ac82757796a7e19a",
+      "dataset_id": "skew1.5_medium_s3",
+      "family": "F4_ski",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "14f2de48289d0d04640d9710db5c1adab3876596a0e825eba22dc5256dc6368b",
+      "dataset_id": "skew1.5_medium_s4",
+      "family": "F4_ski",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "8009bc3c1c578ac4970132ecaee75616c365744de4c456f0505dc25546f58d5a",
+      "dataset_id": "skew1.5_small_s0",
+      "family": "F4_ski",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "691dda5580e1b6189fed382fa3a849437b488e868329ecd39d14ed90b72570e0",
+      "dataset_id": "skew1.5_small_s1",
+      "family": "F4_ski",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "a29585c50e8c8f6b9f6f2c282f18b54c253280cf4970d06e4b074ae56aaca0a2",
+      "dataset_id": "skew1.5_small_s2",
+      "family": "F4_ski",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f6561e735f1c4069b29e82fca8c734feae138fdbcd45381c9ee671972c21d018",
+      "dataset_id": "skew1.5_small_s3",
+      "family": "F4_ski",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "06e04da33823281fa38dd257a109f45c454db6aa953060327930dc495aef6a5f",
+      "dataset_id": "skew1.5_small_s4",
+      "family": "F4_ski",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.5,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+      "dataset_id": "skew1_large_s0",
+      "family": "F5_mixed",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 0,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+      "dataset_id": "skew1_large_s1",
+      "family": "F5_mixed",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 1,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+      "dataset_id": "skew1_large_s2",
+      "family": "F5_mixed",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 2,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "030fda480417612ac68bde6f52d57054fc15cee78f1e88f0d51f00f9a611688b",
+      "dataset_id": "skew1_large_s3",
+      "family": "F5_mixed",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 3,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+      "dataset_id": "skew1_large_s4",
+      "family": "F5_mixed",
+      "scale": "large",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+      "dataset_id": "skew1_medium_s4",
+      "family": "F5_mixed",
+      "scale": "medium",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    },
+    {
+      "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+      "dataset_id": "skew1_small_s4",
+      "family": "F5_mixed",
+      "scale": "small",
+      "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+      "seed": 4,
+      "skew": 1.0,
+      "split": "test"
+    }
+  ],
+  "content": "IDENTITY ONLY - no measurement, no metric, no result",
+  "created_utc": "2026-09-13T06:19:51.702886+00:00",
+  "declared_components_not_materialized": [
+    "public dataset (NYC Taxi subset, PLAN section 18 external validity)",
+    "F5 with unseen parameters (PLAN section 18)"
+  ],
+  "executed": false,
+  "experiment_id": "EXP-003",
+  "fingerprint": "699e98dfe6e706cede7a0dc11d66c54beeb5a629fc8437c5c68182fef4e5b67f",
+  "frozen_on": "Day 31 (PLAN line 277)",
+  "manifest_fingerprint": "cb829aec95346502cdcc1e946a17c959bfdd06f35c8219634c8f91060d0e90ce",
+  "manifest_source": "data/generated/datasets/*/{orders,lineitem}/manifest.json",
+  "provenance": {
+    "code_version": "f9d765d-dirty",
+    "produced_by": "scripts/run_evaluation.py (Day 31)",
+    "spark_executions": 0,
+    "split_authority": "sparkrl.experiments.spec.split_of"
+  },
+  "schema_version": "eval-test-freeze/v1",
+  "split_authority": "sparkrl.experiments.spec.split_of",
+  "test_execution_status": "SEALED - EXP-005 is Day 32-33 and EXP-006 is Day 34 (PLAN lines 312-313)",
+  "verification": "later commands must recompute manifest_fingerprint over 'cells' and refuse to proceed on any mismatch"
+}

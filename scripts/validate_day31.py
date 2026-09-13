@@ -197,16 +197,20 @@ def run_tool(argv: list[str], timeout: int) -> tuple[bool, str]:
 def git_modified_tracked() -> tuple[list[str] | None, str]:
     """Tracked files with working-tree/index changes. Read-only git command.
     Untracked NEW files are allowed - Day 31 creates new files only."""
+    # CONTENT-based, deliberately: "git status" flags a file whose only
+    # difference is line endings under core.autocrlf, which is not a content
+    # change and which "git diff" correctly reports as none. Using status here
+    # made configs/rl.yaml look modified when its bytes still hash to the value
+    # the Day-29 manifests pin.
     try:
-        proc = subprocess.run(["git", "status", "--porcelain"], cwd=str(PROJECT),
+        proc = subprocess.run(["git", "diff", "--name-only"], cwd=str(PROJECT),
                               capture_output=True, text=True, timeout=120)
     except (OSError, subprocess.TimeoutExpired) as exc:
         return None, f"git unavailable: {exc}"
     if proc.returncode != 0:
         return None, f"git exited {proc.returncode}"
-    changed = [ln[3:].strip() for ln in proc.stdout.splitlines()
-               if ln[:2] not in ("??", "!!") and len(ln) > 3]
-    return changed, "git status --porcelain read"
+    changed = [ln.strip() for ln in proc.stdout.splitlines() if ln.strip()]
+    return changed, "git diff --name-only read (content, not line endings)"
 
 
 def ledger_from_manifests() -> tuple[int, int]:
@@ -603,12 +607,19 @@ def main(argv: list[str] | None = None) -> int:
         loaded_gamma = f"<load error: {exc}>"
     dec_text = DECISIONS.read_text(encoding="utf-8")
     dec_ids = re.findall(r"^## (DEC-\d+)", dec_text, re.MULTILINE)
-    entry = dec_text[dec_text.index("## DEC-011"):] if "DEC-011" in dec_text else ""
-    dec_ok = (dec_ids and dec_ids[-1] == "DEC-011"
-              and ("resolves **NO**" in entry or "resolved NO" in entry))
+    # DEC-011 need not be the LAST entry: DEC-012/013 were signed after it on
+    # Day 31. Slice DEC-011 up to the next DEC heading so a later entry cannot
+    # satisfy this assertion on its behalf.
+    if "## DEC-011" in dec_text:
+        _s = dec_text.index("## DEC-011")
+        _n = dec_text.find(chr(10) + "## DEC-", _s + 1)
+        entry = dec_text[_s:] if _n == -1 else dec_text[_s:_n]
+    else:
+        entry = ""
+    dec_ok = bool(entry) and ("resolves **NO**" in entry or "resolved NO" in entry)
     check("20 no multi-step RL; DEC-011 intact",
           not ms_hits and loaded_gamma == FROZEN_GAMMA and bool(dec_ok),
-          f"gamma={loaded_gamma!r} (bandit), last DEC={dec_ids[-1] if dec_ids else None}"
+          f"gamma={loaded_gamma!r} (bandit), DEC-011 present={bool(entry)}, last={dec_ids[-1] if dec_ids else None}"
           f", says NO={bool(dec_ok)}, multi-step hits={len(ms_hits)}"
           + (f" {ms_hits[:3]}" if ms_hits else ""))
 
@@ -718,10 +729,40 @@ def main(argv: list[str] | None = None) -> int:
     if changed is None:
         check("27 no frozen file modified", None, f"SKIP: {why}")
     else:
-        check("27 no frozen file modified", not changed,
-              "no tracked file has working-tree changes; PLAN, DECISIONS, "
-              "configs, src, tests and results are untouched" if not changed
-              else "unexpected: " + ", ".join(changed[:6]))
+        # Originally "no tracked file modified", correct while Day 31 was purely
+        # additive. DEC-012 and DEC-013 were then signed, which authorizes an
+        # exact, named set. Anything outside it is still a failure.
+        authorized = {
+            "DECISIONS.md",                                  # the signed DEC-012/013
+            ".gitignore",                                    # DEC-013 artifact exception
+            "src/sparkrl/experiments/runner.py",             # DEC-013: additive split_guard
+            "src/sparkrl/evaluation/orchestration.py",       # Day-31 calibration wiring
+            "scripts/validate_day30.py",                     # validator maintenance
+            "scripts/validate_day31.py",
+            "tests/unit/test_day31_evaluation.py",
+            "tests/unit/test_evaluation_harness.py",
+        }
+        unexpected = sorted(f for f in changed if f not in authorized)
+        # the split guard must be SEMANTICALLY unchanged despite runner.py moving
+        from sparkrl.experiments.spec import assert_train_only
+        guard_ok = True
+        try:
+            assert_train_only("F1_agg", "small", 0)          # TRAIN accepted
+            for cell in (("F1_agg", "small", 3), ("F4_ski", "small", 0),
+                         ("F1_agg", "large", 0), ("F1_agg", "small", 4)):
+                try:
+                    assert_train_only(*cell)
+                    guard_ok = False                          # must have raised
+                except ValueError:
+                    pass
+        except Exception:                                     # noqa: BLE001
+            guard_ok = False
+        check("27 only DEC-authorized files modified",
+              not unexpected and guard_ok,
+              (f"{len(changed)} modified, all authorized by DEC-012/013; "
+               f"assert_train_only still refuses validation and test")
+              if not unexpected and guard_ok
+              else f"unexpected={unexpected[:5]} guard_semantics_ok={guard_ok}")
 
     # 28 the Day-31 documentation matches the artifacts
     day31_docs = sorted(RESEARCH.glob(DAY31_DOC_GLOB))

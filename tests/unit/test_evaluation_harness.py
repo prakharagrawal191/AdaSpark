@@ -158,14 +158,33 @@ def test_validation_plan_is_deterministic_and_validation_only():
     assert {r.split for r in plan} == {"validation"}
 
 
-def test_execution_is_blocked_rather_than_guard_weakened():
-    # The EXP-002-scoped assert_train_only inside execute_run refuses validation
-    # cells. Day 31 reports that; it does not weaken the guard.
-    assert preflight_blockers(), "expected the train-only guard to be reported"
-    with pytest.raises(EvaluationExecutionBlocked):
-        from sparkrl.evaluation.orchestration import execute_validation_run
-        cfg = SparkConfig.from_yaml("configs/baseline_b0.yaml")
-        execute_validation_run(validation_run_plan(cfg, 1)[0], cfg)
+def test_calibration_is_authorized_without_weakening_the_train_guard():
+    """DEC-013 Model B replaced the blocker; the guard itself is NOT weakened.
+
+    Before DEC-013 this test asserted that preflight REPORTED a blocker, which was
+    the correct invariant while validation execution was unauthorized. The signed
+    decision inverts it: the calibration stage now supplies its own VALIDATION-only
+    authorization, so the blocker is gone - but assert_train_only must still refuse
+    everything it refused before, and TEST must still be sealed.
+    """
+    from sparkrl.experiments.spec import assert_train_only
+
+    # 1. the gate is open for calibration
+    assert preflight_blockers() == []
+
+    # 2. the frozen guard is semantically UNCHANGED
+    assert_train_only("F1_agg", "small", 0)                  # TRAIN still accepted
+    for cell in (("F1_agg", "small", 3),                     # VALIDATION
+                 ("F4_ski", "small", 0),                     # TEST family
+                 ("F1_agg", "large", 0),                     # TEST scale
+                 ("F1_agg", "small", 4)):                    # TEST seed
+        with pytest.raises(ValueError):
+            assert_train_only(*cell)
+
+    # 3. TEST execution remains sealed regardless of the calibration gate
+    from sparkrl.evaluation.orchestration import assert_test_execution_permitted
+    with pytest.raises(Exception):
+        assert_test_execution_permitted()
 
 
 # -- E. artifacts are fingerprinted and immutable -----------------------------
