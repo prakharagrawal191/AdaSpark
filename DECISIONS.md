@@ -211,3 +211,72 @@ migration/reimplementation impact. Editorial notes need only a commit msg.
 
 **Status.** ARCHITECTURE FROZEN FOR IMPLEMENTATION (design freeze; NOT
 empirical validation — performance decided by EXP-004/005).
+
+## DEC-010 | 2026-09-12 | Failed-episode semantics — failure is a first-class observation (Day 29 unblock)
+
+**Decision.** A failed or timed-out episode is a FIRST-CLASS OBSERVATION: the
+environment returns the frozen R3 reward of −1, and the tabular Q-update IS
+APPLIED with that reward. The Day-27 training loop
+(`sparkrl.training.loop.run_training`) already implements exactly this, pinned
+by `tests/unit/test_rl_training.py::test_failed_episode_is_recorded_updated_and_the_run_continues`.
+No code, no test and no hyperparameter changes under this decision.
+
+**Context.** Day 27 (audit §12), Day 28 (audit §14) and COMPONENT_CONTRACTS §12
+each recorded an unresolved conflict between two frozen documents, and Day 29
+blocked on it before executing any replicate. `ARCHITECTURE_FREEZE.md` §11
+("Learning: … failed runs skip update") and §12 ("error path, Q-update
+skipped"), and the conceptual signature in `COMPONENT_CONTRACTS.md` §3
+(`Agent.update(s, a, r, s2) -> None  # skipped on failure episodes`), say the
+update is skipped. `docs/PLAN.md` says the opposite in five places: §11 data
+flow ("failure/timeout ⇒ reward −1" feeding the Q-update), §13 (missing
+features ⇒ "run-failure path (reward −1, logged)"), §14 (timeout guard
+"converts pathological configs into reward −1"), §15 where R3 literally
+contains the term `− 1.0·1[failure or timeout]`, and §15 stability
+("failures capped at −1").
+
+**Precedence rule established here (the missing authority).** `docs/PLAN.md` is
+the top-level frozen research plan. `ARCHITECTURE_FREEZE.md` and
+`COMPONENT_CONTRACTS.md` are Day-12 implementation artifacts DERIVED from it —
+the freeze header states its own sources as "PLAN §§2,5-7,11,20-23,31,33,38-39,44".
+Where a derived document contradicts its source, PLAN governs. No such
+precedence rule was documented anywhere in the repository before this entry;
+that absence is precisely what blocked Day 29, and it is recorded now so the
+question cannot recur.
+
+**Supporting evidence for the PLAN reading.** (i) PLAN §6 states the research
+objective as learning a policy "within a bounded training budget and WITHOUT
+FAILED SUBMITTED CONFIGURATIONS" — an agent can only learn to avoid pathological
+configurations if failures reach the learner, so the skip reading leaves that
+objective with no learning mechanism. (ii) Under the skip reading the frozen R3
+term `− 1.0·1[failure or timeout]` is unreachable by learning, making part of the
+frozen reward definition dead. (iii) The F-FAIL invariant is "failed configs MUST
+NOT yield POSITIVE reward"; a reward of −1 satisfies it. F-FAIL constrains the
+SIGN of the reward, not whether the observation trains.
+
+**Affected components.** COMP-RL-10 (agent) and the Day-27 training loop —
+behaviour confirmed, not changed. COMP-RL-08 (reward) unchanged. No
+implementation, test, configuration or hyperparameter is modified.
+
+**Affected documents.** `ARCHITECTURE_FREEZE.md` §11/§12 and
+`COMPONENT_CONTRACTS.md` §3 are SUPERSEDED ON THIS POINT ONLY. Their original
+text is left intact (they are frozen records of what Day 12 decided); a pointer
+note referencing this entry is appended to each so the contradiction is no
+longer readable as live guidance.
+
+**Affected experiments.** EXP-004 / Days 28-29 training, the Day-30 mode gate,
+and EXP-005. Verified at the time of this entry: all 6 stored training
+artifacts contain 57 episodes with ZERO failed episodes, so no existing result,
+policy, checkpoint or manifest changes under this decision — it is
+forward-looking only.
+
+**Consequences.** Day 29 (training replicates, seeds {0,1,2}, M8) is unblocked
+and proceeds under the frozen protocol unchanged. Any future run containing a
+failed episode will apply the update at reward −1 and must cite this entry.
+
+**Approval.** Recorded by the operator on 2026-09-12 after the Day-29 pre-run
+audit presented both readings and the evidence above. Supervisor
+counter-signature follows the same pending path as the M2 freeze
+(`docs/research/M2_FREEZE.md`, "PROVISIONALLY FROZEN — awaiting supervisor
+signature"); this entry is the artifact to counter-sign.
+
+**Status.** DECIDED — PLAN reading confirmed; implementation already conformant.

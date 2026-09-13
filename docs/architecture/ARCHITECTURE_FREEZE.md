@@ -204,3 +204,14 @@ Single-node PySpark 3.5.9 / Python 3.11.9 / Java 17 / winutils (DEC-007) · Gymn
 ## Design audit (Step 26, recorded)
 
 1 Every EXP executable unchanged (§17). 2 Plan B = config selectors, no redesign (§16). 3 RL loop (06–10) separated from Spark execution (01–04) via env boundary (09). 4 Cache (11) separated from learning (10): hits return data, never update Q directly. 5 AQE is a flag-controlled arm, never ambient. 6 Failed vs low-reward distinguished structurally (error path vs numeric reward; F-FAIL). 7 Leakage prevented (split tags + Q-init provenance + Day-31 gate). 8 Every result → manifest row; every policy versioned. 9 Incremental from Day 13 (session/config/runner exist; order: cache → workloads → monitoring → env → agent). 10 Needed: 12 kept, 8 folded; nothing decorative. Verdict: FIT FOR FREEZE.
+
+## Superseded on one point — DEC-010 (2026-09-12)
+
+§11 "Learning: … failed runs skip update" and §12 "error path, Q-update
+skipped" are SUPERSEDED by **DEC-010**. A failed or timed-out episode is a
+first-class observation: reward −1 (the frozen R3 failure term) and the Q-update
+IS applied. `docs/PLAN.md` governs where a derived Day-12 document contradicts
+it; DEC-010 records that precedence rule, which was previously undocumented.
+The text above is retained unaltered as the frozen record of what Day 12
+decided. The F-FAIL invariant is unaffected: it constrains the reward's SIGN
+(never positive on failure), not whether the observation trains.

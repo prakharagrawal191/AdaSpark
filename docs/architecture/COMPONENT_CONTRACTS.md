@@ -143,3 +143,13 @@ exit 130, which `test_interrupt_during_step_writes_no_checkpoint` already
 covers. NOT independently reviewed: the frozen-drift lens (its one known
 defect, a UTF-8 double-encode of this file, was found and reverted by the
 operator).
+
+## Superseded on one point — DEC-010 (2026-09-12)
+
+The §3 conceptual signature `Agent.update(s, a, r, s2) -> None  # skipped on
+failure episodes`, and the open item recorded in §11, are resolved and
+SUPERSEDED by **DEC-010**: the update IS applied on a failed episode, at the
+frozen reward of −1. `sparkrl.training.loop` already implements this and
+`tests/unit/test_rl_training.py::test_failed_episode_is_recorded_updated_and_the_run_continues`
+pins it; no code changed. The §3 text is retained unaltered as the frozen
+Day-12 record.
