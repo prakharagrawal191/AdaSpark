@@ -729,3 +729,92 @@ audit presented the four options and their research implications.
 
 **Status.** **DECIDED** - EXP-005 RL arm is three replicate arms; policies frozen
 and published to the policy store; no TEST execution authorized by this entry.
+
+## DEC-016 | 2026-09-14 | EXP-005 baseline specifications — A/E/F decided; B/C/D remain open
+
+**Decision.** Three of the six questions raised by the Day-32 baseline audit are
+**DECIDED**; three remain **OPEN** and are carried in the working record
+`docs/research/DEC_016_BASELINE_SPECIFICATION_GAPS_B0P_B3_B4.md`.
+
+**A — B0' identity. DECIDED.** B0' is the **AQE-on modern/default reference
+baseline** of `docs/PLAN.md:152` ("Spark 3.x factory default (AQE enabled)"), NOT
+the "static-tuned EXP-003" strategy of `ARCHITECTURE_FREEZE.md:66/:88`, which is
+superseded on this point. DEC-010's precedence rule governs: PLAN governs where a
+derived Day-12 document contradicts it. Three further documents agree —
+`BASELINE_B0.md:37`, `DAY17_BASELINE_AUDIT.md:38`, and the header of
+`configs/baseline_b0.yaml` itself, which names "AQE-on ... (B0' / RQ6 / EXP-005b)"
+as a separate condition. The ARCHITECTURE_FREEZE reading was additionally
+untenable: `PLAN:310` lists EXP-003's strategies as "B0,B1,B2" with no B0', and a
+validation-tuned B0' would collide with B1, already defined as "one config tuned
+on validation, used everywhere".
+
+**Derivation is mechanical, no constant invented.** `configs/baseline_b0.yaml`
+declares every value to be either observability metadata or "Spark's own
+out-of-box setting", and annotates `aqe_enabled: false` as "AQE OFF (main study)
+- NOT a tuning choice". B0' is therefore B0 with `aqe_enabled: true` and nothing
+else changed.
+
+**A2 — AQE role. Already resolved, recorded for completeness.** An AQE-on
+baseline inside the AQE-off main study is EXPLICITLY INTENDED: `PLAN:72` states
+the contribution as a comparison "incl. random-search-equal-budget **and
+AQE-on/off conditions**", and `PLAN:77` fixes AQE off so that *pre-execution
+configuration selection is well-defined* - a constraint on strategies that CHOOSE
+configurations, not a prohibition on an AQE-on reference point. EXP-005b (Day 38)
+remains the distinct full AQE-on condition.
+
+**CONSEQUENCE DISCOVERED WHILE DECIDING A — B0' CANNOT YET EXECUTE.** The frozen
+runner blocks AQE-on twice: `runner.py:286` raises "AQE became enabled after
+config application (PLAN section 7)", and `verify_applied()` at `runner.py:246`
+records "AQE must be OFF". `SparkConfig` itself accepts `aqe_enabled=true`
+cleanly. So B0' is now fully specified and its STRATEGY is implementable, but its
+EXECUTION requires a further execution-path authorization of exactly the kind
+DEC-013 Model B provided for the validation split. This is recorded here and
+belongs to DEC-014's execution scope; it is NOT authorized by this entry.
+
+**E — EXP-005 arm count. DECIDED.** The 9-arm scope (B0, B0', B1, B2, B3, B4,
+RL-s0, RL-s1, RL-s2) stands on the signed DEC-015, which supersedes
+`PLAN:278/:312`'s "7 strategies" **by decision rather than by edit**. `docs/PLAN.md`
+is deliberately left unmodified as the historical record, consistent with how
+DEC-014 and DEC-015 already describe the supersession, and with DEC-009's
+change-control rule placing substantive changes in this ledger.
+`PLAN AMENDMENT REQUIRED AFTER SUPERVISOR DECISION` is recorded as outstanding.
+
+**F — Implementation scheduling. DECIDED.** Building B0', B3, B4 and the
+`BaselineStrategy` interface is folded explicitly into **Day 32's scope**, which
+PLAN otherwise describes only as "EXP-005 main comparison - queue completes". No
+day is renumbered and nothing downstream shifts. All four items are buildable
+with **no Spark and with TEST sealed** - they are configuration-selection rules,
+unit-testable against fixtures exactly as the Day-31 harness was.
+
+**B, C, D — OPEN. NOT decided by this entry.**
+- **B (B3 specification)** - thirteen items UNDEFINED: `input_GB` definition,
+  source, unit and pre-execution availability; `k` value, provenance, scope and
+  tunability; the clamp target and bound interpretation; the parallelism rule;
+  the core-count definition and source. B3 is PLAN's own "key 'is RL needed?'
+  baseline" and SC3 gates on RL vs B3.
+- **C (B4 specification)** - budget referent, unit and value; draw frequency;
+  whether search/comparison is permitted; whether a best-found action may be
+  selected; whether any tuning occurs; the freeze point. DEC-015 made the budget
+  referent ambiguous: the arms are 84, 49 and 42 episodes, so "same budget as RL"
+  has no unique meaning.
+- **D (TEST instance scope)** - PLAN says 7 instances; the frozen inventory holds
+  43 cells; no authoritative mapping connects them. 7 x 9 x 5 = 315 against
+  43 x 9 x 5 = 1935, a 6.1x difference.
+
+No value is proposed for any of these, and no options are enumerated for B and C,
+because any option offered would itself be a research constant chosen after the
+RL results already exist.
+
+**Affected.** B0' becomes implementable as a strategy (execution still gated).
+B3 and B4 remain unimplementable. `DEC-014 REQUIRES AMENDMENT BEFORE APPROVAL`
+and cannot be soundly approved before Decision D; its execution scope must now
+also cover the AQE-on runner guard recorded above. No code, hyperparameter,
+policy, budget or stored result changes under this entry.
+
+**Approval.** Recorded by the operator on 2026-09-14. Working record:
+`docs/research/DEC_016_BASELINE_SPECIFICATION_GAPS_B0P_B3_B4.md`. Supervisor
+counter-signature follows the M2-freeze path.
+
+**Status.** **PARTIALLY DECIDED** - A, E and F resolved; B, C and D remain open
+and continue to block EXP-005. No execution is authorized by this entry; TEST
+remains sealed.

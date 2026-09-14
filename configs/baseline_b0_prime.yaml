@@ -1,0 +1,54 @@
+# AdaSpark B0' baseline configuration (DEC-016 Decision A, Day 32).
+#
+# B0' = "AQE-on default | Spark 3.x factory default (AQE enabled) | modern
+# default + RQ6" (PLAN section 17, line 152).
+#
+# DERIVATION IS MECHANICAL, NOT A TUNING CHOICE. This file is configs/
+# baseline_b0.yaml with exactly ONE value changed: aqe_enabled false -> true.
+# Every other value is carried over unaltered, and configs/baseline_b0.yaml
+# declares each of them to be either observability/execution metadata required
+# for reproduction or "Spark's own out-of-box setting". Flipping AQE alone
+# therefore yields Spark's factory default with AQE enabled, which is what
+# PLAN:152 defines B0' to be. No performance-tuning value is introduced here,
+# and no research constant is invented.
+#
+# Authority: DEC-016 Decision A resolves the B0' identity in favour of PLAN:152
+# over the "static-tuned EXP-003" wording at ARCHITECTURE_FREEZE:66/:88, under
+# DEC-010's precedence rule. configs/baseline_b0.yaml's own header already names
+# this condition: "AQE-on is a separate comparison condition (B0' / RQ6 /
+# EXP-005b), never here."
+#
+# EXECUTION IS NOT YET AUTHORIZED. The frozen runner refuses AQE-on twice:
+# sparkrl/experiments/runner.py raises "AQE became enabled after config
+# application (PLAN section 7)", and verify_applied() records "AQE must be OFF".
+# This file specifies the strategy; running it requires an execution-path
+# authorization of the kind DEC-013 Model B provided for the validation split.
+# See DEC-016 (signed) and DEC-014 (pending).
+
+baseline_id: "B0-prime"
+description: "Spark factory default with AQE ENABLED (modern default, RQ6)"
+
+runtime:
+  master: "local[2]"                 # unchanged from B0
+  app_name: "sparkrl-b0-prime"
+  driver_memory: "6g"                # unchanged from B0
+  ui_enabled: false                  # observability: no UI needed
+  event_log_enabled: true            # observability: research monitoring
+  event_log_dir: null                # observability: -> sparkrl.utils.paths.eventlog_dir()
+  local_dir: null                    # observability: -> sparkrl.utils.paths.tmp_dir()
+  expected_spark_version_prefix: "3.5"   # DEC-007 frozen backend
+  aqe_enabled: true                  # THE ONLY DIFFERENCE FROM B0 (PLAN:152)
+  shuffle_partitions: 200            # Spark SQL out-of-box default (NOT tuned)
+  default_parallelism: null          # null = leave to Spark (out-of-box)
+
+execution:
+  warmup_runs: 2                     # identical protocol across strategies
+  warmup_micro_job: true
+  timeout_seconds: 300
+  timeout_grace_seconds: 10
+
+# Day-3 harness settings retained for parity with B0
+workload:
+  baseline_rows: 1000000
+  baseline_scale: "medium"
+  seed: 42
