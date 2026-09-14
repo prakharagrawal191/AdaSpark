@@ -659,3 +659,73 @@ counter-signature follows the M2-freeze path.
 **Status.** **DECIDED** — selection at 1 repetition; validation execution
 authorized via a dedicated calibration guard; TRAIN semantics and the TEST seal
 both unchanged.
+
+## DEC-015 | 2026-09-14 | EXP-005 RL arm — all three replicates evaluated as separate arms (M8 failed)
+
+**Decision.** **APPROVED.** EXP-005 evaluates the three Day-29 training
+replicates as **three separate strategies** - `RL-s0`, `RL-s1`, `RL-s2` - rather
+than one "frozen policy". EXP-005's strategy set becomes **nine**: B0, B0', B1,
+B2, B3, B4, RL-s0, RL-s1, RL-s2. All three policies are frozen before the test
+set is opened (PLAN line 159) and are never retrained (PLAN line 192).
+
+**Context - why a decision was needed at all.** PLAN speaks throughout of *the*
+frozen policy, singular (lines 159, 192; ARCHITECTURE_FREEZE line 66 "RL frozen
+policy"). Three policies exist. **M8 was the criterion that would have
+established the replicates agree closely enough to speak of one policy, and it
+FAILED**: greedy-policy agreement 0.2000 over the pre-specified evidence-bearing
+denominator, against the frozen 0.70 threshold (DAY29 audit;
+`results/training/analysis/day29_policy_agreement.json`). PLAN,
+ARCHITECTURE_FREEZE and COMPONENT_CONTRACTS define **no rule** for selecting one
+replicate from seeds {0,1,2}, and no prior DEC provides a fallback for an
+M8-failing policy family. Proceeding without an explicit decision would have
+meant silently promoting one of three disagreeing policies.
+
+**Plan defect recorded.** PLAN requires a single frozen policy but never says how
+it is chosen from the frozen training seeds {0,1,2}, and specifies no fallback if
+the M8 agreement gate fails. This is the same class of omission as DEC-010 (no
+precedence rule), DEC-011 (no gate criterion) and DEC-013 (no selection
+repetition rule), and is recorded so it cannot recur silently.
+
+**Why three arms rather than one chosen seed.** Selecting a single replicate
+after M8 failed would conceal the disagreement behind a choice, and would answer
+RQ2 for one run rather than for the method. Three arms report the replicate
+spread as part of the result: if all three beat B0 the claim is materially
+stronger than any single seed could support; if they diverge, that divergence is
+the honest finding. The rejected alternative - freezing seed 0 on the principled
+ground that it is the only replicate to complete the full 84-episode schedule and
+reach the frozen epsilon floor of 0.05 (seeds 1 and 2 early-stopped at 49 and 42
+episodes with epsilon still 0.0810 and 0.1160) - remains defensible and cheaper,
+and is recorded here as the runner-up rather than discarded.
+
+**The three frozen policies** (each verified through
+`sparkrl.agent.policy_store.load_policy`; identical frozen contracts: gamma 0.0,
+alpha 0.2, action_mode mode12, reward R3, state-v1.5, 8 states):
+
+| arm | policy id | episodes | updates | final epsilon | source run |
+|---|---|---|---|---|---|
+| RL-s0 | `b801f4a7df200b04` | 84 | 84 | 0.0500 | train-a0-d0-20260912T112906Z |
+| RL-s1 | `af41d8ae7a21d81f` | 49 | 49 | 0.0810 | train-a1-d0-20260912T115123Z |
+| RL-s2 | `d8fd7b9859d2feea` | 42 | 42 | 0.1160 | train-a2-d0-20260912T120648Z |
+
+**Cost.** Two additional arms over EXP-005's planned seven: 7 instances x 2 x 5
+repetitions = **+70 runs**, charged to EXP-005's own register line (PLAN line
+312, ~245), NOT to SC6's 500-execution training cap, which stays at 232/500 and
+is untouched.
+
+**Constraints that remain in force.** The policies are evaluated frozen and
+greedy; no Q update, no epsilon schedule, no exploration and no retraining occurs
+on TEST. M8's FAILED verdict is unchanged and must be reported alongside every
+RL result: three arms report the disagreement, they do not repair it.
+
+**This decision does NOT authorize TEST execution.** That is DEC-014, still
+PENDING SUPERVISOR APPROVAL. EXP-005 also remains blocked on three strategies
+that are unimplemented and scheduled on no PLAN day - B0' (AQE-on default), B3
+(rule-based adaptive, whose constant `k` in `clamp(input_GB x k, 16, 128)` PLAN
+never defines) and B4 (random search) - recorded here as a readiness finding, not
+resolved.
+
+**Approval.** Recorded by the operator on 2026-09-14 after the Day-32 readiness
+audit presented the four options and their research implications.
+
+**Status.** **DECIDED** - EXP-005 RL arm is three replicate arms; policies frozen
+and published to the policy store; no TEST execution authorized by this entry.

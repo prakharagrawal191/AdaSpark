@@ -1,0 +1,99 @@
+{
+ "arms": [
+  {
+   "agent_rng_seed": 0,
+   "arm": "RL-s0",
+   "contract_versions": {
+    "action_grid_fingerprint": "97d70dc18a1d5369928964201f2169fd0eebfb8c3c747001900a472885819ba1",
+    "reward_formula": "R3",
+    "state_schema": "state-v1.5"
+   },
+   "episodes": 84,
+   "final_epsilon": 0.05,
+   "learner_config": {
+    "action_mode": "mode12",
+    "alpha": 0.2,
+    "epsilon_decay": 0.95,
+    "epsilon_min": 0.05,
+    "epsilon_start": 1.0,
+    "gamma": 0.0,
+    "q0_aggregation": "median",
+    "q0_default": 0.5,
+    "q0_source": "exp002"
+   },
+   "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+   "published_path": "models/policies/policy-b801f4a7df200b04.json",
+   "source_run": "results/training/train-a0-d0-20260912T112906Z",
+   "source_run_id": "train-a0-d0-20260912T112906Z",
+   "states": 8,
+   "updates": 84
+  },
+  {
+   "agent_rng_seed": 1,
+   "arm": "RL-s1",
+   "contract_versions": {
+    "action_grid_fingerprint": "97d70dc18a1d5369928964201f2169fd0eebfb8c3c747001900a472885819ba1",
+    "reward_formula": "R3",
+    "state_schema": "state-v1.5"
+   },
+   "episodes": 49,
+   "final_epsilon": 0.08099471081759278,
+   "learner_config": {
+    "action_mode": "mode12",
+    "alpha": 0.2,
+    "epsilon_decay": 0.95,
+    "epsilon_min": 0.05,
+    "epsilon_start": 1.0,
+    "gamma": 0.0,
+    "q0_aggregation": "median",
+    "q0_default": 0.5,
+    "q0_source": "exp002"
+   },
+   "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+   "published_path": "models/policies/policy-af41d8ae7a21d81f.json",
+   "source_run": "results/training/train-a1-d0-20260912T115123Z",
+   "source_run_id": "train-a1-d0-20260912T115123Z",
+   "states": 8,
+   "updates": 49
+  },
+  {
+   "agent_rng_seed": 2,
+   "arm": "RL-s2",
+   "contract_versions": {
+    "action_grid_fingerprint": "97d70dc18a1d5369928964201f2169fd0eebfb8c3c747001900a472885819ba1",
+    "reward_formula": "R3",
+    "state_schema": "state-v1.5"
+   },
+   "episodes": 42,
+   "final_epsilon": 0.11598222130000553,
+   "learner_config": {
+    "action_mode": "mode12",
+    "alpha": 0.2,
+    "epsilon_decay": 0.95,
+    "epsilon_min": 0.05,
+    "epsilon_start": 1.0,
+    "gamma": 0.0,
+    "q0_aggregation": "median",
+    "q0_default": 0.5,
+    "q0_source": "exp002"
+   },
+   "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+   "published_path": "models/policies/policy-d8fd7b9859d2feea.json",
+   "source_run": "results/training/train-a2-d0-20260912T120648Z",
+   "source_run_id": "train-a2-d0-20260912T120648Z",
+   "states": 8,
+   "updates": 42
+  }
+ ],
+ "decision": "DEC-015",
+ "evaluation_constraints": "Evaluated frozen and greedy. No Q update, no epsilon schedule, no exploration and no retraining on TEST (PLAN lines 159, 192).",
+ "fingerprint": "58fac8b02e6e4635b6f67d299e3f42089fa9160d01792945601cfb8bf2805380",
+ "m8": {
+  "metric": 0.2,
+  "status": "FAIL",
+  "threshold": 0.7
+ },
+ "m8_note": "M8 FAILED. These three policies DISAGREE: greedy-policy agreement is 0.2000 against the frozen 0.70 threshold. They are published as three separate EXP-005 arms precisely so the disagreement is reported rather than concealed behind a chosen seed. Publishing does not repair, supersede or soften the M8 verdict.",
+ "no_research_claim": "Publishing establishes nothing about whether any strategy outperforms another.",
+ "schema_version": "exp005-rl-arms/v1"
+}
