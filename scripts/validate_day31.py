@@ -786,6 +786,10 @@ def main(argv: list[str] | None = None) -> int:
             "src/sparkrl/evaluation/strategies.py",
             "tests/unit/test_exp005_strategies.py",
             "configs/baseline_b0_prime.yaml",
+            # DEC-017 directs the pending DEC-014 draft to be amended to
+            # the resolved scope; its STATUS must stay PENDING, which
+            # check 25 verifies independently.
+            "docs/research/DEC_014_TEST_EXECUTION_AUTHORIZATION_EXP005.md",
         }
         unexpected = sorted(f for f in changed if f not in authorized)
         # the split guard must be SEMANTICALLY unchanged despite runner.py moving
