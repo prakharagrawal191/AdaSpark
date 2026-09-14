@@ -867,3 +867,104 @@ search before it is frozen; the seven EXP-005 instances are named. No TEST
 execution is authorized by this entry - that remains DEC-014, which may now be
 amended to the resolved 7-instance scope and must also cover the AQE-on runner
 guard. TEST remains sealed.
+
+## DEC-017 | 2026-09-14 | EXP-005 methodology review — amends DEC-015 and DEC-016 (Day 32)
+
+**Decision.** The master methodology review is **ADOPTED IN FULL**. This entry
+amends the signed DEC-015 and DEC-016 rather than rewriting them, per DEC-009's
+change-control rule. Four substantive changes, two of which revise decisions the
+operator had already signed, and both of which rest on evidence found only during
+the review.
+
+**1. B3 is SPECIFIED but NOT EXECUTED as a TEST arm (amends DEC-016 Decision B).**
+`k` = 7.4506 stands unchanged. New evidence: B3 diverges from 16 partitions only
+above **2.147 GB**, and the largest dataset anywhere in the frozen universe -
+train, validation AND test - is **0.4042 GB**. B3 would need a cell **5.3x larger
+than anything that exists** before it differed from B1. It is therefore provably
+byte-identical to B1 on every cell that will ever be executed, verified by
+comparing configuration fingerprints. Running it would spend **35 TEST
+executions** measuring a configuration identical to one already in the queue.
+B3's specification and its identity to B1 are reported ANALYTICALLY instead.
+SC3 ("not worse than heuristics") becomes RL vs B1 **by proof rather than by
+omission** - a defensible result, and a more interesting one than a duplicate
+column: the literature-standard 128-MB sizing heuristic degenerates to the
+validation-tuned static baseline at these data volumes.
+
+**2. B0' executes in EXP-005b, NOT in EXP-005's pooled comparison (amends
+DEC-016 Decision A).** Decision A's identity finding is unchanged - B0' is the
+AQE-on factory default of PLAN:152. What changes is its placement, on evidence
+not weighed when A was signed: `ARCHITECTURE_FREEZE.md:69` states "Main study:
+OFF (PLAN section 7). EXP-005b: ON ... Every manifest records aqe_mode; **analysis
+never pools across modes**." Pooling an AQE-on arm into a Wilcoxon / Cliff /
+Holm comparison against AQE-off arms is prohibited by that frozen rule. There is
+also a fairness defect independent of the rule: B0' ADAPTS AT RUNTIME while every
+other arm is configuration-frozen pre-execution, which is not a like-for-like
+comparison. This supersedes the earlier "EXPLICITLY INTENDED" reading recorded in
+DEC-016, which cited PLAN:72/:312 but had not weighed FREEZE:69.
+
+**3. EXP-005 is SEVEN arms (amends DEC-015 and DEC-016 Decision E).** With B3
+not executed and B0' moved, the set is **B0, B1, B2, B4, RL-s0, RL-s1, RL-s2**.
+The three RL replicate arms stand exactly as DEC-015 established - M8 failed at
+0.2000 and collapsing them would conceal the disagreement behind a choice.
+Consequence worth stating: this **restores PLAN:278/:312's "7 strategies"
+verbatim**, so the `PLAN STRATEGY-COUNT CONFLICT` recorded in DEC-016 Decision E
+is DISSOLVED and no PLAN amendment is required. Projected EXP-005 cost returns to
+**7 instances x 7 arms x 5 repetitions = 245**, matching the PLAN:312 register
+estimate exactly.
+
+**4. The B4 protocol is completed (amends DEC-016 Decision C).** Decision C fixed
+the budget, domain, RNG source, metric, freeze point and split, but left the cell
+schedule, the seed value and the aggregation rule undefined - which the Day-32
+calibration task correctly refused to run against. Completed here:
+
+- **Schedule:** round-robin over the 7 eligible TRAIN cells x 12 cycles = 84,
+  mirroring RL-s0's 7 cells x 12 epochs so "equal budget" is equal in
+  distribution as well as count.
+- **Draw:** action uniform over the frozen 12-action grid, seeded RNG, **seed 0**
+  (the parallel to RL-s0).
+- **Aggregation:** per-action **median of `execution_time_s / T_ref(cell)`**.
+- **Eligibility:** an action needs at least one usable observation; actions with
+  none are reported ineligible, never ranked on a shorter panel (Day-31's rule).
+- **Budget:** 84, unchanged.
+
+**Why normalisation and not a balanced design.** Cell runtimes span
+**2.21 s to 36.67 s - a 16.6x spread** - so a raw per-action median would select
+whichever action happened to draw fast cells. Balancing coverage instead would
+require exactly one observation per (action, cell) pair, and since 12 x 7 = 84
+equals the budget exactly, that degenerates into the exhaustive grid: no longer
+random, and a duplicate of EXP-002's TRAIN scan. Normalising by the frozen T_ref
+removes the cell effect while keeping the draw genuinely random, and it reuses an
+existing frozen mechanism - R3 already normalises by T_ref for precisely this
+reason - rather than introducing a new constant.
+
+**5. EXP-005 failure protocol (for DEC-014 to incorporate).** Deterministic and
+**no-retry**: a failed execution is a first-class recorded observation; retries
+are refused because retrying only failures biases the sample toward
+configurations that fail intermittently; medians are taken over USABLE
+repetitions only; a cell with fewer than 5 usable repetitions is marked
+INCOMPLETE and excluded from pooled statistics with its count reported; a failed
+strategy-cell does not block queue completion.
+
+**6. Authorization design (for DEC-014 to incorporate).** Purpose-scoped, in the
+shape DEC-013 Model B established: a dedicated EXP-005 entry point supplies its
+own `authorize_test_cell` restricted to the seven frozen instances, leaving
+`assert_train_only` and `TestSplitSealed` untouched as defaults. The AQE-on
+runner authorization stays a SEPARATE clause - different purpose - and under
+amendment 2 above it is no longer on EXP-005's critical path at all.
+
+**Affected.** DEC-015 (arm framing), DEC-016 (A, B, C, E). No PLAN edit is
+required - amendment 3 removes the only reason one was pending. B1/B2, the RL
+policies, gamma, the StateVector, the reward, the action space, the split guards
+and TEST all unchanged.
+
+**Budget.** 232/500 now; 316/500 after the authorized B4 search. EXP-005's 245
+sits on its own register line, not SC6.
+
+**Approval.** Recorded by the operator on 2026-09-14 after the master
+methodology review presented each option with its alternatives and research risk.
+Supervisor counter-signature follows the M2-freeze path.
+
+**Status.** **DECIDED** - EXP-005 is seven arms; B3 analytic, B0' in EXP-005b;
+the B4 protocol is complete and its 84-execution search is authorized but NOT yet
+run. No TEST execution is authorized by this entry; DEC-014 remains PENDING and
+must still incorporate items 5 and 6. TEST remains sealed.
