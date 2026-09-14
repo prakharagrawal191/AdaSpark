@@ -216,6 +216,25 @@ def resolve(strategy_id: str, *, family: str | None = None,
             "core-count rule for parallelism",
             {"rule": "clamp(input_GB * %.6f, %d, %d)" % (
                 B3_K, B3_MIN_PARTITIONS, B3_MAX_PARTITIONS),
+             # The implemented rule ALSO snaps the clamped value onto the
+             # nearest frozen level {16,32,64,128}, ties to the lower level.
+             # That snap is an implementation choice PLAN/DEC never authorized
+             # (DEC-018 Decision H). Recording it here keeps an auditor reading
+             # a B3 manifest from re-deriving the raw-clamp threshold (2.147 GB)
+             # instead of the one the code applies (3.221225472 GB).
+             "rule_snap": "then snap to nearest of (16,32,64,128), ties lower",
+             "rule_snap_provenance": (
+                 "IMPLEMENTATION CHOICE, not specified by PLAN:155 or DEC-016 "
+                 "Decision B; disclosed under DEC-018 Decision H"),
+             "divergence_threshold_gb_raw": B3_MIN_PARTITIONS / B3_K,
+             "divergence_threshold_gb_implemented": 24.0 / B3_K,
+             "execution_gate": (
+                 "NOT AUTHORIZED as a TEST arm: DEC-017 amendment 1 rules B3 "
+                 "SPECIFIED but NOT EXECUTED, because it resolves byte-identical "
+                 "to B1 across the entire frozen workload universe. Resolving "
+                 "this configuration does not authorize running it as an EXP-005 "
+                 "arm; EXP-005 is seven arms and B3 is not among them "
+                 "(DEC-018 Decisions B and I)."),
              "k": B3_K,
              "k_basis": "1e9 / 134217728 = one partition per 128 MB "
                         "(spark.sql.files.maxPartitionBytes default)",

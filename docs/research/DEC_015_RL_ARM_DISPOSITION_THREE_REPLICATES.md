@@ -89,6 +89,8 @@ it converts the M8 failure from a hidden assumption into a measured result
 pending supervisor counter-signature of this record and of DEC-014. TEST
 remains sealed until DEC-014 is approved.`
 
-**Status.** **PENDING SUPERVISOR COUNTER-SIGNATURE** (operator directive
-recorded; no execution authorized; Spark executions to date in this audit
-thread: 0).
+**Status.** **APPROVED (OPERATOR) — DEC-018 Decision C, 2026-09-14.**
+**NO SUPERVISOR COUNTER-SIGNED THIS RECORD.** DEC-018 Decision A converted the
+self-imposed supervisor gate into an operator decision and recorded the absence
+of supervisor review permanently. The three-replicate disposition stands and the
+EXP-005 arm count is 7, not 9.

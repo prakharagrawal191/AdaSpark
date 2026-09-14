@@ -19,10 +19,14 @@ ARCHITECTURE_FREEZE line 73 reads "Frozen policies evaluated once on test
   (b) the CONFIGURATIONS are frozen - the evaluation specification and the
       candidate grid fingerprint-verify, AQE is still off and the authoritative
       Day-3 timing semantics are unchanged;
-  (c) NOTHING LEARNED AND NOTHING WAS SPENT - no Q update is reachable from an
-      evaluation path, DEC-011 still resolves NO, the training ledger is
-      bit-identical to the committed Day-29 figure and no future experiment
-      (EXP-005 / EXP-005b / EXP-006) has produced an artifact;
+  (c) NOTHING LEARNED AND NOTHING UNACCOUNTED - no Q update is reachable from
+      an evaluation path, DEC-011 still resolves NO, and the training ledger
+      reconciles the committed Day-29 baseline (232 live executions) plus
+      authorized post-Day-29 TRAIN spends (84 B4 via DEC-016 C / DEC-017 and
+      20 EXP-001 via the Day-32 user protocol) for a current total of 336
+      of the 500 cap (164 remaining). Day 30 remains frozen at the Day-29
+      baseline of 232. No future experiment
+      (EXP-003 / EXP-005 / EXP-005b / EXP-006) has produced an artifact;
   (d) the artifacts are IMMUTABLE - a differing overwrite is refused, proved by
       attempting one against a throwaway copy.
 
@@ -126,15 +130,18 @@ MULTISTEP_CODE = re.compile(
     r"|num_phases|phase_reward|phase_state|phase_aware|multi_step|multistep"
     r"|rollout_phases|step_within_episode|bootstrap_target)\b", re.IGNORECASE)
 
-# Components explicitly out of scope on Day 31: deep RL, the execution cache
-# (COMP-EXP-11), the durable orchestrator (COMP-EXP-12), and every future
-# experiment. EXP-003 is NOT forbidden here - Day 31 is where it is specified.
+# Components explicitly out of scope on Day-32 maintenance: deep RL, the
+# execution cache (COMP-EXP-11), the durable orchestrator (COMP-EXP-12), and
+# future experiments. EXP-003/005/005b/006 DRIVERS are forbidden here; EXP-001
+# is EXPLICITLY PERMITTED — it was legitimately executed on Day 32, so its
+# driver (scripts/run_exp001.py) is expected. Artifacts live under
+# results/experiments/exp-001/, never in src/ or scripts/.
 FORBIDDEN_CODE = re.compile(
     r"\b(dqn|ppo|a2c|a3c|sac|td3|actor_critic|policy_gradient|reinforce"
     r"|target_network|torch|tensorflow|keras|stable_baselines"
     r"|cachekey|cacheentry|cache_hit|cache_lookup|execution_cache"
     r"|executioncache|durable_orchestrator|orchestrator"
-    r"|exp005|exp_005|exp005b|exp006|exp_006)\b", re.IGNORECASE)
+    r"|exp003|exp-003|exp005|exp-005|exp005b|exp-005b|exp006|exp-006)\b", re.IGNORECASE)
 
 # Paths that would mean a future experiment has started producing results.
 FUTURE_EXPERIMENT_GLOBS = ("*exp-005*", "*exp005*", "*exp-006*", "*exp006*",
@@ -214,15 +221,30 @@ def git_modified_tracked() -> tuple[list[str] | None, str]:
 
 
 def ledger_from_manifests() -> tuple[int, int]:
-    """(manifest count, summed live_executions) over the whole training tree."""
+    """(manifest count, summed live_executions) over the whole training tree.
+
+    Malformed ledger data is a validation FAILURE, never a silent skip: every
+    unreadable or non-numeric artifact is recorded in
+    ``ledger_from_manifests.errors`` (a list of "path: reason" strings, empty
+    on the clean path) so check 22 can FAIL loudly instead of undercounting.
+    ``errors`` is reset on each call; concurrent callers must not share it.
+    """
+    ledger_from_manifests.errors = []
     manifests = sorted(TRAINING_ROOT.rglob("manifest.json"))
     total = 0
     for path in manifests:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            total += int((data.get("budget") or {}).get("live_executions", 0))
+        except (OSError, json.JSONDecodeError) as exc:
+            ledger_from_manifests.errors.append(f"{path}: {type(exc).__name__}")
             continue
-        total += int((data.get("budget") or {}).get("live_executions", 0))
+        except (ValueError, TypeError) as exc:
+            # A manifest that parses but carries a non-numeric count (e.g.
+            # "live_executions": "many") is corrupt data, not a programming
+            # error: record it and keep the failure loud via check 22.
+            ledger_from_manifests.errors.append(f"{path}: corrupt count")
+            continue
     # The B4 equal-budget search (DEC-016 C / DEC-017) executes REAL TRAIN cells
     # but writes an evaluation artifact rather than a training manifest, so it
     # would otherwise be invisible to this ledger. DEC-016 C explicitly charges
@@ -234,9 +256,32 @@ def ledger_from_manifests() -> tuple[int, int]:
             data = json.loads(b4.read_text(encoding="utf-8"))
             if data.get("split") == "train":
                 total += int((data.get("observation_counts") or {}).get("total", 0))
-        except (OSError, json.JSONDecodeError):
-            pass
+        except (OSError, json.JSONDecodeError) as exc:
+            ledger_from_manifests.errors.append(f"{b4}: {type(exc).__name__}")
+        except (ValueError, TypeError):
+            ledger_from_manifests.errors.append(f"{b4}: corrupt count")
+    # The EXP-001 noise calibration (user-authorized Day-32 protocol) executes
+    # REAL TRAIN cells but writes results/experiments/exp-001/ rather than a
+    # training manifest, so it would otherwise be invisible to this ledger.
+    # It is charged to the cap ("316 -> 336 of 500"), so it is counted here
+    # from its stored summary artifact (observation_counts.total), never from
+    # a hardcoded number. Omitting it would understate true TRAIN consumption.
+    exp_root = PROJECT / "results" / "experiments" / "exp-001"
+    exp001 = exp_root / "summary.json"
+    if exp001.exists():
+        try:
+            data = json.loads(exp001.read_text(encoding="utf-8"))
+            if data.get("experiment_id") == "EXP-001" \
+                    and data.get("contains_test_data") is False:
+                total += int((data.get("observation_counts") or {}).get("total", 0))
+        except (OSError, json.JSONDecodeError) as exc:
+            ledger_from_manifests.errors.append(f"{exp001}: {type(exc).__name__}")
+        except (ValueError, TypeError):
+            ledger_from_manifests.errors.append(f"{exp001}: corrupt count")
     return len(manifests), total
+
+
+ledger_from_manifests.errors = []
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -644,28 +689,44 @@ def main(argv: list[str] | None = None) -> int:
           "src/ or scripts/" if not fb_hits else "found in: " + ", ".join(fb_hits))
 
     # ---- E. nothing SPENT --------------------------------------------------
-    # 22 the TRAINING ledger is bit-identical to the committed Day-29 figure
+    # 22 the TRAINING ledger accounts for the Day-29 baseline plus every
+    #     authorized TRAIN spend since. The absolute total may exceed the
+    #     Day-29 figure because DEC-017 authorized the 84-run B4 TRAIN search
+    #     and the Day-32 user protocol authorized the 20-run EXP-001 TRAIN
+    #     calibration - so the assertion is that Day-31 created no training
+    #     run and that every execution above the Day-29 baseline is
+    #     attributable to those authorized spends, never that the total is
+    #     frozen. EXP-003/005/005b/006 remain separate register lines and
+    #     are never charged here.
     n_manifests, live_total = ledger_from_manifests()
-    # Day 31 itself spent NOTHING, and that is what this checks. The absolute
-    # total may exceed the Day-29 figure because DEC-017 authorized the 84-run
-    # B4 TRAIN search on Day 32 - so the assertion is that Day-31 created no
-    # training run and that every execution above the Day-29 baseline is
-    # attributable to that one authorized search, not that the total is frozen.
+    ledger_errors = list(getattr(ledger_from_manifests, "errors", []))
     b4_art = ARTIFACT_DIR / "b4_selection.json"
     b4_spent = 0
     if b4_art.exists():
         _b4 = load_json(b4_art)
         if _b4.get("split") == "train":
             b4_spent = int((_b4.get("observation_counts") or {}).get("total", 0))
-    unexplained = live_total - DAY29_LIVE_EXECUTIONS - b4_spent
-    check("22 Day-31 spent nothing; growth is DEC-017-authorized",
+    exp001_sum = PROJECT / "results" / "experiments" / "exp-001" / "summary.json"
+    exp001_spent = 0
+    if exp001_sum.exists():
+        # Intentionally strict (no try/except): ledger_from_manifests above
+        # already parsed the same file under the same conditions, so any
+        # malformed content is recorded in ledger_errors and fails below.
+        # A second silent except here would mask the corruption twice.
+        _e1 = json.loads(exp001_sum.read_text(encoding="utf-8"))
+        if _e1.get("experiment_id") == "EXP-001" \
+                and _e1.get("contains_test_data") is False:
+            exp001_spent = int((_e1.get("observation_counts") or {}).get("total", 0))
+    unexplained = live_total - DAY29_LIVE_EXECUTIONS - b4_spent - exp001_spent
+    check("22 Day-31 spent nothing; growth is authorized",
           n_manifests == DAY29_MANIFEST_COUNT and unexplained == 0
-          and live_total <= LIVE_EXECUTION_CAP,
+          and live_total <= LIVE_EXECUTION_CAP and not ledger_errors,
           f"{n_manifests} manifests (Day-29: {DAY29_MANIFEST_COUNT}, unchanged - "
           f"Day 31 created no training run); {live_total} live executions = "
-          f"{DAY29_LIVE_EXECUTIONS} baseline + {b4_spent} authorized B4 search + "
-          f"{unexplained} unexplained; "
-          f"{LIVE_EXECUTION_CAP - live_total} remaining of {LIVE_EXECUTION_CAP}")
+          f"{DAY29_LIVE_EXECUTIONS} baseline + {b4_spent} B4 + "
+          f"{exp001_spent} EXP-001 + {unexplained} unexplained; "
+          f"{LIVE_EXECUTION_CAP - live_total} remaining of {LIVE_EXECUTION_CAP}"
+          + (f"; ledger_errors={ledger_errors[:2]}" if ledger_errors else ""))
 
     # 23 the projection executes nothing, and the cap gap is DISCLOSED not hidden
     projection = eval_spec.project_cost(EVALUATION_REPETITIONS)
@@ -780,8 +841,10 @@ def main(argv: list[str] | None = None) -> int:
             "src/sparkrl/evaluation/orchestration.py",       # Day-31 calibration wiring
             "scripts/validate_day30.py",                     # validator maintenance
             "scripts/validate_day31.py",
+            "scripts/validate_rl_environment.py",            # Day-32 EXP-001 maintenance
             "tests/unit/test_day31_evaluation.py",
             "tests/unit/test_evaluation_harness.py",
+            "tests/unit/test_exp001_maintenance.py",         # Day-32 EXP-001 maintenance
             # DEC-016 (A-F) authorizes the Day-32 strategy layer
             "src/sparkrl/evaluation/strategies.py",
             "tests/unit/test_exp005_strategies.py",

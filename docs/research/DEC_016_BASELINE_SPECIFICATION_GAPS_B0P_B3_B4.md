@@ -1,6 +1,10 @@
 # DEC-016 Draft — EXP-005 Baseline Specifications, TEST Scope and Arm Count
 
-> **Status.** **PENDING SUPERVISOR APPROVAL**
+> **Status.** **APPROVED (OPERATOR) — DEC-018 Decision D, 2026-09-14.**
+> **NO SUPERVISOR REVIEWED THIS DOCUMENT.** DEC-018 Decision A converted the
+> self-imposed supervisor gate into an operator decision and recorded the
+> absence of supervisor review permanently. Decisions A–F stand as recorded in
+> `DECISIONS.md`.
 > Prepared: Day-32 baseline specification audit, HEAD `061bc3e`.
 > Revised: Day-32 governance reconciliation, HEAD `1367fcc` — restructured into
 > six separately approvable decisions (A–F), Decision E added, and the AQE
@@ -283,5 +287,10 @@ published. `configs/rl.yaml`, the split guards, the reward, the StateVector,
 gamma and all training code are untouched. `docs/PLAN.md` is unmodified. DEC-014's
 approval status is unchanged. No approval is fabricated.
 
-**Status.** **PENDING SUPERVISOR APPROVAL** — six decisions open (A–F), no option
-selected, no constant proposed, no execution authorized.
+**Status.** **APPROVED (OPERATOR) — DEC-018 Decision D, 2026-09-14.** Decisions
+A–F are recorded in `DECISIONS.md`. **NO SUPERVISOR REVIEWED THIS DOCUMENT**;
+DEC-018 Decision A converted the self-imposed supervisor gate into an operator
+decision and recorded that absence permanently.
+
+*(The paragraph above this line describes the document's state before DEC-018 and
+is retained as history, not rewritten.)*

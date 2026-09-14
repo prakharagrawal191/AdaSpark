@@ -1,10 +1,14 @@
 # DEC-014 Draft — TEST Execution Authorization for EXP-005
 
-> **Status.** **PENDING SUPERVISOR APPROVAL**
+> **Status.** **APPROVED (OPERATOR) — DEC-018 Decision B, 2026-09-14.**
+> **NO SUPERVISOR REVIEWED THIS DOCUMENT.** DEC-018 Decision A converted the
+> supervisor gate — a control this project imposed on itself, not an
+> institutional requirement — into an operator decision, and recorded the
+> absence of supervisor review permanently. Read every approval here as an
+> operator decision and nothing more.
 > Prepared: Day 32 readiness audit (post Day-31 closure, HEAD `ba287a6`).
-> This is a DRAFT decision record. It is NOT approval. It does not unseal
-> TEST, modify any guard, or authorize any execution until the supervisor
-> signs it in `DECISIONS.md`.
+> Authorizes EXP-005 ONLY, at 7 instances x 7 arms x 5 repetitions = 245 TEST
+> executions. TEST remains sealed for EXP-005b and EXP-006.
 >
 > **AMENDMENT 1 (2026-09-13).** The RL-arm prerequisite referenced in Fact 5
 > is now the subject of its own draft decision: **DEC-015**
@@ -68,6 +72,12 @@ for the frozen EXP-005 protocol (PLAN line 312), given that:
    three artifacts into `models/policies/` is still pending and remains
    a precondition of any EXP-005 execution. DEC-015 is
    PENDING SUPERVISOR COUNTER-SIGNATURE.]`
+   `[SUPERSEDED 2026-09-14 — the two open items in the amendment above are
+   both now closed. The technical freeze is DONE: `models/policies/` holds
+   `policy-af41d8ae7a21d81f`, `policy-b801f4a7df200b04`,
+   `policy-d8fd7b9859d2feea` and `exp005_rl_arms.json`. DEC-015 is APPROVED
+   (operator) under DEC-018 Decision C. The amendment text is retained as
+   history and deliberately not rewritten.]`
 6. Failure protocol is PARTIALLY specified: statuses, unusable-run
    accounting, timeout (300 s) and the per-cell usability rule exist;
    retry/attempt policy, partial-cell median representation and the exact

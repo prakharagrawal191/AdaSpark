@@ -118,9 +118,42 @@ def _part2() -> int:
                 hits.append(f"{f.name}:{i}: {line.strip()[:90]}")
     check("11 no_learning_no_cache", not hits, "; ".join(hits[:3]) or "clean")
 
-    # 12. no EXP-001/003/005 artifacts introduced
-    exp_files = [p.name for p in (PROJECT / "scripts").glob("*exp00[135]*")]
-    check("12 no_exp001_003_005", not exp_files, str(exp_files))
+    # 12. EXP-001 driver integrity (Day 32: the authorized noise-calibration
+    #     driver). The pre-Day-32 invariant ("no *exp00[135]* script") is STALE:
+    #     EXP-001 was legitimately executed, so the driver's presence is
+    #     EXPECTED. The surviving invariant is narrower but not weaker: the
+    #     driver must be the single authorized TRAIN-only B0 driver, and no
+    #     future-experiment driver may exist - EXP-003, EXP-005, EXP-005b
+    #     or EXP-006, in either naming form (exp003 / exp-003, exp005 /
+    #     exp-005, exp005b / exp-005b, exp006 / exp-006).
+    driver = PROJECT / "scripts" / "run_exp001.py"
+    exp_files = [p.name for p in (PROJECT / "scripts").glob("*exp00[356]*")]
+    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp-00[356]*")]
+    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp_00[356]*")]
+    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp005b*")]
+    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp-005b*")]
+    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp_005b*")]
+    future_files = sorted({f for f in exp_files if f != "run_exp001.py"})
+    ok = driver.exists() and not future_files
+    if ok:
+        try:
+            src = driver.read_text(encoding="utf-8")
+            # Positive content pins (import-level, not string-literal):
+            # the driver must import the B0 drift guard, the TRAIN-only
+            # split guard (as the execute_run default), the B0 reference
+            # point, and split_of; and must carry the no-retry / no-overwrite
+            # protocol text. Import of assert_train_only is via execute_run's
+            # default split_guard (runner.py), so require the local use of
+            # split_of + the TRAIN defence plus the default-guard call site.
+            ok = all(tok in src for tok in
+                     ("assert_b0_unchanged", "b0_point", "split_of",
+                      "execute_run(spec, base)",
+                      "no-retry", "refusing to overwrite", "split != TRAIN"))
+        except OSError:
+            ok = False
+    check("12 exp001_driver_authorized", ok,
+          f"run_exp001.py present TRAIN-only B0 no-retry no-overwrite; "
+          f"no EXP-003/005/005b/006 driver={not future_files} ({future_files or 'none'})")
 
     # 13. agent package holds the Day-26 learner and NOTHING from a future day.
     #     Day 25 asserted this package was EMPTY (COMP-RL-10 was Day 26+). Day 26
