@@ -1,6 +1,14 @@
 # DEC-013 — Validation Execution Gate + B1/B2 Selection Repetition Rule
 
-**Status.** **PENDING SUPERVISOR APPROVAL**
+> **Status.** **SIGNED AND ADOPTED 2026-09-13.** The AUTHORITATIVE text is
+> **DEC-013** in `DECISIONS.md`, recorded by the operator: selection at 1
+> repetition, and the validation execution gate via Model B. This file is retained
+> as the working record of how the decision was reached; where it and
+> `DECISIONS.md` differ, `DECISIONS.md` governs. Supervisor counter-signature
+> follows the same pending path as the M2 freeze.
+>
+> Only this status banner was reconciled; no rationale, evidence, option text,
+> scope, budget figure, requirement, signature or date below it was altered.
 
 **Date drafted.** 2026-09-13 (Day 31, second governance gate)
 

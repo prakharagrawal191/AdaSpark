@@ -1,6 +1,13 @@
 # DEC-012 | 2026-09-13 | EXP-003 / B1-B2 Validation Selection Scheduling and Budget Reconciliation
 
-**Status.** **PENDING SUPERVISOR APPROVAL**
+> **Status.** **SIGNED AND ADOPTED 2026-09-13.** The AUTHORITATIVE text is
+> **DEC-012** in `DECISIONS.md`, recorded by the operator as Option B. This file
+> is retained as the working record of how the decision was reached; where it and
+> `DECISIONS.md` differ, `DECISIONS.md` governs. Supervisor counter-signature
+> follows the same pending path as the M2 freeze.
+>
+> Only this status banner was reconciled; no rationale, evidence, option text,
+> scope, budget figure, requirement, signature or date below it was altered.
 
 **Context.** Day 31 (PLAN line 277) is complete as an infrastructure/plan-freeze milestone: the evaluation harness is built, the TEST-split identity is frozen, the candidate grid is fingerprinted, and the B1/B2 selection machinery is proved to accept validation observations and structurally reject all others. Day 31 actual Spark executions: **0**.
 
