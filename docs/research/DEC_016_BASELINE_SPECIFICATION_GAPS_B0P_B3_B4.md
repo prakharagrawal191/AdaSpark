@@ -1,28 +1,38 @@
-# DEC-016 Draft — EXP-005 Baseline Specification Gaps (B0', B3, B4) and the Seven-Instance Scope
+# DEC-016 Draft — EXP-005 Baseline Specifications, TEST Scope and Arm Count
 
 > **Status.** **PENDING SUPERVISOR APPROVAL**
 > Prepared: Day-32 baseline specification audit, HEAD `061bc3e`.
+> Revised: Day-32 governance reconciliation, HEAD `1367fcc` — restructured into
+> six separately approvable decisions (A–F), Decision E added, and the AQE
+> question narrowed on the evidence.
 > This is a DRAFT. It is NOT in `DECISIONS.md`, carries no signature, selects no
 > option, and authorizes nothing. It proposes NO value for any undefined research
-> constant. Spark executions during the audit that produced it: **0**.
+> constant. Spark executions during the audits that produced it: **0**.
 
 ---
 
 ## Why this draft exists
 
-EXP-005 (PLAN line 312) requires seven strategies. Three of them — B0', B3 and B4
-— have **no implementation anywhere in `src/`**, and the `BaselineStrategy`
-interface that ARCHITECTURE_FREEZE line 66 specifies is not implemented either.
-Auditing what the repository actually defines for each surfaced five gaps, three
-of which cannot be closed by writing code, because the missing pieces are
-research choices rather than engineering details.
+EXP-005 requires a full strategy set. Three strategies — B0', B3 and B4 — have
+**no implementation anywhere in `src/`**, and the `BaselineStrategy` interface
+that `ARCHITECTURE_FREEZE.md:66` specifies is unimplemented too. Auditing what
+the repository actually defines surfaced six distinct questions. Three of them
+cannot be closed by writing code, because the missing pieces are research
+choices, not engineering details.
 
-DEC-015 already records that B0'/B3/B4 are unimplemented. This draft is narrower:
-it is about their **specifications**, not their absence.
+DEC-015 records that B0'/B3/B4 are unimplemented. This draft is narrower: it is
+about their **specifications**, the **TEST execution scope**, and the **arm
+count** — not their absence.
+
+Each decision below is separately approvable. They are deliberately not collapsed
+into one statement, because they have different owners, different evidence, and
+different consequences if refused.
 
 ---
 
-## Gap 1 — B0' is defined two different ways in two frozen documents
+## Decision A — B0' identity
+
+**Two frozen documents define B0' differently.**
 
 | Source | Definition |
 |---|---|
@@ -30,128 +40,148 @@ it is about their **specifications**, not their absence.
 | `docs/architecture/ARCHITECTURE_FREEZE.md:66` | "B0' **static-tuned EXP-003**" |
 | `docs/architecture/ARCHITECTURE_FREEZE.md:88` | EXP-003 produces "validation-split statics (**B0'**/B1/B2)" |
 
-These are not two phrasings of one baseline. One is an AQE-on factory default
-tied to RQ6; the other is a validation-tuned static configuration produced by
-EXP-003. Two further documents side with PLAN: `docs/BASELINE_B0.md:37` ("a
-separate comparison condition (B0', RQ6, EXP-005b)") and
-`docs/research/DAY17_BASELINE_AUDIT.md:38` ("condition (B0', EXP-005b), not part
-of B0").
+These are different baselines, not two phrasings of one. Two further documents
+side with PLAN: `docs/BASELINE_B0.md:37` ("a separate comparison condition (B0',
+RQ6, EXP-005b)") and `docs/research/DAY17_BASELINE_AUDIT.md:38` ("condition
+(B0', EXP-005b), not part of B0"). Seen from the EXP-003 side, the same conflict
+appears: EXP-003's register line (`PLAN.md:310`) lists its strategies as
+"B0,B1,B2" and does **not** mention B0'; `ARCHITECTURE_FREEZE.md:88` does.
 
-**DEC-010's precedence rule already settles which text governs** — PLAN governs
-where a derived Day-12 document contradicts it — so B0' is the AQE-on default.
-That much may need no new decision. What is NOT settled, and is the actual
-question recorded here:
+**DEC-010's precedence rule already governs this**: PLAN governs where a derived
+Day-12 document contradicts it. On that rule B0' is the AQE-on factory default,
+and ARCHITECTURE_FREEZE:66/:88 are superseded on this point.
 
-> PLAN line 77 fixes **AQE off for the main study** and assigns AQE-on to
-> EXP-005b / RQ6. Yet PLAN line 312 lists B0' among EXP-005's strategies. Is an
-> AQE-on baseline inside the AQE-off main comparison intended, or does B0' belong
-> only to EXP-005b?
-
-Note the same contradiction seen from the EXP-003 side: EXP-003's register line
-(PLAN:310) lists its strategies as "B0,B1,B2" and does not mention B0';
-ARCHITECTURE_FREEZE:88 does.
-
-**Requires:** a clarification, not a new constant.
+**Supervisor action:** confirm that DEC-010's precedence rule is intended to
+resolve this, or state the contrary. No new constant is required either way.
 
 ---
 
-## Gap 2 — B3's constant `k` and its parallelism rule are undefined
+## Decision B — B3 specification
 
 `docs/PLAN.md:155` is the ONLY definition of the B3 baseline in the repository:
 
 > `| B3 | Rule-based adaptive | partitions = clamp(input_GB x k, 16, 128);`
 > `core-count rule for parallelism | the key "is RL needed?" baseline |`
 
-ARCHITECTURE_FREEZE:66 adds only the label "B3 rule heuristic". No formula, no
-constant and no rule appears anywhere else.
+`ARCHITECTURE_FREEZE.md:66` adds only the label "B3 rule heuristic". No formula,
+constant or rule appears anywhere else.
 
-*(The `B3` entries throughout `docs/LITERATURE_MATRIX.md` are a literature entry
-ID — the SkewTune paper — and are unrelated to this baseline. They must not be
+*(The many `B3` entries in `docs/LITERATURE_MATRIX.md` are a literature entry ID
+— the SkewTune paper — and are unrelated to this baseline. They must not be
 mistaken for a specification.)*
 
-`UNDEFINED IN CURRENT PLAN/REPOSITORY`, every item below:
-
-- `k` — its value, its derivation, its source
-- whether `k` is global, per-family, or tunable
-- whether `k` was meant to be calibrated, and if so on which split
-- `input_GB` — which measurement, from which artifact, in which unit
-- whether `input_GB` is known **before** execution (B3 must choose a
-  configuration pre-execution, as every strategy in this project does)
-- the "core-count rule for parallelism" — the rule itself
-- what "core count" refers to: physical cores, logical processors, `local[N]`,
-  `spark.default.parallelism`, or another quantity
+| Item | Status |
+|---|---|
+| `input_GB` definition | `UNDEFINED` |
+| `input_GB` measurement source / artifact | `UNDEFINED` |
+| `input_GB` unit conversion | `UNDEFINED` |
+| `input_GB` available pre-execution? | `UNDEFINED` |
+| `k` value | `UNDEFINED` |
+| `k` provenance / derivation | `UNDEFINED` |
+| `k` scope (global vs per-family) | `UNDEFINED` |
+| `k` tunability / calibration split | `UNDEFINED` |
+| clamp target parameter | `UNDEFINED` |
+| clamp bounds 16 / 128 meaning | partially implied, `UNDEFINED` as stated |
+| parallelism rule | `UNDEFINED` |
+| core-count definition | `UNDEFINED` |
+| core-count source | `UNDEFINED` |
 
 The clamp bounds 16 and 128 do coincide with the frozen shuffle-partition action
-levels {16, 32, 64, 128} (PLAN line 127), so the clamp plausibly targets
+levels {16, 32, 64, 128} (`PLAN.md:127`), so the clamp plausibly targets
 `spark.sql.shuffle.partitions` — but the repository never states this, and this
 draft does not assert it.
 
 **B3 is the baseline PLAN itself calls "the key 'is RL needed?' baseline", and
 SC3 (`RESEARCH_PROBLEM.md:305`) gates on RL vs B3.** Choosing `k` or the
 parallelism rule now — from hardware, from EXP-002, from B1, from observed
-performance, or from general Spark practice — would be a new research choice made
-after the RL results already exist. **No value is proposed here.**
+performance, or from general Spark practice — would be a research constant
+invented *after* the RL results already exist. **No value is proposed here, and
+no option is enumerated, because any option offered would itself be that
+constant.**
 
-**Requires:** a specification decision by the supervisor, or a PLAN amendment.
+**Supervisor action:** supply the undefined items; or amend PLAN to redefine B3;
+or drop B3 and record the consequence for SC3.
 
 ---
 
-## Gap 3 — B4's budget and selection rule are underspecified
+## Decision C — B4 specification
 
 | Source | Text |
 |---|---|
 | `docs/PLAN.md:156` | "Random search — uniform over the same 12 actions, same budget as RL — 'is it just exploration?'" |
 | `ARCHITECTURE_FREEZE.md:66` | "B4 equal-budget random"; "Random strategies draw from the Orchestrator RNG stream (seeded, logged)" |
 
-Specified: the draw is uniform over the frozen 12-action grid, and the RNG source
-is the seeded orchestrator stream.
+| Property | Status |
+|---|---|
+| 12-action domain | `DEFINED` — the frozen grid |
+| RNG source | `DEFINED` — seeded orchestrator stream |
+| "same budget as RL" referent | `UNDEFINED` |
+| budget unit (executions? episodes?) | `UNDEFINED` |
+| budget value | `UNDEFINED` |
+| draw occurs per execution? | `UNDEFINED` |
+| may actions be compared across a search? | `UNDEFINED` |
+| may a best-found action be selected? | `UNDEFINED` |
+| does any selection/tuning occur? | `UNDEFINED` |
+| when B4 becomes frozen | `UNDEFINED` |
 
-Undefined:
+**DEC-015 makes the budget referent mathematically ambiguous.** The RL component
+is now three arms of **84**, **49** and **42** episodes. "Same budget as RL" no
+longer denotes a single quantity: it could mean SC6's 500-execution training cap,
+any one of 84/49/42, their mean, their maximum, or a per-instance evaluation
+budget. The ambiguity did not exist when the RL component was a single arm.
 
-- **"same budget as RL"** — which budget? SC6's 500-execution training cap? The
-  episodes the evaluated policy actually trained on (84, 49 and 42 — and these
-  now differ per arm under DEC-015)? A per-instance evaluation budget?
-- **the selection rule.** "Random *search*" implies spending a budget and then
-  using a result. Does B4 draw once per measured run, or search within the budget
-  and then commit to its best-found configuration? If the latter, on what
-  measurement is "best" judged, and does that reintroduce a tuning step?
-- whether B4's configuration is **frozen before TEST**, as every other strategy
-  is, or drawn live during evaluation.
+The second question is the research-critical one: if B4 searches within a budget
+and then commits to its best-found configuration, "best" must be judged on some
+measurement — which would reintroduce a tuning step, and that step's split would
+have to be specified. If B4 instead draws once per measured run, no such step
+exists. PLAN's wording ("random *search*") does not settle it.
 
-DEC-015 sharpens the first question: with three RL arms of differing training
-lengths, "same budget as RL" no longer has a single referent.
-
-**Requires:** a specification decision.
+**Supervisor action:** define the budget referent, the selection rule, and
+whether B4's configuration is frozen before TEST.
 
 ---
 
-## Gap 4 — "7 instances" is never mapped to the frozen TEST set
+## Decision D — the seven-instance TEST scope
 
-`docs/PLAN.md:278` and `:312` both scope EXP-005 to **7 instances**, and the
+`docs/PLAN.md:278` and `:312` scope EXP-005 to **7 instances**, and the
 arithmetic is self-consistent: 7 instances x 7 strategies x 5 repetitions = 245,
 matching the register's "~245".
 
-But the frozen TEST identity (`results/evaluation/test_freeze.json`, Day 31)
-enumerates **43 cells**, and PLAN line 163 describes TEST conceptually as "all
-families x {L} x seeds{3,4} + F4 skew + public dataset + F5 with unseen
-parameters" — which additionally includes a public dataset and an
-unseen-parameter F5 variant that are not among the 43 enumerated
-family x scale x seed cells.
+The frozen TEST identity (`results/evaluation/test_freeze.json`, Day 31)
+enumerates **43 cells**. `PLAN.md:163` additionally describes TEST conceptually
+as including "a public dataset" and "F5 with unseen parameters", neither of which
+is among those 43 enumerated family x scale x seed cells.
 
-**No document states which 7 of the 43 are EXP-005's instances, nor how an
-"instance" is defined.** `EXP-005 INSTANCE MAPPING UNDEFINED`.
+`NO AUTHORITATIVE 7-INSTANCE MAPPING` — no document states which 7 of the 43 are
+EXP-005's instances, nor defines what an "instance" is. A mapping table cannot be
+built from repository evidence, and none is invented here.
 
-This also makes the pending **DEC-014 internally inconsistent**: its line 91
-reads "43 frozen TEST cells, 7 strategies, 5 repetitions, ~245", but
-43 x 7 x 5 = 1505, not 245. The ~245 figure requires 7 instances, not 43 cells.
-Whichever way this resolves, DEC-014's execution scope needs correcting before it
-is signed — the two readings differ by roughly 6x in TEST executions.
-
-**Requires:** a scope definition, and a correction to DEC-014.
+**Supervisor action:** define which TEST identities constitute the 7 instances,
+and how an instance is defined.
 
 ---
 
-## Gap 5 — implementation of B0'/B3/B4 is scheduled on no day
+## Decision E — EXP-005 arm count: 9 in effect, 7 in PLAN
+
+DEC-015 (signed) constitutes the RL component as three arms, making the EXP-005
+strategy set **nine**: B0, B0', B1, B2, B3, B4, RL-s0, RL-s1, RL-s2.
+
+`docs/PLAN.md` still reads **7** in both places that state it:
+
+- `:278` — "7 instances x **7 strategies** x 5 reps"
+- `:312` — "RL vs B0,B0',B1,B2,B3,B4" with "~245"
+
+`PLAN STRATEGY-COUNT CONFLICT`. DEC-015 records that the line-312 wording is
+superseded by decision rather than by a PLAN edit, and DEC-014 carries the same
+note inline. PLAN itself is unchanged and this draft does not change it.
+
+**Supervisor action:** confirm that the 9-arm scope stands on DEC-015 alone, or
+direct a PLAN amendment. `PLAN AMENDMENT REQUIRED AFTER SUPERVISOR DECISION` if
+the latter.
+
+---
+
+## Decision F — implementation scheduling
 
 | Work | Scheduled day | Explicitly scheduled? |
 |---|---|---|
@@ -160,31 +190,89 @@ is signed — the two readings differ by roughly 6x in TEST executions.
 | **B0' implementation** | — | **No** |
 | **B3 implementation** | — | **No** |
 | **B4 implementation** | — | **No** |
-| `BaselineStrategy` interface | — | **No** (specified at ARCHITECTURE_FREEZE:66, unimplemented) |
+| **`BaselineStrategy` interface** | — | **No** (specified at `ARCHITECTURE_FREEZE.md:66`, unimplemented) |
 
 Day 32 is "EXP-005 main comparison — queue completes"; it consumes the
 strategies, it does not build them. `PLAN SCHEDULING GAP`.
 
+All four items are implementable **without Spark and without opening TEST** —
+they are configuration-selection rules, unit-testable against fixtures exactly as
+the Day-31 harness was. Nothing here requires a real execution until EXP-005
+itself runs.
+
+**Supervisor action:** allocate these to a day explicitly, or fold them into
+Day 32's scope in writing. No day number is proposed here.
+
 ---
 
-## What the supervisor is asked to decide
+## Resolved by this audit — the AQE role (formerly an open question)
 
-1. **B0'** — confirm the PLAN reading (AQE-on default) under DEC-010's precedence
-   rule, and state whether B0' belongs in EXP-005 (AQE-off main study) or only in
-   EXP-005b / RQ6.
-2. **B3** — supply `k`, its scope and derivation, the `input_GB` measurement and
-   source, and the core-count parallelism rule; or amend PLAN to redefine B3; or
-   drop B3 and record the consequence for SC3.
-3. **B4** — define the budget referent, the selection rule, and whether B4's
-   configuration is frozen before TEST.
-4. **Seven instances** — define which TEST identities constitute the 7, and
-   correct DEC-014's execution scope accordingly.
-5. **Scheduling** — assign the implementation of B0'/B3/B4 and the
-   `BaselineStrategy` interface to a day, or fold them into Day 32's scope
-   explicitly.
+The earlier revision of this draft raised, as an open question, whether an AQE-on
+baseline belongs inside an AQE-off main study. On the evidence it is
+**EXPLICITLY INTENDED**, and the question is withdrawn:
 
-Options are deliberately not enumerated for items 2 and 3: any option this draft
-proposed would itself be a research constant invented after the RL results exist.
+- `PLAN.md:72` states the experimental contribution as "controlled, seeded,
+  statistically tested comparison across 5–7 baselines incl.
+  random-search-equal-budget **and AQE-on/off conditions**".
+- `PLAN.md:77` fixes AQE off **for the main study** so that *pre-execution
+  configuration selection is well-defined* — a constraint on strategies that
+  choose configurations, not a prohibition on an AQE-on reference point.
+- `PLAN.md:152` gives B0' the role "modern default + RQ6", and `:312` lists it in
+  EXP-005.
+- EXP-005b (Day 38, `PLAN.md:284`) remains the full AQE-on **condition** — all
+  strategies under AQE-on — which is a different scope from a single AQE-on
+  baseline point inside EXP-005.
+
+Decision A therefore narrows to the identity contradiction alone.
+
+---
+
+## Relationship to DEC-014, and sequencing
+
+DEC-014 authorizes **TEST execution and its final scope**. DEC-016 defines the
+**strategies and the design scope** that such an execution would run. They are
+separate concerns and no content is moved between them here.
+
+**DEC-014 cannot be soundly approved before Decisions D and E**, because its
+execution scope depends on both:
+
+`DEC-014 REQUIRES AMENDMENT BEFORE APPROVAL`
+
+Its Option A currently reads "43 frozen TEST cells, 7 strategies, 5 repetitions,
+~245 runs". Those statements are mutually incompatible: 43 x 7 x 5 = **1505**,
+not 245. The "~245" figure requires **7 instances**, not 43 cells. DEC-014's
+inline DEC-015 amendment correctly updates the strategy count (7 to 9) and the
+projection (~245 to ~315, as 9/7 x 245), but that amendment inherits the same
+premise — 43 x 9 x 5 = **1935**, not 315. The conflation of "43 frozen cells"
+with "7 instances" is therefore still live, and the two readings differ by
+roughly **6x** in TEST executions.
+
+This is a scope defect, not an arithmetic blunder: DEC-014's cost model is
+internally consistent *with a 7-instance scope*, and its cell count is
+internally consistent *with the frozen TEST identity*. What is missing is
+Decision D, which connects them.
+
+---
+
+## Supervisor decision matrix
+
+| Question | Current state | Decision needed |
+|---|---|---|
+| A — B0' identity | contradictory across PLAN and ARCHITECTURE_FREEZE | confirm DEC-010 precedence resolves it |
+| A2 — AQE role | **EXPLICITLY INTENDED** (`PLAN.md:72/77/152/312`) | none — resolved by this audit |
+| B — B3 `input_GB` | `UNDEFINED` | define |
+| B — B3 `k` (value, provenance, scope, tunability) | `UNDEFINED` | define |
+| B — B3 clamp target | `UNDEFINED` | define |
+| B — B3 parallelism / core-count rule | `UNDEFINED` | define |
+| C — B4 budget referent, unit and value | `UNDEFINED` (ambiguous since DEC-015) | define |
+| C — B4 selection rule and freeze point | `UNDEFINED` | define |
+| D — TEST 7-instance mapping | `NO AUTHORITATIVE MAPPING` | define |
+| E — EXP-005 arm count | 9 in effect (DEC-015), 7 in PLAN | reconcile; PLAN amendment if directed |
+| F — implementation scheduling | absent for B0'/B3/B4 and `BaselineStrategy` | allocate explicitly |
+| DEC-014 run scope | internally inconsistent (43 cells vs 7 instances) | amend before approval |
+
+No invented values appear in this matrix, and none is offered as a
+recommendation.
 
 ---
 
@@ -192,8 +280,8 @@ proposed would itself be a research constant invented after the RL results exist
 
 TEST remains sealed. B1/B2 remain frozen. RL-s0/s1/s2 remain frozen and
 published. `configs/rl.yaml`, the split guards, the reward, the StateVector,
-gamma and all training code are untouched. No PLAN file is modified. No approval
-is fabricated.
+gamma and all training code are untouched. `docs/PLAN.md` is unmodified. DEC-014's
+approval status is unchanged. No approval is fabricated.
 
-**Status.** **PENDING SUPERVISOR APPROVAL** — no option selected, no constant
-proposed, no execution authorized.
+**Status.** **PENDING SUPERVISOR APPROVAL** — six decisions open (A–F), no option
+selected, no constant proposed, no execution authorized.
