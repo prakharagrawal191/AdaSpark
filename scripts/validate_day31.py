@@ -223,6 +223,19 @@ def ledger_from_manifests() -> tuple[int, int]:
         except (OSError, json.JSONDecodeError):
             continue
         total += int((data.get("budget") or {}).get("live_executions", 0))
+    # The B4 equal-budget search (DEC-016 C / DEC-017) executes REAL TRAIN cells
+    # but writes an evaluation artifact rather than a training manifest, so it
+    # would otherwise be invisible to this ledger. DEC-016 C explicitly charges
+    # it to the cap ("taking the ledger from 232 to 316 of 500"), so it is
+    # counted here. Omitting it would understate true TRAIN consumption.
+    b4 = ARTIFACT_DIR / "b4_selection.json"
+    if b4.exists():
+        try:
+            data = json.loads(b4.read_text(encoding="utf-8"))
+            if data.get("split") == "train":
+                total += int((data.get("observation_counts") or {}).get("total", 0))
+        except (OSError, json.JSONDecodeError):
+            pass
     return len(manifests), total
 
 
@@ -633,13 +646,26 @@ def main(argv: list[str] | None = None) -> int:
     # ---- E. nothing SPENT --------------------------------------------------
     # 22 the TRAINING ledger is bit-identical to the committed Day-29 figure
     n_manifests, live_total = ledger_from_manifests()
-    check("22 training ledger unchanged by Day 31",
-          n_manifests == DAY29_MANIFEST_COUNT
-          and live_total == DAY29_LIVE_EXECUTIONS,
-          f"{n_manifests} manifests (Day-29: {DAY29_MANIFEST_COUNT}), "
-          f"{live_total} live executions (Day-29: {DAY29_LIVE_EXECUTIONS}), "
-          f"{LIVE_EXECUTION_CAP - live_total} remaining of {LIVE_EXECUTION_CAP} "
-          f"- Day 31 spent 0")
+    # Day 31 itself spent NOTHING, and that is what this checks. The absolute
+    # total may exceed the Day-29 figure because DEC-017 authorized the 84-run
+    # B4 TRAIN search on Day 32 - so the assertion is that Day-31 created no
+    # training run and that every execution above the Day-29 baseline is
+    # attributable to that one authorized search, not that the total is frozen.
+    b4_art = ARTIFACT_DIR / "b4_selection.json"
+    b4_spent = 0
+    if b4_art.exists():
+        _b4 = load_json(b4_art)
+        if _b4.get("split") == "train":
+            b4_spent = int((_b4.get("observation_counts") or {}).get("total", 0))
+    unexplained = live_total - DAY29_LIVE_EXECUTIONS - b4_spent
+    check("22 Day-31 spent nothing; growth is DEC-017-authorized",
+          n_manifests == DAY29_MANIFEST_COUNT and unexplained == 0
+          and live_total <= LIVE_EXECUTION_CAP,
+          f"{n_manifests} manifests (Day-29: {DAY29_MANIFEST_COUNT}, unchanged - "
+          f"Day 31 created no training run); {live_total} live executions = "
+          f"{DAY29_LIVE_EXECUTIONS} baseline + {b4_spent} authorized B4 search + "
+          f"{unexplained} unexplained; "
+          f"{LIVE_EXECUTION_CAP - live_total} remaining of {LIVE_EXECUTION_CAP}")
 
     # 23 the projection executes nothing, and the cap gap is DISCLOSED not hidden
     projection = eval_spec.project_cost(EVALUATION_REPETITIONS)
