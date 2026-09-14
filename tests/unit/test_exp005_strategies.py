@@ -7,10 +7,11 @@ from __future__ import annotations
 
 import pytest
 
-from sparkrl.evaluation.strategies import (IMPLEMENTED, OPEN_SPECIFICATIONS,
+from sparkrl.evaluation.strategies import (B3_K, B4_BUDGET, IMPLEMENTED,
+                                           RESOLVED_SPECIFICATIONS,
                                            StrategyResolutionError,
-                                           StrategyUnspecified, describe_all,
-                                           resolve)
+                                           b3_parallelism, b3_partitions,
+                                           describe_all, input_gb, resolve)
 from sparkrl.spark.config import SparkConfig
 
 pytestmark = [pytest.mark.unit]
@@ -52,18 +53,64 @@ def test_b0_remains_aqe_off():
     assert resolve("B0").config.aqe_enabled is False
 
 
-# --- B3/B4 must refuse rather than invent ------------------------------------
-@pytest.mark.parametrize("sid,decision", [("B3", "Decision B"), ("B4", "Decision C")])
-def test_unspecified_strategies_refuse_and_name_their_decision(sid, decision):
-    with pytest.raises(StrategyUnspecified) as exc:
-        resolve(sid)
-    assert decision in str(exc.value)
-    assert "OPEN" in str(exc.value)
+# --- B3: DEC-016 Decision B, and the collapse onto B1 ------------------------
+def test_b3_k_is_the_spark_default_partition_size_and_nothing_else():
+    """k must remain derivable from outside this project."""
+    assert B3_K == pytest.approx(1e9 / 134217728)
 
 
-def test_unspecified_strategies_are_not_in_the_implemented_set():
-    assert "B3" not in IMPLEMENTED and "B4" not in IMPLEMENTED
-    assert set(OPEN_SPECIFICATIONS) == {"B3", "B4"}
+def test_b3_collapses_onto_b1_at_this_data_scale():
+    """The recorded finding: at 0.039-0.404 GB the rule always clamps to 16."""
+    b1 = resolve("B1")
+    for family, scale, seed in (("F1_agg", "small", 0), ("F1_agg", "medium", 0),
+                                ("F1_agg", "large", 3), ("F5_mixed", "large", 3)):
+        b3 = resolve("B3", family=family, scale=scale, dataset_seed=seed)
+        assert b3.provenance["partitions"] == 16
+        assert b3.config_name == b1.config_name
+        assert b3.config_fingerprint == b1.config_fingerprint
+
+
+def test_b3_rule_is_a_real_clamp_not_a_hardcoded_16():
+    """If the data were larger the rule must move; 16 is the clamp, not a constant."""
+    assert b3_partitions(0.04) == 16          # below the floor -> clamped
+    assert b3_partitions(5.0) == 32           # 37.3 -> nearest frozen level
+    assert b3_partitions(20.0) == 128         # 149 -> clamped at the ceiling
+
+
+def test_b3_parallelism_respects_the_frozen_levels():
+    assert b3_parallelism() in (2, 4, 8)
+
+
+def test_b3_input_gb_comes_from_the_frozen_manifests():
+    gb = input_gb("F1_agg", "large", 3)
+    assert 0.3 < gb < 0.5                      # measured compressed Parquet
+    assert resolve("B3", family="F1_agg", scale="large",
+                   dataset_seed=3).provenance["input_gb"] == gb
+
+
+def test_b3_requires_the_full_cell_identity():
+    with pytest.raises(StrategyResolutionError):
+        resolve("B3", family="F1_agg")         # scale and seed missing
+
+
+# --- B4: frozen only by its TRAIN search -------------------------------------
+def test_b4_refuses_until_its_train_search_has_run():
+    import sparkrl.evaluation.strategies as strat
+    if strat.B4_SELECTION_ARTIFACT.exists():
+        pytest.skip("B4 search artifact exists; refusal path not exercisable")
+    with pytest.raises(StrategyResolutionError) as exc:
+        resolve("B4")
+    assert "has not been run" in str(exc.value)
+    assert "Nothing is guessed" in str(exc.value)
+
+
+def test_b4_budget_is_the_completed_rl_schedule():
+    assert B4_BUDGET == 84
+
+
+def test_all_six_baselines_are_implemented_and_history_is_retained():
+    assert set(IMPLEMENTED) == {"B0", "B0'", "B1", "B2", "B3", "B4"}
+    assert set(RESOLVED_SPECIFICATIONS) == {"B3", "B4"}
 
 
 # --- B1/B2 come from the frozen validation selection -------------------------
@@ -120,7 +167,7 @@ def test_unknown_strategy_is_refused_and_names_the_rl_arms():
     assert "policy_store" in str(exc.value)
 
 
-def test_inventory_reports_open_specifications_honestly():
+def test_inventory_names_the_collapse_and_the_rl_arms():
     inv = describe_all()
-    assert inv["B3"].startswith("OPEN") and inv["B4"].startswith("OPEN")
+    assert "collapses onto B1" in inv["B3"]
     assert "DEC-015" in inv["RL-s0/RL-s1/RL-s2"]

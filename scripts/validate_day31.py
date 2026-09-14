@@ -706,9 +706,11 @@ def main(argv: list[str] | None = None) -> int:
     # 26 no future experiment has started producing artifacts
     future: list[str] = []
     if RESULTS.is_dir():
+        allowed_scope = {"exp005_instances.json", "b4_selection.json"}
         for pattern in FUTURE_EXPERIMENT_GLOBS:
             future += [str(p.relative_to(PROJECT)).replace("\\", "/")
-                       for p in RESULTS.rglob(pattern)]
+                       for p in RESULTS.rglob(pattern)
+                       if p.name not in allowed_scope]
     stored_executed = [p.name for p in ARTIFACT_DIR.glob("*.json")
                        if load_json(p).get("executed") is True] \
         if ARTIFACT_DIR.is_dir() else []
@@ -719,6 +721,15 @@ def main(argv: list[str] | None = None) -> int:
                                        # identities; carries NO authoritative
                                        # timing and no research claim
                                        "validation_observations.json",
+                                       # DEC-016 D: the EXP-005 instance
+                                       # SCOPE definition (executed=false)
+                                       # and DEC-016 C's B4 TRAIN-search
+                                       # result. Scope/selection artifacts
+                                       # are not experiment RESULTS; the
+                                       # executed=True test below still
+                                       # catches a real run.
+                                       "exp005_instances.json",
+                                       "b4_selection.json",
                                        "test_freeze.json")) \
         if ARTIFACT_DIR.is_dir() else []
     check("26 no EXP-005/005b/006 artifact", not future and not stored_executed
@@ -745,6 +756,10 @@ def main(argv: list[str] | None = None) -> int:
             "scripts/validate_day31.py",
             "tests/unit/test_day31_evaluation.py",
             "tests/unit/test_evaluation_harness.py",
+            # DEC-016 (A-F) authorizes the Day-32 strategy layer
+            "src/sparkrl/evaluation/strategies.py",
+            "tests/unit/test_exp005_strategies.py",
+            "configs/baseline_b0_prime.yaml",
         }
         unexpected = sorted(f for f in changed if f not in authorized)
         # the split guard must be SEMANTICALLY unchanged despite runner.py moving

@@ -786,24 +786,70 @@ day is renumbered and nothing downstream shifts. All four items are buildable
 with **no Spark and with TEST sealed** - they are configuration-selection rules,
 unit-testable against fixtures exactly as the Day-31 harness was.
 
-**B, C, D — OPEN. NOT decided by this entry.**
-- **B (B3 specification)** - thirteen items UNDEFINED: `input_GB` definition,
-  source, unit and pre-execution availability; `k` value, provenance, scope and
-  tunability; the clamp target and bound interpretation; the parallelism rule;
-  the core-count definition and source. B3 is PLAN's own "key 'is RL needed?'
-  baseline" and SC3 gates on RL vs B3.
-- **C (B4 specification)** - budget referent, unit and value; draw frequency;
-  whether search/comparison is permitted; whether a best-found action may be
-  selected; whether any tuning occurs; the freeze point. DEC-015 made the budget
-  referent ambiguous: the arms are 84, 49 and 42 episodes, so "same budget as RL"
-  has no unique meaning.
-- **D (TEST instance scope)** - PLAN says 7 instances; the frozen inventory holds
-  43 cells; no authoritative mapping connects them. 7 x 9 x 5 = 315 against
-  43 x 9 x 5 = 1935, a 6.1x difference.
+**B — B3 specification. DECIDED.** `input_GB` = the dataset manifests'
+`total_bytes / 1e9` (compressed Parquet, decimal GB) - the sum
+`orders.total_bytes + lineitem.total_bytes` the state encoder already uses
+pre-execution, checksummed in frozen manifests, requiring no new measurement.
+The clamp targets `spark.sql.shuffle.partitions`, whose frozen action levels
+{16, 32, 64, 128} are exactly the clamp bounds. The core-count rule resolves
+parallelism to the machine's physical core count clamped to the frozen levels
+{2, 4, 8}; this machine has 24 physical cores, so B3 selects parallelism 8.
+**`k` = 7.45**, derived as 1e9 / 134217728 - one partition per 128 MB, Spark's
+own `spark.sql.files.maxPartitionBytes` default. It is the only candidate
+derivable from outside this project.
 
-No value is proposed for any of these, and no options are enumerated for B and C,
-because any option offered would itself be a research constant chosen after the
-RL results already exist.
+**B3 COLLAPSES ONTO B1, AND THAT IS RECORDED AS A FINDING, NOT ENGINEERED
+AROUND.** Measured dataset sizes are 0.0386 / 0.1320 / 0.4042 GB (S/M/L), so
+`clamp(input_GB x 7.45, 16, 128)` yields **16 partitions at every scale**. With
+parallelism 8 this is `G-p8-sp16`, byte-identical to the frozen B1. B3 is
+therefore a duplicate arm at this project's data volume, and SC3
+(`RESEARCH_PROBLEM.md:305`, "not worse than heuristics") reduces in practice to
+RL vs B1. The alternative - a larger `k` (256 or 512) chosen so the formula
+produces a visible gradient - was REJECTED because no value outside this project
+justifies it and it would have been selected after the RL results already
+existed. The degeneracy is a fact about the data scale and is reported as one.
+
+*Recorded for the reader: PLAN's scale ladder ("S ~0.3, M ~1, L ~3 GB",
+`PLAN:115`) describes LOGICAL volume; at 10.8 bytes/row compressed Parquet,
+37.5M rows is ~3 GB uncompressed and 0.404 GB on disk. Both measures are
+legitimate and they differ ~7.4x in `k`. This entry pins the on-disk measure
+because it is the one the system actually has.*
+
+**C — B4 specification. DECIDED.** B4 is an **equal-budget random search on the
+TRAIN split**: **84** uniform draws over the frozen 12-action grid from the
+seeded Orchestrator RNG stream, the best selected by **median
+`execution_time_s`**, then **frozen before TEST** as an immutable fingerprinted
+artifact. N = 84 is RL-s0's training budget - the only arm that completed the
+full prescribed 84-episode schedule and reached the frozen epsilon floor of 0.05,
+and therefore the only well-defined single referent for "same budget as RL" now
+that DEC-015 gives arms of 84, 49 and 42. Searching on TRAIN touches neither
+VALIDATION nor TEST. Projected cost: 84 executions, taking the ledger from
+232 to 316 of 500.
+
+**D — EXP-005 TEST instance scope. DECIDED.** The seven instances are:
+
+| # | family | scale | dataset seed | unseen dimension |
+|---|---|---|---|---|
+| 1 | F1_agg | large | 3 | unseen scale L |
+| 2 | F2_join | large | 3 | unseen scale L |
+| 3 | F3_rdd | large | 3 | unseen scale L |
+| 4 | F4_ski | large | 3 | unseen scale L + unseen family |
+| 5 | F5_mixed | large | 3 | unseen scale L |
+| 6 | F4_ski | small | 4 | unseen family + unseen seed |
+| 7 | F4_ski | medium | 4 | unseen family + unseen seed |
+
+All seven verified `split_of() == "test"`. The set covers every unseen dimension
+`PLAN:192` names - unseen scale, unseen family, unseen seeds - and was chosen
+without reference to any performance measurement. This resolves the 7-vs-43
+conflict: the 43 frozen cells remain the TEST IDENTITY, and these 7 are the
+EXP-005 INSTANCES drawn from it. `7 x 9 arms x 5 repetitions = 315`, matching
+DEC-014's projection.
+
+**GAP THAT NO CHOICE HERE CAN CLOSE:** `PLAN:163` also names "public dataset" and
+"F5 with unseen parameters" as TEST material. Neither exists among the 43
+enumerated cells nor on disk - no NYC-Taxi dataset was ever generated. EXP-006's
+external-validity component is unavailable regardless of this scope decision, and
+that is recorded rather than quietly dropped.
 
 **Affected.** B0' becomes implementable as a strategy (execution still gated).
 B3 and B4 remain unimplementable. `DEC-014 REQUIRES AMENDMENT BEFORE APPROVAL`
@@ -815,6 +861,9 @@ policy, budget or stored result changes under this entry.
 `docs/research/DEC_016_BASELINE_SPECIFICATION_GAPS_B0P_B3_B4.md`. Supervisor
 counter-signature follows the M2-freeze path.
 
-**Status.** **PARTIALLY DECIDED** - A, E and F resolved; B, C and D remain open
-and continue to block EXP-005. No execution is authorized by this entry; TEST
-remains sealed.
+**Status.** **DECIDED** - all six questions (A-F) resolved on 2026-09-14. B3
+collapses onto B1 and is recorded as such; B4 requires an 84-execution TRAIN
+search before it is frozen; the seven EXP-005 instances are named. No TEST
+execution is authorized by this entry - that remains DEC-014, which may now be
+amended to the resolved 7-instance scope and must also cover the AQE-on runner
+guard. TEST remains sealed.

@@ -1,0 +1,63 @@
+{
+ "decision": "DEC-016 Decision D",
+ "executed": false,
+ "fingerprint": "1c33975aebf813023777a209165e3aa5ee8b66fe61ae5eefa80337750787c815",
+ "frozen_test_cells_total": 43,
+ "instance_count": 7,
+ "instances": [
+  {
+   "dataset_seed": 3,
+   "family": "F1_agg",
+   "scale": "large",
+   "split": "test",
+   "unseen_dimension": "unseen scale L"
+  },
+  {
+   "dataset_seed": 3,
+   "family": "F2_join",
+   "scale": "large",
+   "split": "test",
+   "unseen_dimension": "unseen scale L"
+  },
+  {
+   "dataset_seed": 3,
+   "family": "F3_rdd",
+   "scale": "large",
+   "split": "test",
+   "unseen_dimension": "unseen scale L"
+  },
+  {
+   "dataset_seed": 3,
+   "family": "F4_ski",
+   "scale": "large",
+   "split": "test",
+   "unseen_dimension": "unseen scale L + unseen family F4"
+  },
+  {
+   "dataset_seed": 3,
+   "family": "F5_mixed",
+   "scale": "large",
+   "split": "test",
+   "unseen_dimension": "unseen scale L"
+  },
+  {
+   "dataset_seed": 4,
+   "family": "F4_ski",
+   "scale": "small",
+   "split": "test",
+   "unseen_dimension": "unseen family F4 + unseen seed 4"
+  },
+  {
+   "dataset_seed": 4,
+   "family": "F4_ski",
+   "scale": "medium",
+   "split": "test",
+   "unseen_dimension": "unseen family F4 + unseen seed 4"
+  }
+ ],
+ "no_research_claim": "A scope definition. It establishes nothing about any strategy's performance.",
+ "relationship": "The 43 cells in test_freeze.json remain the TEST IDENTITY. These 7 are the EXP-005 INSTANCES drawn from it, resolving the 7-vs-43 conflict PLAN left open. 7 instances x 9 arms x 5 repetitions = 315, matching DEC-014's projection.",
+ "schema_version": "exp005-instances/v1",
+ "selection_basis": "Covers every unseen dimension PLAN:192 names - unseen scale L (all five families), unseen family F4 (three cells), unseen seed 4 (two cells). Chosen without reference to any performance measurement; no TEST metric exists and none was consulted.",
+ "unavailable_test_material": "PLAN:163 also names a 'public dataset' (NYC Taxi) and 'F5 with unseen parameters'. Neither exists among the 43 enumerated cells nor on disk. EXP-006's external-validity component is unavailable regardless of this scope decision; recorded rather than quietly dropped."
+}
