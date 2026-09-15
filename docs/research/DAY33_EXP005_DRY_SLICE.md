@@ -18,10 +18,29 @@ It is **not** pending. No supervisor reviewed it; DEC-018 Decision A converted
 that self-imposed gate into an operator decision and recorded the absence of
 supervisor review permanently.
 
-Authorized scope: 7 instances x 7 arms x 5 repetitions = **245 TEST
-executions**, on EXP-005's own register line, outside the SC6 TRAIN cap.
+**What DEC-018 Decision B approved**, in its own words: TEST is opened "solely
+and strictly for the frozen EXP-005 protocol at the resolved scope: **7
+instances x 7 arms x 5 repetitions = 245 TEST executions**, charged to EXP-005's
+own register line and outside the SC6 TRAIN cap… TEST remains sealed for every
+other purpose, including EXP-005b and EXP-006, each of which requires its own
+decision."
 
-Governance snapshot: `git log --oneline -1` = `715a7d3`.
+Two consequences follow, and they are distinct:
+
+1. **The 7-run dry slice was legitimately authorized when it ran.** It is a
+   prefix of the 245 that Decision B released. It was **not** executed under a
+   still-pending authorization: DEC-018 was committed as `715a7d3` and the slice
+   ran afterwards, against instance 1 of the 7 named in the same decision.
+2. **The remaining 238 are also already authorized.** They are the balance of
+   the same 245. What gates them is not authorization but an operator
+   *sequencing* control — the dry-slice protocol requires explicit instruction
+   before continuing. Authorization and instruction are different things, and
+   the earlier record blurred them.
+
+Nothing outside the 245 is authorized by any current decision.
+
+Governance snapshot at correction time: `715a7d3` (DEC-018), `feb5a16` (this
+record).
 
 ## 2. Frozen instances and the executed cell
 
@@ -84,15 +103,25 @@ matches `baseline_selection.json`'s `artifact_id` exactly.
 
 The declared/applied split is structural, not drift: *declared* is the knob-only
 `ConfigPoint.fingerprint()`, *applied* is the full `SparkConfig.fingerprint()`
-after resolution. B1 exhibits the same pattern.
+after resolution. Both arms exhibit the pattern, and both declared values were
+independently recomputed: `ConfigPoint("B0").fingerprint()` = `a69cee0f...3612`
+and `ConfigPoint("G-p8-sp16").fingerprint()` = `f857d8de...204c`, each equal to
+the declared value recorded on every row of its arm.
 
-**B0's check is weaker and must not be overstated.** B0's applied fingerprint
-matches neither its declared value nor the live `configs/baseline_b0.yaml`
-fingerprint (`9270d2ce...`). This is expected — `app_name` and path fields differ
-at run time and are inside the SparkConfig hash — but it means **no frozen value
-exists to cross-check B0's executed configuration against**. What does hold is
-that the driver calls `assert_b0_unchanged(base)` before executing, which is a
-real guard on the source file.
+**B0's check is weaker and must not be overstated.** The evidence-based
+statement is:
+
+> B0 was resolved from the frozen `configs/baseline_b0.yaml` source. The applied
+> runtime fingerprint is a *derived runtime* configuration fingerprint and is
+> **not** identical to the source-file fingerprint (`9270d2ce...`), because
+> `app_name` and path metadata are resolved per run and fall inside the
+> `SparkConfig` hash. **No evidence of B0 configuration drift was found.**
+
+No claim of exact fingerprint equality is made for B0, because none exists. What
+does hold is that the driver calls `assert_b0_unchanged(base)` before executing,
+which is a real guard on the source file, and that AQE is recorded `false` in
+B0's arm provenance. B1's case remains the stronger one and is stated as such
+above.
 
 No cross-contamination: B0 rows carry only B0 provenance, B1 rows only B1.
 
@@ -115,13 +144,30 @@ artifacts fail the project's own `freeze.verify_artifact()`:
 | `b4_selection.json` | yes | **no** | **ArtifactCorrupt** |
 | `exp005_instances.json` | **no** | yes | **ArtifactCorrupt** |
 
-Neither failure indicates tampering. Both artifacts were written with hand-rolled
-hashing instead of `freeze.seal()`, so they carry only one of the two fields the
-verifier requires. `b4_selection.json` is a Day-32 defect of this project's own
-`scripts/run_b4_search.py`, which computed `artifact_id` inline rather than
-sealing through `freeze`. `exp005_instances.json` declares a `fingerprint` that
-could not be reproduced from its content by file-bytes or canonical-JSON hashing,
-so its derivation is unknown and it should not be cited as a verified pin.
+Neither failure indicates tampering, but **the two failures have different causes
+and must not be described together.** Each artifact carries only one of the two
+fields `verify_artifact()` requires, and that is where the similarity ends:
+
+- **`exp005_instances.json` — the content hash is GENUINE.** Its `fingerprint`
+  `1c33975a...c815` is **bit-identical** to `freeze.artifact_fingerprint()`
+  recomputed over the file (sha256 over canonical JSON, `sort_keys=True`,
+  `separators=(",",":")`, `ensure_ascii=True`, excluding the
+  `_FINGERPRINT_EXCLUDED` keys `artifact_id`/`fingerprint`/`created_utc`,
+  `freeze.py:37,60-65`). The hashing is **not** hand-rolled and the value **is a
+  verified content pin** of the frozen instance list. What is missing is only the
+  `artifact_id` stamp that `seal()` would have added, and `verify_artifact()`
+  fails solely on that: *"artifact_id does not match content"*.
+- **`b4_selection.json` — the hash really is hand-rolled.** It carries an
+  `artifact_id` of `0f87744727d1e12d...cff52` computed inline by
+  `scripts/run_b4_search.py`, and no `fingerprint` field at all;
+  `freeze.artifact_fingerprint()` over the same file yields a different value,
+  `4b0b1c47d50360ad...daad`. `verify_artifact()` fails with *"stored fingerprint
+  None != recomputed 4b0b1c47d50360ad"*. **This one is a genuine Day-32 defect of
+  this project's own code**, which computed the id inline instead of sealing
+  through `freeze`.
+
+So the frozen instance list is content-pinned and trustworthy; the B4 selection
+artifact is the one whose integrity rests on an unverifiable inline hash.
 
 **These are deliberately NOT re-sealed.** Re-sealing would change
 `exp005_instances.json`'s fingerprint, which is already recorded inside the
@@ -148,13 +194,70 @@ a limitation; any repair belongs to a fresh artifact under a new decision.
 
 3. **`exp005_instances.json` does not contain per-instance dataset fingerprints.**
    The report described "fingerprints computed over each instance's manifest tree
-   (exact file set + bytes)". Its instance records hold only `family`, `scale`,
-   `dataset_seed`, `split`, `unseen_dimension`. A single artifact-level
-   `fingerprint` covers the list; there is no per-dataset content hash, so the
-   `dataset_fingerprint` recorded in each observation has **no frozen counterpart
-   to be checked against**. Relatedly, the report's claim that B0's two
-   fingerprints are "both consistent with the frozen B0 baseline" asserts a check
-   no artifact supports (see §4).
+   (exact file set + bytes)". No such per-instance hash exists. Relatedly, the
+   report's claim that B0's two fingerprints are "both consistent with the frozen
+   B0 baseline" asserts a check no artifact supports (see §4). The precise
+   position is set out in §6.1.
+
+### 6.1 How EXP-005 instances are actually frozen
+
+> **`exp005_instances.json` freezes identity tuples, not content fingerprints.**
+
+Precisely:
+
+- **The queue is built from the frozen identity tuple**
+  `(dataset_seed, family, scale, split, unseen_dimension)`. Those five fields are
+  the complete per-instance record; no instance carries a content hash.
+- **The observation records carry a `dataset_fingerprint`** — `030fda48...688b`
+  for all 7 runs — produced by the runner at execution time from the dataset it
+  actually read.
+- **That relationship is an observation-level provenance property, not a
+  verification against the freeze artifact.** The observation fingerprint does
+  **not** demonstrate that the frozen instance artifact contains that value,
+  because the artifact contains no such field. There is no frozen counterpart to
+  compare it against.
+- **One artifact-level `fingerprint` does exist** at the top level of
+  `exp005_instances.json` (`1c33975aebf813023777a209165e3aa5ee8b66fe61ae5eefa80337750787c815`),
+  recorded identically in the dry slice's `spec.json` and `summary.json`. It
+  covers the artifact as a whole and **is a genuine content pin**: it reproduces
+  bit-identically from `freeze.artifact_fingerprint()` (see §5). It is, however,
+  **not** a per-instance dataset hash — it pins the identity-tuple list as
+  written, not the bytes of any dataset on disk. So it cannot be used to verify
+  that the dataset actually read at run time is the one intended; that gap is
+  what the bullet above describes.
+
+No fingerprint field was added to the instance-freeze artifact. Changing that
+artifact is not authorized by any current decision, and it has already been
+consumed by an executed TEST slice.
+
+### 6.2 A correction to this correction
+
+The first version of this corrected record (commit `feb5a16`) itself asserted,
+twice, that `exp005_instances.json`'s fingerprint "could not be reproduced from
+its content by file-bytes or canonical-JSON hashing, so its derivation is
+unknown" and that it "should not be cited as a verified pin". **That was wrong.**
+The fingerprint reproduces bit-identically from the project's own
+`freeze.artifact_fingerprint()`; the failed reproduction attempts had simply
+omitted the `_FINGERPRINT_EXCLUDED` keys (`artifact_id`, `fingerprint`,
+`created_utc`) that the function excludes. The same version wrongly attributed
+"hand-rolled hashing" to both failing artifacts, which is true only of
+`b4_selection.json`.
+
+The error is recorded rather than quietly overwritten because it is the same
+failure mode this document was written to correct: **asserting a negative from a
+failed personal attempt instead of consulting the authority that already exists
+in the repository.** The corrected position is in §5. Net effect on the
+conclusions: `exp005_instances.json`'s integrity is *better* than the first
+correction claimed, and `b4_selection.json`'s is unchanged.
+
+An adversarial verification pass over this record confirmed, independently, that
+all ten full-length hashes are exactly 64 characters and byte-identical to their
+artifacts, that `resolve("B1").config_fingerprint` equals the applied value, and
+that B1's `selection_artifact_id` equals `baseline_selection.json`'s
+`artifact_id`. One of that pass's four checks (scope and preserved findings)
+failed on a network error and did **not** run; the scope claims in §7 therefore
+rest on the primary verification recorded here, not on an independent second
+reading.
 
 ## 7. Scope discipline
 
