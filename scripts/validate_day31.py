@@ -22,13 +22,15 @@ ARCHITECTURE_FREEZE line 73 reads "Frozen policies evaluated once on test
   (c) NOTHING LEARNED AND NOTHING UNACCOUNTED - no Q update is reachable from
       an evaluation path, DEC-011 still resolves NO, and the training ledger
       reconciles the committed Day-29 baseline (232 live executions) plus
-      EVERY authorized post-Day-29 TRAIN spend (84 B4 via DEC-016 C /
-      DEC-017, 20 EXP-001 via the Day-32 user protocol, and 126 EXP-007
-      A1/A2 authorized by DEC-026) for a current total of 462 of the 500
-      cap (38 remaining, reconciled by DEC-031 sections 3/4/8). The
-      assertion is that every live execution is ATTRIBUTABLE to a recorded
-      authorization, never that the total is frozen. EXP-003 / EXP-005 /
-      EXP-005b / EXP-006 remain separate register lines, charged 0 here;
+      EVERY charged post-Day-29 TRAIN spend (84 B4 via DEC-016 C /
+      DEC-017, 20 EXP-001 via the Day-32 user protocol, 126 EXP-007
+      A1/A2 authorized by DEC-026, and 6 DEC-033 2026-09-19 smoke charged
+      under DEC-031 section 5 categories 1+3) for a current total of 468
+      of the 500 cap (32 remaining, reconciled by DEC-031 sections 3/4/8
+      plus DEC-033 sections 4-5). The assertion is that every live
+      execution is ATTRIBUTABLE to a recorded charging rule, never that
+      the total is frozen. EXP-003 / EXP-005 / EXP-005b / EXP-006 remain
+      separate register lines, charged 0 here;
   (d) the artifacts are IMMUTABLE - a differing overwrite is refused, proved by
       attempting one against a throwaway copy.
 
@@ -781,14 +783,17 @@ def main(argv: list[str] | None = None) -> int:
 
     # ---- E. nothing SPENT --------------------------------------------------
     # 22 the TRAINING ledger accounts for the Day-29 baseline plus every
-    #     authorized TRAIN spend since. The absolute total may exceed the
-    #     Day-29 figure because DEC-017 authorized the 84-run B4 TRAIN search,
-    #     the Day-32 user protocol authorized the 20-run EXP-001 TRAIN
-    #     calibration, and DEC-026 authorized EXP-007's A1/A2 TRAIN runs
-    #     (reconciled at 126 by DEC-031 sections 3/4/8) - so the assertion is
-    #     that every execution above the Day-29 baseline is ATTRIBUTABLE to a
-    #     recorded authorization, never that the total is frozen.
-    #     EXP-003/005/005b/006 remain separate register lines, charged 0.
+    #     charged TRAIN spend since. The absolute total may exceed the
+    #     Day-29 figure because DEC-017 charged the 84-run B4 TRAIN search,
+    #     the Day-32 user protocol charged the 20-run EXP-001 TRAIN
+    #     calibration, DEC-026 authorized EXP-007's A1/A2 TRAIN runs
+    #     (reconciled at 126 by DEC-031 sections 3/4/8), and DEC-033
+    #     sections 4-5 charged the six completed 2026-09-19 smoke TRAIN
+    #     executions under DEC-031 section 5 categories 1+3 - so the
+    #     assertion is that every execution above the Day-29 baseline is
+    #     ATTRIBUTABLE to a recorded charging rule, never that the total
+    #     is frozen. EXP-003/005/005b/006 remain separate register lines,
+    #     charged 0.
     #
     #     THE MANIFEST-COUNT CONJUNCT WAS REMOVED, and deliberately not
     #     replaced. It asserted n_manifests == 9 and existed to catch a run
@@ -856,14 +861,47 @@ def main(argv: list[str] | None = None) -> int:
             except (ValueError, TypeError):
                 ledger_errors.append(
                     f"{exp007_art.name}: corrupt total_live_executions")
+    # DEC-033 sections 4-5 charged-but-unauthorized 2026-09-19 smoke term.
+    # Two completed same-day smoke manifests (train-a0-d0-20260919T130241Z
+    # and train-a0-d0-20260919T130614Z) record 3 live TRAIN executions
+    # each under DEC-031 section 5 categories 1+3, for 6 newly classified
+    # executions. Read as a NAMED, BOUNDED constant recorded by DEC-033 -
+    # the same shape as the Day-29/B4/EXP-001/EXP-007 terms above - never
+    # by re-summing the same manifests that produce live_total, which
+    # DEC-032 section 6 forbids as self-cancelling. A seventh same-day
+    # completed smoke manifest, or a changed live count in either named
+    # directory, leaves the residual non-zero and FAILS loudly.
+    smoke_spent = 0
+    smoke_names = ("train-a0-d0-20260919T130241Z",
+                   "train-a0-d0-20260919T130614Z")
+    _smoke_live: list[int] = []
+    for _name in smoke_names:
+        _mp = TRAINING_ROOT / "smoke" / _name / "manifest.json"
+        try:
+            _md = json.loads(_mp.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            ledger_errors.append(f"{_name}: {type(exc).__name__}")
+            continue
+        try:
+            _live = int((_md.get("budget") or {}).get("live_executions", 0))
+        except (ValueError, TypeError):
+            ledger_errors.append(f"{_name}: corrupt live_executions")
+            continue
+        if _md.get("status") != "completed" or _live != 3:
+            ledger_errors.append(f"{_name}: expected completed/3")
+            continue
+        _smoke_live.append(_live)
+    if len(_smoke_live) == len(smoke_names) and not ledger_errors:
+        smoke_spent = 6  # DEC-033 sections 4-5 recorded charge, bounded here
     unexplained = (live_total - DAY29_LIVE_EXECUTIONS - b4_spent
-                   - exp001_spent - exp007_spent)
+                   - exp001_spent - exp007_spent - smoke_spent)
     check("22 every live execution is authorized",
           unexplained == 0 and live_total <= LIVE_EXECUTION_CAP
           and not ledger_errors,
           f"{n_manifests} manifests (reported, not asserted); {live_total} "
           f"live executions = {DAY29_LIVE_EXECUTIONS} Day-29 baseline + "
           f"{b4_spent} B4 + {exp001_spent} EXP-001 + {exp007_spent} EXP-007 "
+          f"+ {smoke_spent} DEC-033 2026-09-19 smoke "
           f"+ {unexplained} unexplained (must be exactly 0; a NEGATIVE value "
           f"means authorized spend exceeds the measured ledger and FAILS "
           f"loudly as inconsistent accounting); "
