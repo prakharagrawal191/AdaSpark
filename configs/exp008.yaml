@@ -1,0 +1,159 @@
+# EXP-008 A3/A4 configuration artifact - UNRESOLVED / FAIL-CLOSED TEMPLATE.
+#
+# Authority: DEC-030 (EXP-008 A3/A4 methodology freeze; execution NOT
+# authorized) and DEC-031 (SC6 budget reconciliation; EXP-008 execution
+# authorization = NO). The precedence order is PLAN.md > DECISIONS.md >
+# DEC-030 > DEC-031.
+#
+# This file is INERT: nothing in the primary study, EXP-005/006/007, the
+# baselines or the training loop loads it. It exists so that the frozen A3/A4
+# methodology has a schema-safe, explicitly-unresolved representation.
+#
+# Every key left `null` is a DEC-030 UNRESOLVED methodological field. It is
+# REQUIRED-BUT-UNSET: `sparkrl.training.exp008` refuses to make any arm
+# configuration-complete until a later decision supplies it explicitly.
+# `null` is never defaulted, and no value here changes the primary study.
+#
+# frozen (safe to state): experiment id, schema version, dataset seed 0,
+#     split=train, q0_projection=false, the DEC-030 arm identities, the A4
+#     action subset (frozen as mode4), and each A3 arm's own reward formula.
+# unresolved (`null`): everything else, including the A4 control-pairing
+#     reward, the A3 action schema, state schema, Q0 source, seeds, TRAIN
+#     cells, horizon, early-stop, AQE confirmation, warm-up, cache, alpha,
+#     gamma, epsilon schedule, execution budget and the live-execution
+#     charging rule.
+#
+# A5 is DISABLED (DEC-011; re-affirmed DEC-030 section 9) and is not
+# representable here at all.
+schema_version: "exp008-config/v1"
+experiment_id: "EXP-008"
+
+# Authorization is an EXTERNAL governance decision and remains NO (DEC-031).
+# This block is documentation of that fact; the implementation exposes no
+# mechanism that can set it to true.
+authorization:
+  execution_authorized: false
+  status: "NO (DEC-031: EXP-008 execution authorization = NO)"
+  note: >-
+    Requires an external authorization decision with worst-case execution
+    counts and its SC6 ledger charge (DEC-030 section 15 gate chain).
+
+# DEC-030 section 12 field 14: statistical governance is NOT frozen.
+statistical_governance: null
+
+arms:
+  A3-R3-frozen:
+    # DEC-030 section 3: R3 is the frozen primary reward. The arm identity
+    # fixes it; it is not an experimental choice.
+    reward_variant: "R3"
+    action_mode: null
+    state_schema: null
+    q0_source: null
+    q0_variant: null
+    q0_projection: false
+    agent_seeds: null
+    dataset_seed: 0
+    train_cells: null
+    split: "train"
+    t_ref_source: null
+    t_ref_fingerprint: null
+    alpha: null
+    gamma: null
+    epsilon_schedule: null
+    episode_horizon: null
+    early_stop_rule: null
+    execution_budget: null
+    aqe_condition: null
+    warm_up_behavior: null
+    cache_behavior: null
+    live_execution_charging_rule: null
+    statistical_governance: null
+    code_fingerprint: null
+
+  A3-time-only:
+    # DEC-030 section 3.2: R = 1.0 * clip((T_ref - T)/T_ref, -1, +1),
+    # failure -1.0. A MULTI-TERM REMOVAL from R3 (task-imbalance AND
+    # spill-waste), NOT a one-factor ablation.
+    reward_variant: "A3-time-only"
+    action_mode: null
+    state_schema: null
+    q0_source: null
+    q0_variant: null
+    q0_projection: false
+    agent_seeds: null
+    dataset_seed: 0
+    train_cells: null
+    split: "train"
+    t_ref_source: null
+    t_ref_fingerprint: null
+    alpha: null
+    gamma: null
+    epsilon_schedule: null
+    episode_horizon: null
+    early_stop_rule: null
+    execution_budget: null
+    aqe_condition: null
+    warm_up_behavior: null
+    cache_behavior: null
+    live_execution_charging_rule: null
+    statistical_governance: null
+    code_fingerprint: null
+
+  A3-R4-log-ratio:
+    # DEC-030 section 3.3: R4 = -ln(T / T_ref) is REGISTERED but INCOMPLETE.
+    # Its failure/domain/clipping/edge semantics are unresolved, so the
+    # implementation refuses to construct it - this arm can never execute
+    # while any of those fields is unset. No Q0 is admissible for it.
+    reward_variant: "A3-R4-log-ratio"
+    action_mode: null
+    state_schema: null
+    q0_source: null
+    q0_variant: null
+    q0_projection: false
+    agent_seeds: null
+    dataset_seed: 0
+    train_cells: null
+    split: "train"
+    t_ref_source: null
+    t_ref_fingerprint: null
+    alpha: null
+    gamma: null
+    epsilon_schedule: null
+    episode_horizon: null
+    early_stop_rule: null
+    execution_budget: null
+    aqe_condition: null
+    warm_up_behavior: null
+    cache_behavior: null
+    live_execution_charging_rule: null
+    statistical_governance: null
+    code_fingerprint: null
+
+  A4-mode4:
+    # DEC-030 section 4: the ONLY frozen EXP-008 execution-control field is
+    # the action mode (mode4 = {0, 3, 6, 9}, original indices preserved).
+    # The A4 control-pairing reward is UNFROZEN, so it stays null.
+    reward_variant: null
+    action_mode: "mode4"
+    state_schema: null
+    q0_source: null
+    q0_variant: null
+    q0_projection: false
+    agent_seeds: null
+    dataset_seed: 0
+    train_cells: null
+    split: "train"
+    t_ref_source: null
+    t_ref_fingerprint: null
+    alpha: null
+    gamma: null
+    epsilon_schedule: null
+    episode_horizon: null
+    early_stop_rule: null
+    execution_budget: null
+    aqe_condition: null
+    warm_up_behavior: null
+    cache_behavior: null
+    live_execution_charging_rule: null
+    statistical_governance: null
+    code_fingerprint: null

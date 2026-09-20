@@ -1,0 +1,591 @@
+{
+  "analysis_fingerprint": "10c245449aa16b3e41366c7530b1d022dc874e445bfb28df59e3c464be0c257b",
+  "b2_summary": {
+    "complete_cells": 1,
+    "executable_evidence_cells": 1,
+    "total_failed": 0,
+    "total_undefined": 20,
+    "total_usable": 5,
+    "undefined_cells": 4
+  },
+  "cell_arm_coverage": {
+    "F1_agg|large|s0": {
+      "B0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "B2": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s1": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s2": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      }
+    },
+    "F4_ski|large|s0": {
+      "B0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "B2": {
+        "eligible": false,
+        "failed": 0,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 5,
+        "usable": 0
+      },
+      "RL-s0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s1": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s2": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      }
+    },
+    "F4_ski|large|s4": {
+      "B0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "B2": {
+        "eligible": false,
+        "failed": 0,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 5,
+        "usable": 0
+      },
+      "RL-s0": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s1": {
+        "eligible": true,
+        "failed": 0,
+        "status": "5/5 usable",
+        "successful": 5,
+        "total": 5,
+        "undefined": 0,
+        "usable": 5
+      },
+      "RL-s2": {
+        "eligible": false,
+        "failed": 4,
+        "status": "1/5 usable, 4 failed",
+        "successful": 1,
+        "total": 5,
+        "undefined": 0,
+        "usable": 1
+      }
+    },
+    "F4_ski|medium|s3": {
+      "B0": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "B2": {
+        "eligible": false,
+        "failed": 0,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 5,
+        "usable": 0
+      },
+      "RL-s0": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "RL-s1": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "RL-s2": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      }
+    },
+    "F4_ski|small|s3": {
+      "B0": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "B2": {
+        "eligible": false,
+        "failed": 0,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 5,
+        "usable": 0
+      },
+      "RL-s0": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "RL-s1": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      },
+      "RL-s2": {
+        "eligible": false,
+        "failed": 5,
+        "status": "0/5 usable, 5 failed",
+        "successful": 0,
+        "total": 5,
+        "undefined": 0,
+        "usable": 0
+      }
+    }
+  },
+  "classification_predicates": {
+    "failed": "event_log_status == 'MISSING' AND usable == False AND execution_time_s is None AND config_name is not None",
+    "note": "String literals aligned to the ledger's actual tokens ('COMPLETE', 'NOT_EXECUTED', the full 'INCOMPLETE (DEC-019...)' error message); predicate logic preserved verbatim.",
+    "successful": "event_log_status == 'COMPLETE' AND usable == True AND execution_time_s is not None  (task text: 'COMPLETED')",
+    "undefined_b2_f4": "event_log_status == 'NOT_EXECUTED' AND usable == False AND execution_time_s is None AND config_name is None AND arm == 'B2' AND family == 'F4_ski' AND error == 'INCOMPLETE (DEC-019 Option A / DEC-022 scope): ...'"
+  },
+  "complete_cell_medians": {
+    "F1_agg|large|s0": {
+      "B0": {
+        "max": 52.505552599999646,
+        "median": 50.00348849999864,
+        "min": 44.99899100000039,
+        "n": 5,
+        "values": [
+          44.99899100000039,
+          49.18618299999798,
+          50.00348849999864,
+          50.0193317000012,
+          52.505552599999646
+        ]
+      },
+      "B2": {
+        "max": 10.037301799995475,
+        "median": 9.537869200001296,
+        "min": 9.264452999996138,
+        "n": 5,
+        "values": [
+          9.264452999996138,
+          9.476747499997145,
+          9.537869200001296,
+          9.895237799995812,
+          10.037301799995475
+        ]
+      },
+      "RL-s0": {
+        "max": 9.54131139999663,
+        "median": 9.424090600005002,
+        "min": 9.263210800003435,
+        "n": 5,
+        "values": [
+          9.263210800003435,
+          9.374001899996074,
+          9.424090600005002,
+          9.459918099993956,
+          9.54131139999663
+        ]
+      },
+      "RL-s1": {
+        "max": 9.57717810000031,
+        "median": 9.358740800002124,
+        "min": 9.10350820000167,
+        "n": 5,
+        "values": [
+          9.10350820000167,
+          9.207608400000026,
+          9.358740800002124,
+          9.515681799995946,
+          9.57717810000031
+        ]
+      },
+      "RL-s2": {
+        "max": 9.861693099999684,
+        "median": 9.521689300003345,
+        "min": 9.433028100000229,
+        "n": 5,
+        "values": [
+          9.433028100000229,
+          9.494029399997089,
+          9.521689300003345,
+          9.547150899998087,
+          9.861693099999684
+        ]
+      }
+    },
+    "F4_ski|large|s0": {
+      "B0": {
+        "max": 15.764683000001241,
+        "median": 15.621737800000119,
+        "min": 14.315024299998186,
+        "n": 5,
+        "values": [
+          14.315024299998186,
+          15.323973599995952,
+          15.621737800000119,
+          15.735341499996139,
+          15.764683000001241
+        ]
+      },
+      "RL-s0": {
+        "max": 7.665326199996343,
+        "median": 7.6217745000030845,
+        "min": 7.5214592999982415,
+        "n": 5,
+        "values": [
+          7.5214592999982415,
+          7.539892800006783,
+          7.6217745000030845,
+          7.630606099999568,
+          7.665326199996343
+        ]
+      },
+      "RL-s1": {
+        "max": 8.03939679999894,
+        "median": 7.634470900004089,
+        "min": 7.619206600000325,
+        "n": 5,
+        "values": [
+          7.619206600000325,
+          7.624569799998426,
+          7.634470900004089,
+          7.673924000002444,
+          8.03939679999894
+        ]
+      },
+      "RL-s2": {
+        "max": 7.579167899995809,
+        "median": 7.5549612999966484,
+        "min": 7.427158300000883,
+        "n": 5,
+        "values": [
+          7.427158300000883,
+          7.505241200000455,
+          7.5549612999966484,
+          7.563946500005841,
+          7.579167899995809
+        ]
+      }
+    },
+    "F4_ski|large|s4": {
+      "B0": {
+        "max": 15.768810299996403,
+        "median": 14.659406299993861,
+        "min": 12.50103769999987,
+        "n": 5,
+        "values": [
+          12.50103769999987,
+          14.61393799999496,
+          14.659406299993861,
+          15.712414500005252,
+          15.768810299996403
+        ]
+      },
+      "RL-s0": {
+        "max": 7.778492400000687,
+        "median": 7.684249199999613,
+        "min": 7.5723568000030355,
+        "n": 5,
+        "values": [
+          7.5723568000030355,
+          7.5851511000000755,
+          7.684249199999613,
+          7.697094700000889,
+          7.778492400000687
+        ]
+      },
+      "RL-s1": {
+        "max": 7.720266100004665,
+        "median": 7.55635230000189,
+        "min": 7.452516400000604,
+        "n": 5,
+        "values": [
+          7.452516400000604,
+          7.454538699996192,
+          7.55635230000189,
+          7.618068700001459,
+          7.720266100004665
+        ]
+      }
+    },
+    "F4_ski|medium|s3": {},
+    "F4_ski|small|s3": {}
+  },
+  "descriptive_single_runs": {
+    "F1_agg|large|s0": {},
+    "F4_ski|large|s0": {},
+    "F4_ski|large|s4": {
+      "RL-s2": {
+        "label": "single successful observation; cell incomplete; descriptive only",
+        "n": 1,
+        "values": [
+          7.5359994000027655
+        ]
+      }
+    },
+    "F4_ski|medium|s3": {},
+    "F4_ski|small|s3": {}
+  },
+  "failure_distribution": {
+    "F1_agg|large|s0": {
+      "B0": 0,
+      "B2": 0,
+      "RL-s0": 0,
+      "RL-s1": 0,
+      "RL-s2": 0
+    },
+    "F4_ski|large|s0": {
+      "B0": 0,
+      "B2": 0,
+      "RL-s0": 0,
+      "RL-s1": 0,
+      "RL-s2": 0
+    },
+    "F4_ski|large|s4": {
+      "B0": 0,
+      "B2": 0,
+      "RL-s0": 0,
+      "RL-s1": 0,
+      "RL-s2": 4
+    },
+    "F4_ski|medium|s3": {
+      "B0": 5,
+      "B2": 0,
+      "RL-s0": 5,
+      "RL-s1": 5,
+      "RL-s2": 5
+    },
+    "F4_ski|small|s3": {
+      "B0": 5,
+      "B2": 0,
+      "RL-s0": 5,
+      "RL-s1": 5,
+      "RL-s2": 5
+    }
+  },
+  "input_integrity": {
+    "all_rows_match_queue": true,
+    "duplicates": 0,
+    "index_max": 125,
+    "index_min": 1,
+    "queue_fingerprint_unchanged": true,
+    "queue_fp_match_expected": true,
+    "row_count": 125,
+    "selected_cells_fp_match_expected": true,
+    "spec_fingerprint_unchanged": true,
+    "spec_fp_match_expected": true,
+    "unique_indices": 125
+  },
+  "ledger_sha256": "be270c0be60be735e130165b8650d62272aed80f94aba1932140a706ad2eb577",
+  "per_arm_totals": {
+    "B0": {
+      "failed": 10,
+      "planned": 25,
+      "successful": 15,
+      "total": 25,
+      "undefined": 0,
+      "usable": 15
+    },
+    "B2": {
+      "failed": 0,
+      "planned": 25,
+      "successful": 5,
+      "total": 25,
+      "undefined": 20,
+      "usable": 5
+    },
+    "RL-s0": {
+      "failed": 10,
+      "planned": 25,
+      "successful": 15,
+      "total": 25,
+      "undefined": 0,
+      "usable": 15
+    },
+    "RL-s1": {
+      "failed": 10,
+      "planned": 25,
+      "successful": 15,
+      "total": 25,
+      "undefined": 0,
+      "usable": 15
+    },
+    "RL-s2": {
+      "failed": 14,
+      "planned": 25,
+      "successful": 11,
+      "total": 25,
+      "undefined": 0,
+      "usable": 11
+    }
+  },
+  "queue_fingerprint_recomputed": "c88ba20c75a0654a81c2113a83aefd119a19271985bdccabd4c7ef44ec917d4c",
+  "queue_fingerprint_stored": "c88ba20c75a0654a81c2113a83aefd119a19271985bdccabd4c7ef44ec917d4c",
+  "raw_classification": {
+    "failed": 44,
+    "successful": 61,
+    "unclassified": 0,
+    "undefined": 20
+  },
+  "rl_s2_summary": {
+    "complete_cells": 2,
+    "failed": 14,
+    "successful": 11,
+    "total_attempts": 25
+  },
+  "sc5_status": "NOT EVALUABLE (seen-relative-advantage baseline never frozen before EXP-006; not constructed; not derived from EXP-005)",
+  "selected_cells_fingerprint": "5fea06f272345a9d7bb0e11aca9208c416dac4a1bb5a37581976c1f149da17e5",
+  "spark_executions_during_analysis": 0,
+  "spec_fingerprint": "0f078dc2f89b726ef80a58c3b7161ded9cc071dfe48a34266725fe9872b7eb54",
+  "spec_fingerprint_recomputed": "0f078dc2f89b726ef80a58c3b7161ded9cc071dfe48a34266725fe9872b7eb54",
+  "validation": {
+    "125_rows": true,
+    "20_undefined": true,
+    "44_failed": true,
+    "61_successful": true,
+    "all_f4_executable_combinations_incomplete": false,
+    "b2_one_complete_cell": true,
+    "b2_undefined_cells_four": true,
+    "complete_cell_set_exact": true,
+    "complete_cells": [
+      "F1_agg|large|s0|B0",
+      "F1_agg|large|s0|B2",
+      "F1_agg|large|s0|RL-s0",
+      "F1_agg|large|s0|RL-s1",
+      "F1_agg|large|s0|RL-s2",
+      "F4_ski|large|s0|B0",
+      "F4_ski|large|s0|RL-s0",
+      "F4_ski|large|s0|RL-s1",
+      "F4_ski|large|s0|RL-s2",
+      "F4_ski|large|s4|B0",
+      "F4_ski|large|s4|RL-s0",
+      "F4_ski|large|s4|RL-s1"
+    ],
+    "deterministic": true,
+    "expected_complete_cells": [
+      "F1_agg|large|s0|B0",
+      "F1_agg|large|s0|B2",
+      "F1_agg|large|s0|RL-s0",
+      "F1_agg|large|s0|RL-s1",
+      "F1_agg|large|s0|RL-s2",
+      "F4_ski|large|s0|B0",
+      "F4_ski|large|s0|RL-s0",
+      "F4_ski|large|s0|RL-s1",
+      "F4_ski|large|s0|RL-s2",
+      "F4_ski|large|s4|B0",
+      "F4_ski|large|s4|RL-s0",
+      "F4_ski|large|s4|RL-s1"
+    ],
+    "medians_only_for_complete": true,
+    "no_fabricated_median": true,
+    "queue_fingerprint_unchanged": true,
+    "rl_s2_two_complete_cells": true,
+    "spec_fingerprint_unchanged": true
+  }
+}

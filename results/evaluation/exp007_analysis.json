@@ -1,0 +1,1315 @@
+{
+  "analysis_fingerprint": "06bb58594939004b4eb7a0c2b0417701f80485ad50a4f62b0c35f33b9641ce36",
+  "analysis_schema_version": "exp007-analysis/v1",
+  "claims": {
+    "not_supported": [
+      "Causal attribution of reward differences to state representation alone.",
+      "Inferential or significance claims.",
+      "TEST generalization claims.",
+      "A 'best variant' ranking."
+    ],
+    "supported": [
+      "126 live TRAIN executions completed with 0 failures.",
+      "A1 ran 35/35 episodes on both seeds without early stop.",
+      "A2-s0 completed 35 episodes; A2-s1 stopped at 21 episodes under the frozen early-stop rule.",
+      "A1 and A2 use neutral Q0 0.5; the full-state reference uses EXP-002-derived Q0."
+    ]
+  },
+  "early_stopping": {
+    "A1-s0": {
+      "at_epoch": null,
+      "episodes": 35,
+      "epochs": 5,
+      "triggered": false
+    },
+    "A1-s1": {
+      "at_epoch": null,
+      "episodes": 35,
+      "epochs": 5,
+      "triggered": false
+    },
+    "A2-s0": {
+      "at_epoch": 5,
+      "episodes": 35,
+      "epochs": 5,
+      "triggered": true
+    },
+    "A2-s1": {
+      "at_epoch": 3,
+      "episodes": 21,
+      "epochs": 3,
+      "triggered": true
+    },
+    "rule": "greedy snapshot identical at 3 consecutive epoch boundaries"
+  },
+  "experiment_id": "EXP-007",
+  "full_state_reference": {
+    "q0_source": "exp002-derived",
+    "q0_version": "q0-exp002/v1",
+    "runs": [
+      {
+        "early_stop_at_epoch": null,
+        "early_stop_triggered": false,
+        "episodes_completed": 84,
+        "episodes_failed": 0,
+        "episodes_sha256": "f7a6feff6984cbeb8ce88c2d4c42c5394ddafa90e27200a28f5e3ba30409e08b",
+        "final_greedy_action": {
+          "state-v1.5|agg|S|gt0": 8,
+          "state-v1.5|agg|S|le0": 8,
+          "state-v1.5|join|S|gt0": 4,
+          "state-v1.5|join|S|le0": 8,
+          "state-v1.5|mixed|S|gt0": 4,
+          "state-v1.5|mixed|S|le0": 9,
+          "state-v1.5|rdd_sort|S|gt0": 5,
+          "state-v1.5|rdd_sort|S|le0": 7
+        },
+        "final_policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+        "final_policy_sha256": "d50f39222fe7e3c92d2f2bd6215f29c95559792381ac08911c945d02a576e16d",
+        "final_q_table_size": 8,
+        "label": "FULL-s0",
+        "live_executions": 84,
+        "manifest_sha256": "ec9ee8b8254f1e8403a0a48b76583b5e909da36a11d5acea06c2d1b06e2b0654",
+        "max_reward": 0.9265295176538455,
+        "mean_reward": 0.7364668368911531,
+        "median_reward": 0.817966628508802,
+        "min_reward": 0.2159540305656743,
+        "n_unique_states_visited": 5,
+        "negative_rewards": 0,
+        "q0_version": "q0-exp002/v1",
+        "reward_stdev_sample": 0.18363821272591982,
+        "run_id": "train-a0-d0-20260912T112906Z",
+        "seed": 0,
+        "state_schema": "state-v1.5",
+        "stop_reason": "planned_episodes",
+        "unique_states_visited": [
+          "state-v1.5|agg|S|gt0",
+          "state-v1.5|agg|S|le0",
+          "state-v1.5|join|S|gt0",
+          "state-v1.5|mixed|S|gt0",
+          "state-v1.5|rdd_sort|S|gt0"
+        ]
+      },
+      {
+        "early_stop_at_epoch": 7,
+        "early_stop_triggered": true,
+        "episodes_completed": 49,
+        "episodes_failed": 0,
+        "episodes_sha256": "c79f6f17c39b387c4c28dc22ee6e33b39f1c25418f2ce085f7e1a17408f357c7",
+        "final_greedy_action": {
+          "state-v1.5|agg|S|gt0": 6,
+          "state-v1.5|agg|S|le0": 8,
+          "state-v1.5|join|S|gt0": 1,
+          "state-v1.5|join|S|le0": 8,
+          "state-v1.5|mixed|S|gt0": 5,
+          "state-v1.5|mixed|S|le0": 9,
+          "state-v1.5|rdd_sort|S|gt0": 4,
+          "state-v1.5|rdd_sort|S|le0": 7
+        },
+        "final_policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+        "final_policy_sha256": "86431c67cdb1fa9c73d01e8fab0468b54508d3981cf39e41aed1509985f53a06",
+        "final_q_table_size": 8,
+        "label": "FULL-s1",
+        "live_executions": 49,
+        "manifest_sha256": "808f1d3f905b5d51ac34ba315613d666045fad563370e96c264266558757ba32",
+        "max_reward": 0.8923477639601431,
+        "mean_reward": 0.6680647716443874,
+        "median_reward": 0.7001202967951223,
+        "min_reward": 0.15148901139217624,
+        "n_unique_states_visited": 5,
+        "negative_rewards": 0,
+        "q0_version": "q0-exp002/v1",
+        "reward_stdev_sample": 0.17684347409425055,
+        "run_id": "train-a1-d0-20260912T115123Z",
+        "seed": 1,
+        "state_schema": "state-v1.5",
+        "stop_reason": "early_stop_policy_stable",
+        "unique_states_visited": [
+          "state-v1.5|agg|S|gt0",
+          "state-v1.5|agg|S|le0",
+          "state-v1.5|join|S|gt0",
+          "state-v1.5|mixed|S|gt0",
+          "state-v1.5|rdd_sort|S|gt0"
+        ]
+      },
+      {
+        "early_stop_at_epoch": 6,
+        "early_stop_triggered": true,
+        "episodes_completed": 42,
+        "episodes_failed": 0,
+        "episodes_sha256": "6945e4f01f84de3954138d0baf09bcafc6fd99ce68053ba152d8d92fda7a88aa",
+        "final_greedy_action": {
+          "state-v1.5|agg|S|gt0": 5,
+          "state-v1.5|agg|S|le0": 8,
+          "state-v1.5|join|S|gt0": 5,
+          "state-v1.5|join|S|le0": 8,
+          "state-v1.5|mixed|S|gt0": 9,
+          "state-v1.5|mixed|S|le0": 9,
+          "state-v1.5|rdd_sort|S|gt0": 4,
+          "state-v1.5|rdd_sort|S|le0": 7
+        },
+        "final_policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+        "final_policy_sha256": "4c1112fb7b552dba7c3d943e4f09ac034b1bc59495d27e8f4ddd1bd74e1ac248",
+        "final_q_table_size": 8,
+        "label": "FULL-s2",
+        "live_executions": 42,
+        "manifest_sha256": "6c4877058abd48cd4798424c56c37b6cb0e3e76828301b532b7dd767830a66e7",
+        "max_reward": 0.9152278623076864,
+        "mean_reward": 0.7715643100733867,
+        "median_reward": 0.8036933771509018,
+        "min_reward": 0.4475605928928081,
+        "n_unique_states_visited": 5,
+        "negative_rewards": 0,
+        "q0_version": "q0-exp002/v1",
+        "reward_stdev_sample": 0.14838652164454136,
+        "run_id": "train-a2-d0-20260912T120648Z",
+        "seed": 2,
+        "state_schema": "state-v1.5",
+        "stop_reason": "early_stop_policy_stable",
+        "unique_states_visited": [
+          "state-v1.5|agg|S|gt0",
+          "state-v1.5|agg|S|le0",
+          "state-v1.5|join|S|gt0",
+          "state-v1.5|mixed|S|gt0",
+          "state-v1.5|rdd_sort|S|gt0"
+        ]
+      }
+    ],
+    "schema": "state-v1.5",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "space_cardinality": 30
+  },
+  "hypothesis_status": {
+    "note": "No frozen quantitative acceptance criterion exists; no numeric pass/fail threshold is invented. A2 is feedback-only and provides contextual evidence only.",
+    "registered_acceptance": "ablation table / ablation rows",
+    "registered_hypothesis": "context+feedback > context-only",
+    "status": "observed pattern; not established"
+  },
+  "inputs": {
+    "full_state_reference_runs": [
+      {
+        "label": "FULL-s0",
+        "run_id": "train-a0-d0-20260912T112906Z",
+        "seed": 0
+      },
+      {
+        "label": "FULL-s1",
+        "run_id": "train-a1-d0-20260912T115123Z",
+        "seed": 1
+      },
+      {
+        "label": "FULL-s2",
+        "run_id": "train-a2-d0-20260912T120648Z",
+        "seed": 2
+      }
+    ],
+    "runs": [
+      {
+        "label": "A1-s0",
+        "run_id": "train-a0-d0-20260917T055042Z",
+        "seed": 0,
+        "variant": "A1"
+      },
+      {
+        "label": "A1-s1",
+        "run_id": "train-a1-d0-20260917T060047Z",
+        "seed": 1,
+        "variant": "A1"
+      },
+      {
+        "label": "A2-s0",
+        "run_id": "train-a0-d0-20260917T061316Z",
+        "seed": 0,
+        "variant": "A2"
+      },
+      {
+        "label": "A2-s1",
+        "run_id": "train-a1-d0-20260917T062346Z",
+        "seed": 1,
+        "variant": "A2"
+      }
+    ],
+    "training_root": "C:\\Users\\prakh\\OneDrive\\Desktop\\PDS PROJECT\\results\\training"
+  },
+  "limitations": {
+    "causal_limitation": "No causal claim is supported; differences are observed between frozen training configurations under their registered initialization schemes.",
+    "horizon_limitation": "A2-s1 ran 3 epochs / 21 episodes under the frozen early-stop rule; the other three runs ran 5 epochs / 35 episodes.",
+    "q0_confound": "A1/A2 use neutral q0-neutral/v1 (0.5); the full-state reference uses EXP-002-derived q0-exp002/v1. Differences are therefore NOT purely caused by state representation.",
+    "seed_limitation": "EXP-007 uses two seeds per ablation; the main study uses three seeds.",
+    "test_limitation": "EXP-007 is TRAIN-only; no TEST generalization claim is supported."
+  },
+  "methodology_provenance": {
+    "config": "configs/rl.yaml",
+    "decisions": [
+      "DEC-023",
+      "DEC-024",
+      "DEC-025",
+      "DEC-026"
+    ],
+    "learner_module": "src/sparkrl/agent/q_learning.py",
+    "loop_module": "src/sparkrl/training/loop.py",
+    "plan_state_space": "docs/PLAN.md sections 12-13, 16, 22-24, 31-33",
+    "q0_module": "src/sparkrl/agent/q0.py",
+    "registered_acceptance": "ablation table / ablation rows",
+    "registered_hypothesis": "context+feedback > context-only",
+    "spec_module": "src/sparkrl/training/ablation.py",
+    "state_module": "src/sparkrl/rl/state.py"
+  },
+  "primary_ablation_table": [
+    {
+      "early_stop": false,
+      "episodes": 35,
+      "executions": 35,
+      "final_epsilon": 0.16608338398760714,
+      "mean_reward": 0.7406522468329192,
+      "median_reward": 0.823746727314502,
+      "seed": 0,
+      "state": "state-v1",
+      "states": 15,
+      "states_visited": 4,
+      "variant": "A1"
+    },
+    {
+      "early_stop": false,
+      "episodes": 35,
+      "executions": 35,
+      "final_epsilon": 0.16608338398760714,
+      "mean_reward": 0.6274945814669343,
+      "median_reward": 0.6415639566037892,
+      "seed": 1,
+      "state": "state-v1",
+      "states": 15,
+      "states_visited": 4,
+      "variant": "A1"
+    },
+    {
+      "early_stop": true,
+      "episodes": 35,
+      "executions": 35,
+      "final_epsilon": 0.16608338398760714,
+      "mean_reward": 0.7621543249941893,
+      "median_reward": 0.8234759405750864,
+      "seed": 0,
+      "state": "state-v2",
+      "states": 2,
+      "states_visited": 2,
+      "variant": "A2"
+    },
+    {
+      "early_stop": true,
+      "episodes": 21,
+      "executions": 21,
+      "final_epsilon": 0.34056162628811465,
+      "mean_reward": 0.6723533677086293,
+      "median_reward": 0.7223224627252701,
+      "seed": 1,
+      "state": "state-v2",
+      "states": 2,
+      "states_visited": 2,
+      "variant": "A2"
+    }
+  ],
+  "run_results": {
+    "A1-s0": {
+      "action_counts": {
+        "0": 1,
+        "1": 2,
+        "10": 2,
+        "11": 8,
+        "2": 1,
+        "3": 1,
+        "4": 9,
+        "6": 3,
+        "8": 7,
+        "9": 1
+      },
+      "agent_rng_seed": 0,
+      "dataset_seed": 0,
+      "early_stop_at_epoch": null,
+      "early_stop_rule": "greedy snapshot identical at 3 consecutive epoch boundaries",
+      "early_stop_triggered": false,
+      "episodes_completed": 35,
+      "episodes_failed": 0,
+      "episodes_planned": 35,
+      "episodes_sha256": "28e2940b3712ebda6cd4fe77ae604352ce46cfbe3016b7e2fccfffdc0a2a4479",
+      "epoch_rewards": [
+        {
+          "episodes": 7,
+          "epoch": 1,
+          "max_reward": 0.914402574942637,
+          "mean_reward": 0.7003121811724259,
+          "median_reward": 0.7896566169008844,
+          "min_reward": 0.2546518020043073
+        },
+        {
+          "episodes": 7,
+          "epoch": 2,
+          "max_reward": 0.9138395959941998,
+          "mean_reward": 0.7566193301162445,
+          "median_reward": 0.7471932330383388,
+          "min_reward": 0.45617258172016195
+        },
+        {
+          "episodes": 7,
+          "epoch": 3,
+          "max_reward": 0.881720452744608,
+          "mean_reward": 0.7450161930130647,
+          "median_reward": 0.8264164700633734,
+          "min_reward": 0.47806091986268706
+        },
+        {
+          "episodes": 7,
+          "epoch": 4,
+          "max_reward": 0.9315502377636844,
+          "mean_reward": 0.7597967597872798,
+          "median_reward": 0.8306838300597006,
+          "min_reward": 0.43934446808306227
+        },
+        {
+          "episodes": 7,
+          "epoch": 5,
+          "max_reward": 0.9163307032246235,
+          "mean_reward": 0.7415167700755811,
+          "median_reward": 0.823746727314502,
+          "min_reward": 0.3923839930545376
+        }
+      ],
+      "epochs_completed": 5,
+      "excluded_cells": [
+        {
+          "cell": "F3_rdd|medium",
+          "reason": "t_ref_null",
+          "t_ref_s": null
+        }
+      ],
+      "final_epsilon": 0.16608338398760714,
+      "final_greedy_action": {
+        "state-v1|agg|L|None": 0,
+        "state-v1|agg|M|None": 0,
+        "state-v1|agg|S|None": 8,
+        "state-v1|join|L|None": 0,
+        "state-v1|join|M|None": 0,
+        "state-v1|join|S|None": 4,
+        "state-v1|mixed|L|None": 0,
+        "state-v1|mixed|M|None": 0,
+        "state-v1|mixed|S|None": 11,
+        "state-v1|rdd_sort|L|None": 0,
+        "state-v1|rdd_sort|M|None": 0,
+        "state-v1|rdd_sort|S|None": 4,
+        "state-v1|skew_join|L|None": 0,
+        "state-v1|skew_join|M|None": 0,
+        "state-v1|skew_join|S|None": 0
+      },
+      "final_policy_id": "861cd534306706faa2df2568166170204c102ba5fa91e6bb74b9a75d0b547d81",
+      "final_policy_path": "checkpoints/policy-861cd534306706fa.json",
+      "final_policy_sha256": "bceab0a116be1bf548701aeeaf51b4e8b4d1c7c3f89a5933f6ff603f1b415b56",
+      "final_q_table_size": 15,
+      "hyperparameters": {
+        "alpha": 0.2,
+        "epsilon_decay": 0.95,
+        "epsilon_min": 0.05,
+        "epsilon_start": 1.0,
+        "gamma": 0.0,
+        "q0_default": 0.5,
+        "source": "configs/rl.yaml + PLAN section 16"
+      },
+      "label": "A1-s0",
+      "live_executions": 35,
+      "manifest_sha256": "8f88b88fa4aec1360d95b646d93ddd1311cdd19a7823f425c740fff07f3db7f7",
+      "max_reward": 0.9315502377636844,
+      "mean_reward": 0.7406522468329192,
+      "median_reward": 0.823746727314502,
+      "min_reward": 0.2546518020043073,
+      "n_distinct_actions": 10,
+      "n_non_default_q_rows": 4,
+      "n_unique_state_action_pairs": 16,
+      "n_unique_states_visited": 4,
+      "negative_rewards": 0,
+      "per_state": {
+        "state-v1|agg|S|None": {
+          "distinct_actions": [
+            4,
+            6,
+            8
+          ],
+          "episodes": 10,
+          "max_reward": 0.9315502377636844,
+          "mean_reward": 0.8819201197350786,
+          "median_reward": 0.8900177088777,
+          "min_reward": 0.7896566169008844,
+          "n_distinct_actions": 3
+        },
+        "state-v1|join|S|None": {
+          "distinct_actions": [
+            4,
+            6,
+            10,
+            11
+          ],
+          "episodes": 10,
+          "max_reward": 0.8860316387285722,
+          "mean_reward": 0.7896205954643742,
+          "median_reward": 0.7515057418671393,
+          "min_reward": 0.7158203002787161,
+          "n_distinct_actions": 4
+        },
+        "state-v1|mixed|S|None": {
+          "distinct_actions": [
+            1,
+            4,
+            10,
+            11
+          ],
+          "episodes": 10,
+          "max_reward": 0.8567013033290595,
+          "mean_reward": 0.6975141033101118,
+          "median_reward": 0.7823156249053507,
+          "min_reward": 0.2546518020043073,
+          "n_distinct_actions": 4
+        },
+        "state-v1|rdd_sort|S|None": {
+          "distinct_actions": [
+            0,
+            1,
+            2,
+            3,
+            9
+          ],
+          "episodes": 5,
+          "max_reward": 0.47806091986268706,
+          "mean_reward": 0.44645609081130533,
+          "median_reward": 0.45617258172016195,
+          "min_reward": 0.3923839930545376,
+          "n_distinct_actions": 5
+        }
+      },
+      "positive_rewards": 35,
+      "q0_provenance": {
+        "actions_per_state": 12,
+        "aggregation": null,
+        "learner_version": "tabular-q/v1",
+        "n_states": 15,
+        "note": "DEC-023 section 4: A1/A2 use identical neutral Q0 initialization (q0_default for every valid state x action); no EXP-002 Q0 projection, no median pooling of Q0 rows, no prior trained policy dependency.",
+        "pairs_initialized": 180,
+        "projection_from_exp002": false,
+        "q0_default": 0.5,
+        "q0_version": "q0-neutral/v1",
+        "source": "neutral_default",
+        "state_schema": "state-v1",
+        "variant": "A1"
+      },
+      "reward_stdev_sample": 0.1775310897627863,
+      "rewards": [
+        0.7896566169008844,
+        0.914402574942637,
+        0.8860316387285722,
+        0.7405260184613319,
+        0.4663184913360777,
+        0.8505981258331704,
+        0.2546518020043073,
+        0.8657237739570359,
+        0.9138395959941998,
+        0.7158203002787161,
+        0.7471932330383388,
+        0.45617258172016195,
+        0.8567013033290595,
+        0.7408845224961993,
+        0.881720452744608,
+        0.8334116691655182,
+        0.8800230993218211,
+        0.7164782664168309,
+        0.47806091986268706,
+        0.8264164700633734,
+        0.5990024735166141,
+        0.8983149650107921,
+        0.9315502377636844,
+        0.8443447372132339,
+        0.7558182506959397,
+        0.43934446808306227,
+        0.8306838300597006,
+        0.6185208296845459,
+        0.8742506076468021,
+        0.9163307032246235,
+        0.8745185321328194,
+        0.7354518783561383,
+        0.3923839930545376,
+        0.823746727314502,
+        0.5739349487996447
+      ],
+      "run_dir": "results/training/train-a0-d0-20260917T055042Z",
+      "run_id": "train-a0-d0-20260917T055042Z",
+      "schedule_cells": [
+        "F1_agg|medium",
+        "F1_agg|small",
+        "F2_join|medium",
+        "F2_join|small",
+        "F3_rdd|small",
+        "F5_mixed|medium",
+        "F5_mixed|small"
+      ],
+      "seed": 0,
+      "state_schema": "state-v1",
+      "state_space_cardinality": 15,
+      "stop_reason": "planned_episodes",
+      "t_ref_gate_sha256": "e30a7b0c953d9965ed97722327f39006fef30f9c6bc980418b50247ebaa05392",
+      "t_ref_source": "exp002-gate:gate.json",
+      "unique_states_visited": [
+        "state-v1|agg|S|None",
+        "state-v1|join|S|None",
+        "state-v1|mixed|S|None",
+        "state-v1|rdd_sort|S|None"
+      ],
+      "variant": "A1",
+      "zero_rewards": 0
+    },
+    "A1-s1": {
+      "action_counts": {
+        "0": 8,
+        "1": 9,
+        "10": 2,
+        "2": 1,
+        "3": 3,
+        "4": 1,
+        "5": 2,
+        "6": 1,
+        "7": 7,
+        "9": 1
+      },
+      "agent_rng_seed": 1,
+      "dataset_seed": 0,
+      "early_stop_at_epoch": null,
+      "early_stop_rule": "greedy snapshot identical at 3 consecutive epoch boundaries",
+      "early_stop_triggered": false,
+      "episodes_completed": 35,
+      "episodes_failed": 0,
+      "episodes_planned": 35,
+      "episodes_sha256": "57c8d6a7e95a77c4905d4042470b694baec4f1301c7fb50f8c7df348542c596e",
+      "epoch_rewards": [
+        {
+          "episodes": 7,
+          "epoch": 1,
+          "max_reward": 0.7946854222570399,
+          "mean_reward": 0.601102603607714,
+          "median_reward": 0.6415639566037892,
+          "min_reward": 0.2610802416621687
+        },
+        {
+          "episodes": 7,
+          "epoch": 2,
+          "max_reward": 0.7872348055447633,
+          "mean_reward": 0.5677686014183577,
+          "median_reward": 0.6093758339862668,
+          "min_reward": 0.33212887792823675
+        },
+        {
+          "episodes": 7,
+          "epoch": 3,
+          "max_reward": 0.8662991648421915,
+          "mean_reward": 0.639511611040145,
+          "median_reward": 0.6229234840884442,
+          "min_reward": 0.46347197740390605
+        },
+        {
+          "episodes": 7,
+          "epoch": 4,
+          "max_reward": 0.8650482079049991,
+          "mean_reward": 0.6056939648926547,
+          "median_reward": 0.6256560831564608,
+          "min_reward": 0.3053681377663704
+        },
+        {
+          "episodes": 7,
+          "epoch": 5,
+          "max_reward": 0.8692385464991007,
+          "mean_reward": 0.7233961263758002,
+          "median_reward": 0.7951232027992311,
+          "min_reward": 0.4906156053183585
+        }
+      ],
+      "epochs_completed": 5,
+      "excluded_cells": [
+        {
+          "cell": "F3_rdd|medium",
+          "reason": "t_ref_null",
+          "t_ref_s": null
+        }
+      ],
+      "final_epsilon": 0.16608338398760714,
+      "final_greedy_action": {
+        "state-v1|agg|L|None": 0,
+        "state-v1|agg|M|None": 0,
+        "state-v1|agg|S|None": 1,
+        "state-v1|join|L|None": 0,
+        "state-v1|join|M|None": 0,
+        "state-v1|join|S|None": 10,
+        "state-v1|mixed|L|None": 0,
+        "state-v1|mixed|M|None": 0,
+        "state-v1|mixed|S|None": 5,
+        "state-v1|rdd_sort|L|None": 0,
+        "state-v1|rdd_sort|M|None": 0,
+        "state-v1|rdd_sort|S|None": 5,
+        "state-v1|skew_join|L|None": 0,
+        "state-v1|skew_join|M|None": 0,
+        "state-v1|skew_join|S|None": 0
+      },
+      "final_policy_id": "eaa401ea28ae2acb48fd343acca9e08cf96e277f68716c499afb02ce6dc2dc6e",
+      "final_policy_path": "checkpoints/policy-eaa401ea28ae2acb.json",
+      "final_policy_sha256": "dd96c57fd54497deff20db420f60df8e9353d0da12eb5a9183b5504562eb05a9",
+      "final_q_table_size": 15,
+      "hyperparameters": {
+        "alpha": 0.2,
+        "epsilon_decay": 0.95,
+        "epsilon_min": 0.05,
+        "epsilon_start": 1.0,
+        "gamma": 0.0,
+        "q0_default": 0.5,
+        "source": "configs/rl.yaml + PLAN section 16"
+      },
+      "label": "A1-s1",
+      "live_executions": 35,
+      "manifest_sha256": "fb0413f204156521531743e48d736fb9ad4b6bd03eaa9a84dabdd70ef94f0c29",
+      "max_reward": 0.8692385464991007,
+      "mean_reward": 0.6274945814669343,
+      "median_reward": 0.6415639566037892,
+      "min_reward": 0.2610802416621687,
+      "n_distinct_actions": 10,
+      "n_non_default_q_rows": 4,
+      "n_unique_state_action_pairs": 15,
+      "n_unique_states_visited": 4,
+      "negative_rewards": 0,
+      "per_state": {
+        "state-v1|agg|S|None": {
+          "distinct_actions": [
+            1,
+            6,
+            7
+          ],
+          "episodes": 10,
+          "max_reward": 0.8662991648421915,
+          "mean_reward": 0.7856395760794656,
+          "median_reward": 0.793053916413003,
+          "min_reward": 0.6415639566037892,
+          "n_distinct_actions": 3
+        },
+        "state-v1|join|S|None": {
+          "distinct_actions": [
+            1,
+            3,
+            7,
+            10
+          ],
+          "episodes": 10,
+          "max_reward": 0.8692385464991007,
+          "mean_reward": 0.5649338093922187,
+          "median_reward": 0.6161496590373555,
+          "min_reward": 0.2610802416621687,
+          "n_distinct_actions": 4
+        },
+        "state-v1|mixed|S|None": {
+          "distinct_actions": [
+            0,
+            5,
+            9
+          ],
+          "episodes": 10,
+          "max_reward": 0.8344985231874683,
+          "mean_reward": 0.6183262656624575,
+          "median_reward": 0.7079292672633182,
+          "min_reward": 0.3053681377663704,
+          "n_distinct_actions": 3
+        },
+        "state-v1|rdd_sort|S|None": {
+          "distinct_actions": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "episodes": 5,
+          "max_reward": 0.4906156053183585,
+          "mean_reward": 0.4546627680002564,
+          "median_reward": 0.451672227669549,
+          "min_reward": 0.4301603822950945,
+          "n_distinct_actions": 5
+        }
+      },
+      "positive_rewards": 35,
+      "q0_provenance": {
+        "actions_per_state": 12,
+        "aggregation": null,
+        "learner_version": "tabular-q/v1",
+        "n_states": 15,
+        "note": "DEC-023 section 4: A1/A2 use identical neutral Q0 initialization (q0_default for every valid state x action); no EXP-002 Q0 projection, no median pooling of Q0 rows, no prior trained policy dependency.",
+        "pairs_initialized": 180,
+        "projection_from_exp002": false,
+        "q0_default": 0.5,
+        "q0_version": "q0-neutral/v1",
+        "source": "neutral_default",
+        "state_schema": "state-v1",
+        "variant": "A1"
+      },
+      "reward_stdev_sample": 0.17641853465219445,
+      "rewards": [
+        0.7946854222570399,
+        0.6415639566037892,
+        0.637461713768931,
+        0.2610802416621687,
+        0.451672227669549,
+        0.7512038967986103,
+        0.6700507664939094,
+        0.7872348055447633,
+        0.6684547292632963,
+        0.39383135523797413,
+        0.6093758339862668,
+        0.4373936473143738,
+        0.7459609606535926,
+        0.33212887792823675,
+        0.7914224105689663,
+        0.8662991648421915,
+        0.6229234840884442,
+        0.49880556670559195,
+        0.46347197740390605,
+        0.7458077680327269,
+        0.4878509056391881,
+        0.789132007279194,
+        0.8650482079049991,
+        0.6256560831564608,
+        0.4783151947394296,
+        0.4301603822950945,
+        0.7461777411070344,
+        0.3053681377663704,
+        0.7951232027992311,
+        0.857431853731185,
+        0.8692385464991007,
+        0.6526500740778192,
+        0.4906156053183585,
+        0.8344985231874683,
+        0.5642150790174382
+      ],
+      "run_dir": "results/training/train-a1-d0-20260917T060047Z",
+      "run_id": "train-a1-d0-20260917T060047Z",
+      "schedule_cells": [
+        "F1_agg|medium",
+        "F1_agg|small",
+        "F2_join|medium",
+        "F2_join|small",
+        "F3_rdd|small",
+        "F5_mixed|medium",
+        "F5_mixed|small"
+      ],
+      "seed": 1,
+      "state_schema": "state-v1",
+      "state_space_cardinality": 15,
+      "stop_reason": "planned_episodes",
+      "t_ref_gate_sha256": "e30a7b0c953d9965ed97722327f39006fef30f9c6bc980418b50247ebaa05392",
+      "t_ref_source": "exp002-gate:gate.json",
+      "unique_states_visited": [
+        "state-v1|agg|S|None",
+        "state-v1|join|S|None",
+        "state-v1|mixed|S|None",
+        "state-v1|rdd_sort|S|None"
+      ],
+      "variant": "A1",
+      "zero_rewards": 0
+    },
+    "A2-s0": {
+      "action_counts": {
+        "1": 1,
+        "10": 2,
+        "11": 2,
+        "3": 1,
+        "4": 8,
+        "6": 3,
+        "8": 17,
+        "9": 1
+      },
+      "agent_rng_seed": 0,
+      "dataset_seed": 0,
+      "early_stop_at_epoch": 5,
+      "early_stop_rule": "greedy snapshot identical at 3 consecutive epoch boundaries",
+      "early_stop_triggered": true,
+      "episodes_completed": 35,
+      "episodes_failed": 0,
+      "episodes_planned": 35,
+      "episodes_sha256": "9f2dcc637fad2e039319c979cce79cffd68d1a8f833514f4428f327c3deb0514",
+      "epoch_rewards": [
+        {
+          "episodes": 7,
+          "epoch": 1,
+          "max_reward": 0.9134311363325829,
+          "mean_reward": 0.7199315144203623,
+          "median_reward": 0.7988680995118509,
+          "min_reward": 0.44341313086934137
+        },
+        {
+          "episodes": 7,
+          "epoch": 2,
+          "max_reward": 0.9145025061563855,
+          "mean_reward": 0.7484813391197722,
+          "median_reward": 0.7526242897450338,
+          "min_reward": 0.4845148546080766
+        },
+        {
+          "episodes": 7,
+          "epoch": 3,
+          "max_reward": 0.9123824540067738,
+          "mean_reward": 0.779632389924773,
+          "median_reward": 0.8403208663640843,
+          "min_reward": 0.4856559259298669
+        },
+        {
+          "episodes": 7,
+          "epoch": 4,
+          "max_reward": 0.9179510593003377,
+          "mean_reward": 0.774384622823236,
+          "median_reward": 0.8234759405750864,
+          "min_reward": 0.39764927360479074
+        },
+        {
+          "episodes": 7,
+          "epoch": 5,
+          "max_reward": 0.9206094346465135,
+          "mean_reward": 0.7883417586828031,
+          "median_reward": 0.8848040085801783,
+          "min_reward": 0.3748563068876587
+        }
+      ],
+      "epochs_completed": 5,
+      "excluded_cells": [
+        {
+          "cell": "F3_rdd|medium",
+          "reason": "t_ref_null",
+          "t_ref_s": null
+        }
+      ],
+      "final_epsilon": 0.16608338398760714,
+      "final_greedy_action": {
+        "state-v2|gt0": 8,
+        "state-v2|le0": 6
+      },
+      "final_policy_id": "de167eb4534fae8c51d92a36396d53bcbd97f52deca31540f6b9031ff0f73768",
+      "final_policy_path": "checkpoints/policy-de167eb4534fae8c.json",
+      "final_policy_sha256": "d1aa5da7789d645dab770e00518b1370ea7a8412c64555c2878362554d8723a8",
+      "final_q_table_size": 2,
+      "hyperparameters": {
+        "alpha": 0.2,
+        "epsilon_decay": 0.95,
+        "epsilon_min": 0.05,
+        "epsilon_start": 1.0,
+        "gamma": 0.0,
+        "q0_default": 0.5,
+        "source": "configs/rl.yaml + PLAN section 16"
+      },
+      "label": "A2-s0",
+      "live_executions": 35,
+      "manifest_sha256": "d4819b706bf822c2efe5352700413c28c17f79de885512559f6daef992a3f624",
+      "max_reward": 0.9206094346465135,
+      "mean_reward": 0.7621543249941893,
+      "median_reward": 0.8234759405750864,
+      "min_reward": 0.3748563068876587,
+      "n_distinct_actions": 8,
+      "n_non_default_q_rows": 2,
+      "n_unique_state_action_pairs": 9,
+      "n_unique_states_visited": 2,
+      "negative_rewards": 0,
+      "per_state": {
+        "state-v2|gt0": {
+          "distinct_actions": [
+            1,
+            3,
+            4,
+            6,
+            8,
+            9,
+            10,
+            11
+          ],
+          "episodes": 34,
+          "max_reward": 0.9206094346465135,
+          "mean_reward": 0.761074508096611,
+          "median_reward": 0.8249736188161743,
+          "min_reward": 0.3748563068876587,
+          "n_distinct_actions": 8
+        },
+        "state-v2|le0": {
+          "distinct_actions": [
+            6
+          ],
+          "episodes": 1,
+          "max_reward": 0.7988680995118509,
+          "mean_reward": 0.7988680995118509,
+          "median_reward": 0.7988680995118509,
+          "min_reward": 0.7988680995118509,
+          "n_distinct_actions": 1
+        }
+      },
+      "positive_rewards": 35,
+      "q0_provenance": {
+        "actions_per_state": 12,
+        "aggregation": null,
+        "learner_version": "tabular-q/v1",
+        "n_states": 2,
+        "note": "DEC-023 section 4: A1/A2 use identical neutral Q0 initialization (q0_default for every valid state x action); no EXP-002 Q0 projection, no median pooling of Q0 rows, no prior trained policy dependency.",
+        "pairs_initialized": 24,
+        "projection_from_exp002": false,
+        "q0_default": 0.5,
+        "q0_version": "q0-neutral/v1",
+        "source": "neutral_default",
+        "state_schema": "state-v2",
+        "variant": "A2"
+      },
+      "reward_stdev_sample": 0.16633516676517396,
+      "rewards": [
+        0.7988680995118509,
+        0.9134311363325829,
+        0.8592897411472046,
+        0.6977054652341627,
+        0.44341313086934137,
+        0.8686619548810521,
+        0.4581510729663414,
+        0.8641937495987907,
+        0.9145025061563855,
+        0.6860177240720564,
+        0.7526242897450338,
+        0.4845148546080766,
+        0.8264712970572622,
+        0.7110449526008003,
+        0.8763452500880828,
+        0.8403208663640843,
+        0.8813880005695096,
+        0.7291304267442283,
+        0.4856559259298669,
+        0.9123824540067738,
+        0.7322038057708656,
+        0.8816944040210757,
+        0.9179510593003377,
+        0.8234759405750864,
+        0.7451072759193731,
+        0.39764927360479074,
+        0.9164965145427822,
+        0.7383178917992057,
+        0.8848040085801783,
+        0.9200147784720069,
+        0.9206094346465135,
+        0.7738378874355926,
+        0.3748563068876587,
+        0.9157471848315847,
+        0.7285227099260873
+      ],
+      "run_dir": "results/training/train-a0-d0-20260917T061316Z",
+      "run_id": "train-a0-d0-20260917T061316Z",
+      "schedule_cells": [
+        "F1_agg|medium",
+        "F1_agg|small",
+        "F2_join|medium",
+        "F2_join|small",
+        "F3_rdd|small",
+        "F5_mixed|medium",
+        "F5_mixed|small"
+      ],
+      "seed": 0,
+      "state_schema": "state-v2",
+      "state_space_cardinality": 2,
+      "stop_reason": "early_stop_policy_stable",
+      "t_ref_gate_sha256": "e30a7b0c953d9965ed97722327f39006fef30f9c6bc980418b50247ebaa05392",
+      "t_ref_source": "exp002-gate:gate.json",
+      "unique_states_visited": [
+        "state-v2|gt0",
+        "state-v2|le0"
+      ],
+      "variant": "A2",
+      "zero_rewards": 0
+    },
+    "A2-s1": {
+      "action_counts": {
+        "0": 2,
+        "1": 2,
+        "3": 2,
+        "6": 1,
+        "7": 13,
+        "9": 1
+      },
+      "agent_rng_seed": 1,
+      "dataset_seed": 0,
+      "early_stop_at_epoch": 3,
+      "early_stop_rule": "greedy snapshot identical at 3 consecutive epoch boundaries",
+      "early_stop_triggered": true,
+      "episodes_completed": 21,
+      "episodes_failed": 0,
+      "episodes_planned": 35,
+      "episodes_sha256": "b34cc0ebecb24d90c807bae355c7c15359a5cf18ecf6a021cb55af0b6ef6c7ca",
+      "epoch_rewards": [
+        {
+          "episodes": 7,
+          "epoch": 1,
+          "max_reward": 0.8204643266798821,
+          "mean_reward": 0.6749545469418309,
+          "median_reward": 0.7358758425824823,
+          "min_reward": 0.42461654269852805
+        },
+        {
+          "episodes": 7,
+          "epoch": 2,
+          "max_reward": 0.7917944281727606,
+          "mean_reward": 0.65742431854181,
+          "median_reward": 0.6965549390403765,
+          "min_reward": 0.5302416125273056
+        },
+        {
+          "episodes": 7,
+          "epoch": 3,
+          "max_reward": 0.8349200347540721,
+          "mean_reward": 0.684681237642247,
+          "median_reward": 0.7223224627252701,
+          "min_reward": 0.5110337022188883
+        }
+      ],
+      "epochs_completed": 3,
+      "excluded_cells": [
+        {
+          "cell": "F3_rdd|medium",
+          "reason": "t_ref_null",
+          "t_ref_s": null
+        }
+      ],
+      "final_epsilon": 0.34056162628811465,
+      "final_greedy_action": {
+        "state-v2|gt0": 7,
+        "state-v2|le0": 1
+      },
+      "final_policy_id": "c8c89aec0fc9ef895343c15c69fb3b55ec33944d1029065de5e123ae0fe7bb9d",
+      "final_policy_path": "checkpoints/policy-c8c89aec0fc9ef89.json",
+      "final_policy_sha256": "e29f46174a0554b57c3fa6ca89c5b48db19c2f32b9bbf4531f10f2e9b0797ef0",
+      "final_q_table_size": 2,
+      "hyperparameters": {
+        "alpha": 0.2,
+        "epsilon_decay": 0.95,
+        "epsilon_min": 0.05,
+        "epsilon_start": 1.0,
+        "gamma": 0.0,
+        "q0_default": 0.5,
+        "source": "configs/rl.yaml + PLAN section 16"
+      },
+      "label": "A2-s1",
+      "live_executions": 21,
+      "manifest_sha256": "1c7e69c7234125a0cf5f2a9c7489e0034760b367da57870a83520542ef53b788",
+      "max_reward": 0.8349200347540721,
+      "mean_reward": 0.6723533677086293,
+      "median_reward": 0.7223224627252701,
+      "min_reward": 0.42461654269852805,
+      "n_distinct_actions": 6,
+      "n_non_default_q_rows": 2,
+      "n_unique_state_action_pairs": 7,
+      "n_unique_states_visited": 2,
+      "negative_rewards": 0,
+      "per_state": {
+        "state-v2|gt0": {
+          "distinct_actions": [
+            0,
+            1,
+            3,
+            6,
+            7,
+            9
+          ],
+          "episodes": 20,
+          "max_reward": 0.8349200347540721,
+          "mean_reward": 0.6649478197600667,
+          "median_reward": 0.7150782374171671,
+          "min_reward": 0.42461654269852805,
+          "n_distinct_actions": 6
+        },
+        "state-v2|le0": {
+          "distinct_actions": [
+            1
+          ],
+          "episodes": 1,
+          "max_reward": 0.8204643266798821,
+          "mean_reward": 0.8204643266798821,
+          "median_reward": 0.8204643266798821,
+          "min_reward": 0.8204643266798821,
+          "n_distinct_actions": 1
+        }
+      },
+      "positive_rewards": 21,
+      "q0_provenance": {
+        "actions_per_state": 12,
+        "aggregation": null,
+        "learner_version": "tabular-q/v1",
+        "n_states": 2,
+        "note": "DEC-023 section 4: A1/A2 use identical neutral Q0 initialization (q0_default for every valid state x action); no EXP-002 Q0 projection, no median pooling of Q0 rows, no prior trained policy dependency.",
+        "pairs_initialized": 24,
+        "projection_from_exp002": false,
+        "q0_default": 0.5,
+        "q0_version": "q0-neutral/v1",
+        "source": "neutral_default",
+        "state_schema": "state-v2",
+        "variant": "A2"
+      },
+      "reward_stdev_sample": 0.12361515934698393,
+      "rewards": [
+        0.8204643266798821,
+        0.7358758425824823,
+        0.7253571102806958,
+        0.42461654269852805,
+        0.458793028741298,
+        0.7975177178852998,
+        0.76205725972463,
+        0.6965549390403765,
+        0.7336526997446084,
+        0.5575883706217247,
+        0.7078340121090643,
+        0.5302416125273056,
+        0.7917944281727606,
+        0.5843041675768303,
+        0.8349200347540721,
+        0.7258341294005858,
+        0.7223224627252701,
+        0.630266292108388,
+        0.5110337022188883,
+        0.7966452937753383,
+        0.5717467485131862
+      ],
+      "run_dir": "results/training/train-a1-d0-20260917T062346Z",
+      "run_id": "train-a1-d0-20260917T062346Z",
+      "schedule_cells": [
+        "F1_agg|medium",
+        "F1_agg|small",
+        "F2_join|medium",
+        "F2_join|small",
+        "F3_rdd|small",
+        "F5_mixed|medium",
+        "F5_mixed|small"
+      ],
+      "seed": 1,
+      "state_schema": "state-v2",
+      "state_space_cardinality": 2,
+      "stop_reason": "early_stop_policy_stable",
+      "t_ref_gate_sha256": "e30a7b0c953d9965ed97722327f39006fef30f9c6bc980418b50247ebaa05392",
+      "t_ref_source": "exp002-gate:gate.json",
+      "unique_states_visited": [
+        "state-v2|gt0",
+        "state-v2|le0"
+      ],
+      "variant": "A2",
+      "zero_rewards": 0
+    }
+  },
+  "spark_executions_during_analysis": 0,
+  "state_coverage": {
+    "A1": {
+      "n_observed_union": 4,
+      "observed_union": [
+        "state-v1|agg|S|None",
+        "state-v1|join|S|None",
+        "state-v1|mixed|S|None",
+        "state-v1|rdd_sort|S|None"
+      ],
+      "possible": 15
+    },
+    "A2": {
+      "n_observed_union": 2,
+      "observed_union": [
+        "state-v2|gt0",
+        "state-v2|le0"
+      ],
+      "possible": 2
+    },
+    "full_state": {
+      "n_observed_union": 5,
+      "observed_union": [
+        "state-v1.5|agg|S|gt0",
+        "state-v1.5|agg|S|le0",
+        "state-v1.5|join|S|gt0",
+        "state-v1.5|mixed|S|gt0",
+        "state-v1.5|rdd_sort|S|gt0"
+      ],
+      "possible": 30
+    }
+  },
+  "validation": {
+    "a1_two_seeds": true,
+    "a2_s1_21_episodes": true,
+    "a2_two_seeds": true,
+    "deterministic_rerun": true,
+    "exactly_four_source_runs": true,
+    "no_failures": true,
+    "no_test_data_included": true,
+    "q0_provenance_correct": true,
+    "state_schemas_correct": true,
+    "total_live_executions": 126,
+    "total_live_executions_126": true
+  },
+  "variant_summaries": {
+    "A1": {
+      "early_stops": 0,
+      "episode_counts": [
+        35,
+        35
+      ],
+      "mean_of_run_means": 0.6840734141499267,
+      "median_of_run_medians": 0.7326553419591456,
+      "n_runs": 2,
+      "run_means": {
+        "A1-s0": 0.7406522468329192,
+        "A1-s1": 0.6274945814669343
+      },
+      "run_medians": {
+        "A1-s0": 0.823746727314502,
+        "A1-s1": 0.6415639566037892
+      },
+      "seeds": [
+        0,
+        1
+      ],
+      "states_visited_intersection": [
+        "state-v1|agg|S|None",
+        "state-v1|join|S|None",
+        "state-v1|mixed|S|None",
+        "state-v1|rdd_sort|S|None"
+      ],
+      "states_visited_union": [
+        "state-v1|agg|S|None",
+        "state-v1|join|S|None",
+        "state-v1|mixed|S|None",
+        "state-v1|rdd_sort|S|None"
+      ],
+      "total_executions": 70
+    },
+    "A2": {
+      "early_stops": 2,
+      "episode_counts": [
+        21,
+        35
+      ],
+      "mean_of_run_means": 0.7172538463514093,
+      "median_of_run_medians": 0.7728992016501783,
+      "n_runs": 2,
+      "run_means": {
+        "A2-s0": 0.7621543249941893,
+        "A2-s1": 0.6723533677086293
+      },
+      "run_medians": {
+        "A2-s0": 0.8234759405750864,
+        "A2-s1": 0.7223224627252701
+      },
+      "seeds": [
+        0,
+        1
+      ],
+      "states_visited_intersection": [
+        "state-v2|gt0",
+        "state-v2|le0"
+      ],
+      "states_visited_union": [
+        "state-v2|gt0",
+        "state-v2|le0"
+      ],
+      "total_executions": 56
+    }
+  }
+}

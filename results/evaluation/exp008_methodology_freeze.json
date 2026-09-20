@@ -1,0 +1,353 @@
+{
+  "a3_arms": {
+    "r3_frozen": {
+      "action_schema": "mode12 (12 actions) - UNFROZEN - REQUIRES DECISION (B4)",
+      "alpha": "0.2 (frozen main-study value) - UNFROZEN - REQUIRES DECISION (B4)",
+      "aqe_condition": "aqe_enabled=false (frozen main-study control) - UNFROZEN - REQUIRES DECISION (B4)",
+      "arm_identifier": "A3-R3-frozen",
+      "cache_behavior": "UNFROZEN - REQUIRES DECISION (B4)",
+      "classification": "R3 remains exactly the frozen primary reward - unchanged",
+      "clipping": "[-1, +1] on the time delta (frozen R3)",
+      "coefficients": {
+        "clip_high": 1.0,
+        "clip_low": -1.0,
+        "spill_ratio_reference": 0.1,
+        "task_cv_reference": 0.5,
+        "w_failure": 1.0,
+        "w_spill_waste": 0.2,
+        "w_task_imbalance": 0.2,
+        "w_time_improvement": 1.0
+      },
+      "dataset_seed": "0 (frozen: T_ref calibrated for dataset seed 0 only)",
+      "early_stop_rule": "UNFROZEN - REQUIRES DECISION (B4)",
+      "episode_horizon": "UNFROZEN - REQUIRES DECISION (B4)",
+      "epsilon_schedule": "start 1.0, floor 0.05, decay 0.95 per episode (frozen main-study values) - UNFROZEN - REQUIRES DECISION (B4)",
+      "failure_behavior": "R = -1.0 exactly (DEC-010, frozen R3)",
+      "gamma": "0.0 (frozen main-study value; DEC-011 bandit lock) - UNFROZEN - REQUIRES DECISION (B4)",
+      "live_execution_charging_rule": "UNFROZEN - REQUIRES SEPARATE BUDGET DECISION (B5)",
+      "missing_input_rule": "missing CV/spill inputs contribute 0.0 and are recorded, never guessed (frozen reward.py)",
+      "q0": "REQUIRES EXPLICIT DECISION (B3: Q0 provenance)",
+      "registered_intent_source": "PLAN section 24 (line 188): final/frozen R3 (1, 0.2, 0.2)",
+      "reward_formula": "1.0*clip((T_ref-T)/T_ref,-1,+1) + 0.2*(1-min(1,CV/0.5)) - 0.2*min(1,(spill/input)/0.10) - 1.0*1[fail]",
+      "state_schema": "state-v1.5 (30 states) - UNFROZEN - REQUIRES DECISION (B4)",
+      "t_ref_source": "EXP-002 TRAIN records, B0 median, dataset seed 0 (frozen TRefStore gate)",
+      "train_cells": "UNFROZEN - REQUIRES DECISION (B4)",
+      "training_seeds": "UNFROZEN - REQUIRES DECISION (B4)",
+      "warm_up_behavior": "UNFROZEN - REQUIRES DECISION (B4)"
+    },
+    "r4_log_ratio": {
+      "action_schema": "mode12 (12 actions) - UNFROZEN - REQUIRES DECISION (B4)",
+      "alpha": "0.2 (frozen main-study value) - UNFROZEN - REQUIRES DECISION (B4)",
+      "aqe_condition": "aqe_enabled=false (frozen main-study control) - UNFROZEN - REQUIRES DECISION (B4)",
+      "arm_identifier": "A3-R4-log-ratio",
+      "cache_behavior": "UNFROZEN - REQUIRES DECISION (B4)",
+      "classification": "INCOMPLETE - R4 is UNIMPLEMENTED; every missing semantic requires a separate explicit decision",
+      "dataset_seed": "0 (frozen: T_ref calibrated for dataset seed 0 only)",
+      "early_stop_rule": "UNFROZEN - REQUIRES DECISION (B4)",
+      "episode_horizon": "UNFROZEN - REQUIRES DECISION (B4)",
+      "epsilon_schedule": "start 1.0, floor 0.05, decay 0.95 per episode (frozen main-study values) - UNFROZEN - REQUIRES DECISION (B4)",
+      "gamma": "0.0 (frozen main-study value; DEC-011 bandit lock) - UNFROZEN - REQUIRES DECISION (B4)",
+      "implementation_status": "UNIMPLEMENTED (no weights, no validator, no tests)",
+      "live_execution_charging_rule": "UNFROZEN - REQUIRES SEPARATE BUDGET DECISION (B5)",
+      "q0": "REQUIRES EXPLICIT DECISION (B3: Q0 provenance)",
+      "registered_formula": "R4 = -ln(T / T_ref)",
+      "registered_intent_source": "PLAN section 24 (line 188): R4 log-ratio -ln(T/T_ref)",
+      "state_schema": "state-v1.5 (30 states) - UNFROZEN - REQUIRES DECISION (B4)",
+      "t_ref_source": "EXP-002 TRAIN records, B0 median, dataset seed 0 - presumed from frozen main-study value; NOT separately frozen for this arm",
+      "train_cells": "UNFROZEN - REQUIRES DECISION (B4)",
+      "training_seeds": "UNFROZEN - REQUIRES DECISION (B4)",
+      "unfrozen_semantics": {
+        "clipping": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "coefficients": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "edge_T_le_0": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "edge_T_ref_le_0": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "edge_failures_timeouts": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "edge_missing_execution_time": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "failure_rule": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "term_structure_vs_time_only": "UNFROZEN - SEPARATE DECISION REQUIRED"
+      },
+      "warm_up_behavior": "UNFROZEN - REQUIRES DECISION (B4)"
+    },
+    "time_only": {
+      "action_schema": "mode12 (12 actions) - UNFROZEN - REQUIRES DECISION (B4)",
+      "alpha": "0.2 (frozen main-study value) - UNFROZEN - REQUIRES DECISION (B4)",
+      "aqe_condition": "aqe_enabled=false (frozen main-study control) - UNFROZEN - REQUIRES DECISION (B4)",
+      "arm_identifier": "A3-time-only",
+      "cache_behavior": "UNFROZEN - REQUIRES DECISION (B4)",
+      "classification": "MULTI-TERM REMOVAL from R3 - NOT a pure one-factor ablation: task-imbalance AND spill-waste removed simultaneously",
+      "clipping": "time delta clipped to [-1, +1] (retained from frozen R3)",
+      "coefficients": {
+        "clip_high": 1.0,
+        "clip_low": -1.0,
+        "w_failure": 1.0,
+        "w_spill_waste": 0.0,
+        "w_task_imbalance": 0.0,
+        "w_time_improvement": 1.0
+      },
+      "dataset_seed": "0 (frozen: T_ref calibrated for dataset seed 0 only)",
+      "early_stop_rule": "UNFROZEN - REQUIRES DECISION (B4)",
+      "episode_horizon": "UNFROZEN - REQUIRES DECISION (B4)",
+      "epsilon_schedule": "start 1.0, floor 0.05, decay 0.95 per episode (frozen main-study values) - UNFROZEN - REQUIRES DECISION (B4)",
+      "failure_behavior": "R = -1.0 exactly (DEC-010; retained from frozen R3)",
+      "gamma": "0.0 (frozen main-study value; DEC-011 bandit lock) - UNFROZEN - REQUIRES DECISION (B4)",
+      "live_execution_charging_rule": "UNFROZEN - REQUIRES SEPARATE BUDGET DECISION (B5)",
+      "q0": "REQUIRES EXPLICIT DECISION (B3: Q0 provenance)",
+      "registered_intent_source": "PLAN section 24 (line 188): time-only (1, 0, 0)",
+      "removed_terms": [
+        "task-imbalance (0.2)",
+        "spill-waste (0.2)"
+      ],
+      "retained_terms": [
+        "time improvement (1.0, clipped)",
+        "failure penalty (-1.0)"
+      ],
+      "reward_formula": "R = 1.0 * clip((T_ref - T) / T_ref, -1, +1)",
+      "state_schema": "state-v1.5 (30 states) - UNFROZEN - REQUIRES DECISION (B4)",
+      "t_ref_source": "EXP-002 TRAIN records, B0 median, dataset seed 0 - presumed from frozen main-study value; NOT separately frozen for this arm",
+      "train_cells": "UNFROZEN - REQUIRES DECISION (B4)",
+      "training_seeds": "UNFROZEN - REQUIRES DECISION (B4)",
+      "warm_up_behavior": "UNFROZEN - REQUIRES DECISION (B4)"
+    }
+  },
+  "a4_arm": {
+    "action_schema": "mode12 (12 actions) - UNFROZEN - REQUIRES DECISION (B4)",
+    "action_space": {
+      "frozen_source": "ARCHITECTURE_FREEZE section 9 / COMP-RL-07 / action.py MODE4_SUBSET = frozenset({0, 3, 6, 9})",
+      "mode": "mode4",
+      "subset": [
+        0,
+        3,
+        6,
+        9
+      ]
+    },
+    "alpha": "0.2 (frozen main-study value) - UNFROZEN - REQUIRES DECISION (B4)",
+    "aqe_condition": "aqe_enabled=false (frozen main-study control) - UNFROZEN - REQUIRES DECISION (B4)",
+    "arm_identifier": "A4-mode4",
+    "cache_behavior": "UNFROZEN - REQUIRES DECISION (B4)",
+    "classification": "ACTION AVAILABILITY ONLY - mode4 subset of mode12; every other factor must equal its control arm",
+    "dataset_seed": "0 (frozen: T_ref calibrated for dataset seed 0 only)",
+    "early_stop_rule": "UNFROZEN - REQUIRES DECISION (B4)",
+    "episode_horizon": "UNFROZEN - REQUIRES DECISION (B4)",
+    "epsilon_schedule": "start 1.0, floor 0.05, decay 0.95 per episode (frozen main-study values) - UNFROZEN - REQUIRES DECISION (B4)",
+    "exact_four_configurations": [
+      {
+        "action_index": 0,
+        "config": "local[2]; spark.sql.shuffle.partitions=16; spark.default.parallelism=2",
+        "parallelism": 2,
+        "shuffle_partitions": 16
+      },
+      {
+        "action_index": 3,
+        "config": "local[2]; spark.sql.shuffle.partitions=128; spark.default.parallelism=2",
+        "parallelism": 2,
+        "shuffle_partitions": 128
+      },
+      {
+        "action_index": 6,
+        "config": "local[4]; spark.sql.shuffle.partitions=64; spark.default.parallelism=4",
+        "parallelism": 4,
+        "shuffle_partitions": 64
+      },
+      {
+        "action_index": 9,
+        "config": "local[8]; spark.sql.shuffle.partitions=32; spark.default.parallelism=8",
+        "parallelism": 8,
+        "shuffle_partitions": 32
+      }
+    ],
+    "gamma": "0.0 (frozen main-study value; DEC-011 bandit lock) - UNFROZEN - REQUIRES DECISION (B4)",
+    "live_execution_charging_rule": "UNFROZEN - REQUIRES SEPARATE BUDGET DECISION (B5)",
+    "primary_comparison": "mode12 (all 12 frozen actions)",
+    "q0": "STRUCTURALLY COMPATIBLE (EXISTING FROZEN MAPPING) - rows remain 12-wide; subset indices used as-is; Q0 SOURCE choice still UNFROZEN - SEPARATE DECISION REQUIRED",
+    "registered_intent_source": "PLAN section 24: 4-action minimization / action-space ablation",
+    "reward": "R3 presumed - UNFROZEN - REQUIRES DECISION (B4); must equal its control arm",
+    "state_schema": "state-v1.5 (30 states) - UNFROZEN - REQUIRES DECISION (B4)",
+    "t_ref_source": "EXP-002 TRAIN, B0 median, dataset seed 0 - presumed from frozen main-study value; NOT separately frozen for this arm",
+    "train_cells": "UNFROZEN - REQUIRES DECISION (B4)",
+    "training_seeds": "UNFROZEN - REQUIRES DECISION (B4)",
+    "verification": "subset strictly contained in the frozen 12-grid (grid_index = parallelism_index*4 + shuffle_index); selection restriction pre-implemented and unit-validated; AQE guard preserved",
+    "warm_up_behavior": "UNFROZEN - REQUIRES DECISION (B4)"
+  },
+  "a5": {
+    "disabled_by": "DEC-011 (2026-09-13, Day-30 mode gate = NO)",
+    "gamma": 0.0,
+    "gamma_0_9_implementation_or_execution": "FORBIDDEN under DEC-030",
+    "multi_step_rl_opened": false,
+    "part_of_this_decision": false,
+    "status": "DISABLED"
+  },
+  "acceptance_gates": {
+    "A3_exact_intent_reconstructed": true,
+    "A3_time_only_classified_as_multi_term_removal": true,
+    "A4_Q0_compatibility_explicitly_resolved_or_marked_unresolved": true,
+    "A4_exact_four_action_mapping_verified": true,
+    "A4_exact_intent_reconstructed": true,
+    "No_Q0_projection_invented": true,
+    "R3_remains_unchanged": true,
+    "R4_either_completely_frozen_or_marked_for_separate_decision": true,
+    "budget_remains_separate_unresolved_decision": true,
+    "control_variables_explicitly_recorded": true,
+    "deterministic_json_rerun_passes": true,
+    "execution_authorization_remains_NO": true,
+    "hidden_confound_recorded": true,
+    "historical_decisions_unchanged": true,
+    "no_Spark_executed": true,
+    "no_TEST_executed": true,
+    "no_training_executed": true,
+    "statistical_thresholds_not_invented": true
+  },
+  "budget_dependency": {
+    "b5_resolved_by_this_dec": false,
+    "b5_status": "NOT RESOLVED BY DEC-030 - SEPARATE REQUIRED DECISION",
+    "contradictory_figures_cited_not_selected": {
+      "cumulative_live_executions_before_exp008": 379,
+      "remaining_sc6_capacity_dec_chain_post007": -89,
+      "remaining_sc6_capacity_nominal_train_only": 121,
+      "remaining_sc6_capacity_validation_excluded_basis": 38,
+      "sc6_cap_frozen": 500
+    },
+    "explicit_dependency": "EXP-008 execution remains unauthorized until a separate budget decision establishes a valid headroom calculation."
+  },
+  "confound_classifications": {
+    "A3": [
+      {
+        "confound": "multi-term reward removal",
+        "description": "time-only removes TWO terms simultaneously; not isolable per term",
+        "resolution": "explicit classification; NOT repaired",
+        "severity": "HIGH"
+      },
+      {
+        "confound": "Q0 interaction",
+        "description": "differing Q0 sources confound reward effects with initialization",
+        "resolution": "REQUIRES EXPLICIT DECISION (B3: Q0 provenance)",
+        "severity": "MEDIUM"
+      },
+      {
+        "confound": "R4 functional-form change",
+        "description": "-ln vs clipped-linear confounds functional form with coefficient/term differences; edge semantics unfrozen",
+        "resolution": "UNFROZEN - SEPARATE DECISION REQUIRED",
+        "severity": "HIGH"
+      }
+    ],
+    "A4": [
+      {
+        "confound": "action-selection distribution differences",
+        "description": "epsilon-greedy over 4 vs 12 actions changes exploration coverage; inherent to the factor; report, do not repair",
+        "resolution": "inherent; reported",
+        "severity": "MEDIUM"
+      },
+      {
+        "confound": "possible Q0 mismatch",
+        "description": "if A4 Q0 source differs from its control arm, action effects are confounded with initialization",
+        "resolution": "REQUIRES EXPLICIT DECISION (B3: Q0 provenance)",
+        "severity": "MEDIUM"
+      }
+    ]
+  },
+  "date": "2026-09-17",
+  "dec030_fingerprint": "ec487bf2a84a9c1a6f506bdd83c71b7c7bb7ae2cceaf7e761f000c7201912a5a",
+  "decision_id": "DEC-030",
+  "decision_state_fingerprint": "DEC-026|5cf0cf850f022750fa7df734328f6807e3546ee9|313e6f0353670bef42e1c10bbfa3069dfc29d5e348617d81b1add5d2dde957e9",
+  "execution_authorized": false,
+  "files_created": [
+    "docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md",
+    "results/evaluation/exp008_methodology_freeze.json"
+  ],
+  "files_modified": [],
+  "no_Spark_executed": true,
+  "no_TEST_executed": true,
+  "no_training_executed": true,
+  "q0": {
+    "governing_rules": [
+      "no TEST-derived information",
+      "no post-hoc Q0 construction",
+      "no invented state mapping",
+      "no invented action mapping",
+      "no pooling unless already frozen",
+      "no silent change to the primary-study Q0",
+      "no reuse of an incompatible Q0 merely for convenience"
+    ],
+    "per_arm": {
+      "A3-R3-frozen": {
+        "classification": "REQUIRES NEW DECISION",
+        "note": "same state/action space as primary; q0-exp002/v1 plausible; provenance UNFROZEN (B3)"
+      },
+      "A3-R4-log-ratio": {
+        "classification": "REQUIRES NEW DECISION",
+        "note": "no Q0 ever computed under R4; constructing one now would be post-hoc construction (forbidden)"
+      },
+      "A3-time-only": {
+        "classification": "REQUIRES NEW DECISION",
+        "note": "state/action space may stay identical; q0-exp002/v1 plausible; provenance UNFROZEN (B3)"
+      },
+      "A4-mode4": {
+        "classification": "EXISTING FROZEN MAPPING",
+        "note": "rows 12-wide; indices {0, 3, 6, 9} used as-is; no projection; Q0 source choice still UNFROZEN"
+      }
+    },
+    "projection_invented": false
+  },
+  "repository": {
+    "branch": "main",
+    "head": "5cf0cf850f022750fa7df734328f6807e3546ee9",
+    "latest_committed_dec": "DEC-026"
+  },
+  "schema_version": "exp008-methodology-freeze/v1",
+  "scope": "EXP-008 A3/A4 methodology only (reward variants A3; action-space ablation A4); resolves only methodological aspects of B1-B4; B5 and B6 remain separate",
+  "source_document_fingerprints": {
+    "DECISIONS.md": "313e6f0353670bef42e1c10bbfa3069dfc29d5e348617d81b1add5d2dde957e9",
+    "configs/reward.yaml": "a52131d5a0de63ef06d3dd5b181f1bbeda326df3ffffbd2ae1c69ed96571db1b",
+    "configs/rl.yaml": "8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80",
+    "docs/PLAN.md": "db5e82102833efe6bab8db1adaf1b35ad195faf385e63ab296d50562e349ee63",
+    "docs/architecture/ARCHITECTURE_FREEZE.md": "9520fc86931c058bf7b0911bf3c5bfeb5471083e5f3e2cd417e229899c33fb9b",
+    "docs/architecture/COMPONENT_CONTRACTS.md": "b7f33ba1bc4668c704451cc091538c0a5f42cb14a83c15798a0eca64935bb95a",
+    "docs/research/DAY37_EXP008_PREFLIGHT_AUDIT.md": "69f7c6a747170edcf6841dc06c69d9cb0db1997a68feee6a09041d6ba31a82b1",
+    "experiments/registry.csv": "40232dcab3f18aa8c8461e988273207e5805aba5395ea560f8c73c653239b722",
+    "src/sparkrl/agent/q0.py": "7d2ffb0c33fc4349a71d3e064781927425092ff86be2eeed595705b3111de195",
+    "src/sparkrl/agent/q_learning.py": "1c5fab897f8f652b90cd9011b1d84846459f041d31565c9652c4edd578d9bb31",
+    "src/sparkrl/rl/action.py": "580cf010f17b2cb0f7c3b7967d4fb560b7f973028e8a1909123e7d337f4c0528",
+    "src/sparkrl/rl/env.py": "66ff0497ebdf594d33936215a06c2197a5c3ed6301ddffe170486e20b251e975",
+    "src/sparkrl/rl/reward.py": "0c5e67f45886443136d80630689a75d536c979df921a94496d6c61ae41f89798",
+    "src/sparkrl/rl/state.py": "3ce6ee042829b4374776617fdf74f1f7a375905d35e414a577823b149911bda0",
+    "src/sparkrl/training/ablation.py": "69ab9c40e1688405b8b6f795783ada7fbf26c753bacb76d0aba215b7fb5b216a",
+    "src/sparkrl/training/loop.py": "b513238d5148a16cc8e39283526082b0c199fee5ad7a00326d95f4ad3983a611"
+  },
+  "statistical_governance": {
+    "frozen_for_exp008": false,
+    "frozen_machinery_main_study": "PLAN 22/23/33: 5 reps, medians, Wilcoxon signed-rank (instance x seed), Mann-Whitney (unpaired), Cliff delta, Holm-Bonferroni (EXP-005 standard)",
+    "inferential_analysis_performed": false,
+    "separate_stats_dec_may_be_required_later": true,
+    "thresholds_invented": false,
+    "unfrozen_items": [
+      "descriptive-only vs inferential choice",
+      "effect-size threshold",
+      "Holm family",
+      "minimum successful cells",
+      "multiple-testing correction scope",
+      "p-value threshold",
+      "superiority threshold"
+    ]
+  },
+  "status": "DECIDED - methodology frozen; execution NOT authorized",
+  "unresolved_methodological_fields": [
+    "final arm set to execute (which A3 formulas; whether A3-R4 is retained)",
+    "Q0 source per arm (A3 all arms; A4)",
+    "state schema per arm (A3; A4)",
+    "action schema for A3",
+    "reward arm for A4 control pairing",
+    "seeds (count + identities) (A3; A4)",
+    "TRAIN cells (A3; A4)",
+    "episode horizon (A3; A4)",
+    "early-stop rule (A3; A4)",
+    "AQE condition confirmation (A3; A4)",
+    "warm-up behavior (A3; A4)",
+    "cache behavior (A3; A4)",
+    "whether A3 and A4 share seeds/cells/horizon",
+    "statistical governance (descriptive vs inferential; thresholds)",
+    "R4 complete specification (A3-R4)",
+    "epsilon schedule / alpha / gamma if deviating from frozen values (A3; A4)",
+    "live-execution charging rule and headroom (B5 - separate budget decision)",
+    "implementation authorization (B6 - separate decision)"
+  ]
+}

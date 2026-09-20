@@ -1,0 +1,3305 @@
+{
+  "applicability": {
+    "b2_undefined_on": [
+      "F4_ski"
+    ],
+    "per_cell": [
+      {
+        "arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "executable_arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F1_agg",
+        "scale": "large",
+        "seed": 0,
+        "undefined_arms": []
+      },
+      {
+        "arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "large",
+        "seed": 0,
+        "undefined_arms": [
+          "B2"
+        ]
+      },
+      {
+        "arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "large",
+        "seed": 4,
+        "undefined_arms": [
+          "B2"
+        ]
+      },
+      {
+        "arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "medium",
+        "seed": 3,
+        "undefined_arms": [
+          "B2"
+        ]
+      },
+      {
+        "arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "small",
+        "seed": 3,
+        "undefined_arms": [
+          "B2"
+        ]
+      }
+    ],
+    "rule": "Every selected cell runs every arm for which a frozen identity exists: B0 and RL-s0/s1/s2 everywhere; B2 only where the frozen per-family B2 configuration exists."
+  },
+  "arms": {
+    "b3": "analytic-only, never queued, never executed (DEC-016 B / DEC-017 / DEC-021 s.6)",
+    "executable": [
+      "B0",
+      "B2",
+      "RL-s0",
+      "RL-s1",
+      "RL-s2"
+    ],
+    "identities": {
+      "B0": {
+        "aqe_enabled": false,
+        "config_file": "configs/baseline_b0.yaml",
+        "config_file_sha256": "203e049738f06e1437adc5d72fdc0c650a6720d2f2124d36e5c696787b0ca511",
+        "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+        "config_name": "B0",
+        "config_point_fingerprint": "a69cee0fdc39840749530e92c11c45bb093d1ebf2b8b36396ce34443e0153612",
+        "resolution": "sparkrl.evaluation.strategies.resolve('B0')"
+      },
+      "B2": {
+        "artifact": "results/evaluation/baseline_selection.json",
+        "by_family": {
+          "F1_agg": {
+            "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+            "config_name": "G-p8-sp16"
+          },
+          "F2_join": {
+            "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+            "config_name": "G-p8-sp16"
+          },
+          "F3_rdd": {
+            "config_fingerprint": "a40aaa33b3dca0901584d1e14d5b319f0b1b26615e2510985c1b22d5352d39d2",
+            "config_name": "G-p8-sp64"
+          },
+          "F5_mixed": {
+            "config_fingerprint": "c1821b22d64710c3a71651b83a15e58b782e8e43f89902dad473ed098784326c",
+            "config_name": "G-p8-sp32"
+          }
+        },
+        "resolution": "sparkrl.evaluation.strategies.resolve('B2', family)",
+        "undefined_on": [
+          "F4_ski"
+        ]
+      },
+      "B3": {
+        "note": "DEC-016 Decision B / DEC-017 / DEC-021 s.6 - computed from manifests, never queued, never executed",
+        "status": "ANALYTIC-ONLY"
+      },
+      "RL": {
+        "arms": {
+          "RL-s0": {
+            "agent_rng_seed": 0,
+            "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+            "policy_path": "models/policies/policy-b801f4a7df200b04.json",
+            "source_run_id": "train-a0-d0-20260912T112906Z"
+          },
+          "RL-s1": {
+            "agent_rng_seed": 1,
+            "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+            "policy_path": "models/policies/policy-af41d8ae7a21d81f.json",
+            "source_run_id": "train-a1-d0-20260912T115123Z"
+          },
+          "RL-s2": {
+            "agent_rng_seed": 2,
+            "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+            "policy_path": "models/policies/policy-d8fd7b9859d2feea.json",
+            "source_run_id": "train-a2-d0-20260912T120648Z"
+          }
+        },
+        "manifest": "models/policies/exp005_rl_arms.json",
+        "manifest_fingerprint": "58fac8b02e6e4635b6f67d299e3f42089fa9160d01792945601cfb8bf2805380",
+        "selection": "frozen Q-table, greedy per state; never retrained"
+      }
+    },
+    "rl_seeds_distinct": true
+  },
+  "artifact_id": "0f078dc2f89b726ef80a58c3b7161ded9cc071dfe48a34266725fe9872b7eb54",
+  "authorized_by": {
+    "authorization_note": "DEC-021 s.14: freezing this specification does NOT authorize execution. EXP-006 QUEUE FROZEN - EXECUTION NOT AUTHORIZED. A separate experiment-specific authorization entry is required before any Spark run.",
+    "decisions": [
+      "DEC-020",
+      "DEC-021"
+    ],
+    "execution_authorized": false
+  },
+  "budget": {
+    "f4_component": {
+      "arms": 4,
+      "cells": 4,
+      "reps": 5,
+      "rule": "4 F4 cells x 4 executable arms (B0+RL-s0/s1/s2) x 5 reps",
+      "spark_executions": 80
+    },
+    "non_f4_component": {
+      "arms": 5,
+      "cells": 1,
+      "reps": 5,
+      "rule": "1 non-F4 cell x 5 executable arms (B0+B2+RL-s0/s1/s2) x 5 reps",
+      "spark_executions": 25
+    },
+    "planned_spark_executions": 105,
+    "register_scale": "PLAN s.33 / registry: EXP-006 '~100' runs; 105 planned Spark executions is the frozen approximately-100 target (DEC-021 s.3). The 36-cell universe x 5 reps x all arms would be ~900 rows and is NOT this experiment.",
+    "total_queue_observations": 125,
+    "undefined_rows": 20
+  },
+  "candidate_universe": {
+    "cells": [
+      {
+        "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+        "dataset_id": "skew1_large_s0",
+        "family": "F1_agg",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+        "dataset_id": "skew1_large_s1",
+        "family": "F1_agg",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+        "dataset_id": "skew1_large_s2",
+        "family": "F1_agg",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+        "dataset_id": "skew1_large_s4",
+        "family": "F1_agg",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+        "dataset_id": "skew1_medium_s4",
+        "family": "F1_agg",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+        "dataset_id": "skew1_small_s4",
+        "family": "F1_agg",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+        "dataset_id": "skew1_large_s0",
+        "family": "F2_join",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+        "dataset_id": "skew1_large_s1",
+        "family": "F2_join",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+        "dataset_id": "skew1_large_s2",
+        "family": "F2_join",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+        "dataset_id": "skew1_large_s4",
+        "family": "F2_join",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+        "dataset_id": "skew1_medium_s4",
+        "family": "F2_join",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+        "dataset_id": "skew1_small_s4",
+        "family": "F2_join",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+        "dataset_id": "skew1_large_s0",
+        "family": "F3_rdd",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+        "dataset_id": "skew1_large_s1",
+        "family": "F3_rdd",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+        "dataset_id": "skew1_large_s2",
+        "family": "F3_rdd",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+        "dataset_id": "skew1_large_s4",
+        "family": "F3_rdd",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+        "dataset_id": "skew1_medium_s4",
+        "family": "F3_rdd",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+        "dataset_id": "skew1_small_s4",
+        "family": "F3_rdd",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "87ed7ae2e2d82d6de119995494c0be604947ee3178e3d577e99647d1e78bc034",
+        "dataset_id": "skew1.5_large_s0",
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "fdc7de51023050da51bf912559b722a0e89a80e4f4553729e0b1773c472c68b6",
+        "dataset_id": "skew1.5_large_s1",
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "43755275e1e5f7be1e94a07832b6f5f51c27007b99a13d5d871684175dc294ae",
+        "dataset_id": "skew1.5_large_s2",
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "fc44e583ec7139f7d01bb6d410d824f30850ace92405b5f3bfbb2a57d494a0dd",
+        "dataset_id": "skew1.5_large_s4",
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "1fd36ea55a4987d560b1ec1a3d4dfd4be6243607b498d66cd8a39efdac092277",
+        "dataset_id": "skew1.5_medium_s0",
+        "family": "F4_ski",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f5fd0057bc431aa16b76c2a97882242a1c57f9153552db975adc8526ae64bfea",
+        "dataset_id": "skew1.5_medium_s1",
+        "family": "F4_ski",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "4498078685cdd3fe3a3e795fb43ba53351cd39603bdbdd3af937730cf96a1611",
+        "dataset_id": "skew1.5_medium_s2",
+        "family": "F4_ski",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "debcd23fae6a96e0ad206150f4158d0c114a51c937be8158ac82757796a7e19a",
+        "dataset_id": "skew1.5_medium_s3",
+        "family": "F4_ski",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 3,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "8009bc3c1c578ac4970132ecaee75616c365744de4c456f0505dc25546f58d5a",
+        "dataset_id": "skew1.5_small_s0",
+        "family": "F4_ski",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "691dda5580e1b6189fed382fa3a849437b488e868329ecd39d14ed90b72570e0",
+        "dataset_id": "skew1.5_small_s1",
+        "family": "F4_ski",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "a29585c50e8c8f6b9f6f2c282f18b54c253280cf4970d06e4b074ae56aaca0a2",
+        "dataset_id": "skew1.5_small_s2",
+        "family": "F4_ski",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f6561e735f1c4069b29e82fca8c734feae138fdbcd45381c9ee671972c21d018",
+        "dataset_id": "skew1.5_small_s3",
+        "family": "F4_ski",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 3,
+        "skew": 1.5,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+        "dataset_id": "skew1_large_s0",
+        "family": "F5_mixed",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3163ec9fc1aee2b191389d80f7911ee1067c1bbd703fdaeaf3dfb06d53ab5734",
+        "dataset_id": "skew1_large_s1",
+        "family": "F5_mixed",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 1,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+        "dataset_id": "skew1_large_s2",
+        "family": "F5_mixed",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 2,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "f47a9a28b13df8d89eb2e553c3f29e2cfc853c285837eb6bd47bdbb0b515d02b",
+        "dataset_id": "skew1_large_s4",
+        "family": "F5_mixed",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "3d65dc22108c04f4aa4f05f030ed5b3c007156b5cb18e90e9e14d7865063b4b2",
+        "dataset_id": "skew1_medium_s4",
+        "family": "F5_mixed",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      },
+      {
+        "dataset_fingerprint": "a551111da5c18288ddee34ff06d8ece13051ef8bf6333e5180ef54764838721b",
+        "dataset_id": "skew1_small_s4",
+        "family": "F5_mixed",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.0,
+        "split": "test"
+      }
+    ],
+    "consumed_by_exp005": 7,
+    "correction": "DEC-021 s.1: F4_ski|large|s3 was consumed by EXP-005 and is therefore excluded from the remainder; the correct F4 remainder is 12 cells.",
+    "definition": "DEC-020 s.B / DEC-021 s.2: the REMAINING already-defined and materially available frozen TEST cells. This is a candidate pool, NOT the execution queue.",
+    "remaining_count": 36,
+    "source_artifact": "results/evaluation/test_freeze.json",
+    "source_cell_count": 43
+  },
+  "created_utc": "2026-09-15T17:18:34.400086+00:00",
+  "excluded_from_this_experiment": {
+    "b1_b4": "not EXP-006 arms - (DEC-021 s.7 lists exactly RL-s0/s1/s2 + B0 + B2-where-defined)",
+    "b3": "analytic-only (not a TEST arm)",
+    "consumed_exp005_instances": [
+      "F1_agg|large|3",
+      "F2_join|large|3",
+      "F3_rdd|large|3",
+      "F4_ski|large|3",
+      "F4_ski|medium|4",
+      "F4_ski|small|4",
+      "F5_mixed|large|3"
+    ],
+    "f5_unseen_parameters": "never generated; not synthesized (DEC-020 s.B, DEC-021 s.11)",
+    "public_dataset": "never generated and materially unavailable; not substituted (DEC-020 s.B, DEC-021 s.11)"
+  },
+  "experiment_id": "EXP-006",
+  "failure_protocol": "Failures are first-class observations recorded and reported; no retry is added by this specification. A failed execution never becomes an undefined row, and an undefined row is never reported as a failure. F3-large-class spill/sort failures stay first-class (DEC-020 s.I, DEC-021 s.9).",
+  "fingerprint": "0f078dc2f89b726ef80a58c3b7161ded9cc071dfe48a34266725fe9872b7eb54",
+  "fingerprints": {
+    "queue": "c88ba20c75a0654a81c2113a83aefd119a19271985bdccabd4c7ef44ec917d4c",
+    "selected_cells": "5fea06f272345a9d7bb0e11aca9208c416dac4a1bb5a37581976c1f149da17e5",
+    "universe": "6150713d924b7640a9caa7aee66cc11fc781cca3b5a67fcdd91073da989b5ce3"
+  },
+  "incomplete_semantics": "A cell/arm is COMPLETE only if all 5 planned reps are usable. Fewer than 5 usable reps => INCOMPLETE, excluded from any pooled statistic (DEC-017 item 5). Missing values are never imputed (no zero/mean/worst-case/retry/B1 substitute).",
+  "no_analysis_rule": "No statistical or performance conclusion is drawn from this specification; it contains no measurement and no metric. No winner selection, no arm ranking, no inferential test, and no EXP-005 retrofit.",
+  "protocol_version": "exp006/v1",
+  "provenance": {
+    "decisions": [
+      "DEC-020",
+      "DEC-021",
+      "DEC-019 (B2 undefined class)"
+    ],
+    "inputs": {
+      "baseline_b0.yaml": "203e049738f06e1437adc5d72fdc0c650a6720d2f2124d36e5c696787b0ca511",
+      "exp005_instances_consumed": "results/experiments/exp-005/spec.json",
+      "exp005_rl_arms.json": "1c33cc1ec623257d9678e3d1bb4af82d5e80e328a2aa47f0fb56c0c7d4dcb207",
+      "test_freeze.json": "3b37ea80458c1b4fe2c8f72202ce4b7449fe03532e4d8f8554d704ba8ab9d650"
+    },
+    "produced_by": "scripts/freeze_exp006.py (pre-execution freeze)",
+    "spark_executions": 0
+  },
+  "purpose": "DEC-021 s.4: descriptive generalization evaluation of the already-trained frozen RL policies against the available frozen comparators on previously unseen dimensions. NOT a policy-selection, tuning, hyper-parameter-search, significance-seeking, or EXP-005-replacement experiment.",
+  "queue": {
+    "count": 125,
+    "counts_by_arm": {
+      "B0": 25,
+      "B2": 25,
+      "RL-s0": 25,
+      "RL-s1": 25,
+      "RL-s2": 25
+    },
+    "executable": 105,
+    "ordering": "Deterministic and non-random: selected cells sorted by (family, scale, seed); within a cell the canonical arm order ['B0', 'B2', 'RL-s0', 'RL-s1', 'RL-s2']; repeats 1-5 ascending. No random or outcome-derived order.",
+    "rows": [
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 1,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 2,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 3,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 4,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 5,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+          "config_name": "G-p8-sp16",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 6,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+          "config_name": "G-p8-sp16",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 7,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+          "config_name": "G-p8-sp16",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 8,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+          "config_name": "G-p8-sp16",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 9,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "config_fingerprint": "285ad990e5bc5b8e691073f7a37e363ebb938b95fff945b64cab2f2820398681",
+          "config_name": "G-p8-sp16",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 10,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 11,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 12,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 13,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 14,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 15,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 16,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 17,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 18,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 19,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 20,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 21,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 22,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 23,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 24,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F1_agg",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 25,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 26,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 27,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 28,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 29,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 30,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 31,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 32,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 33,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 34,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 0,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 35,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 36,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 37,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 38,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 39,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 40,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 41,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 42,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 43,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 44,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 45,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 46,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 47,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 48,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 49,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 0,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 50,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 51,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 52,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 53,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 54,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 55,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 4,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 56,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 4,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 57,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 4,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 58,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 4,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 59,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 4,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 60,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 61,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 62,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 63,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 64,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 65,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 66,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 67,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 68,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 69,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 70,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 71,
+        "rep": 1,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 72,
+        "rep": 2,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 73,
+        "rep": 3,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 74,
+        "rep": 4,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 4,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 75,
+        "rep": 5,
+        "scale": "large",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 76,
+        "rep": 1,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 77,
+        "rep": 2,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 78,
+        "rep": 3,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 79,
+        "rep": 4,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 80,
+        "rep": 5,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 81,
+        "rep": 1,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 82,
+        "rep": 2,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 83,
+        "rep": 3,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 84,
+        "rep": 4,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 85,
+        "rep": 5,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 86,
+        "rep": 1,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 87,
+        "rep": 2,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 88,
+        "rep": 3,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 89,
+        "rep": 4,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 90,
+        "rep": 5,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 91,
+        "rep": 1,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 92,
+        "rep": 2,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 93,
+        "rep": 3,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 94,
+        "rep": 4,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 95,
+        "rep": 5,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 96,
+        "rep": 1,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 97,
+        "rep": 2,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 98,
+        "rep": 3,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 99,
+        "rep": 4,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 100,
+        "rep": 5,
+        "scale": "medium",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 101,
+        "rep": 1,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 102,
+        "rep": 2,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 103,
+        "rep": 3,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 104,
+        "rep": 4,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "config_fingerprint": "9270d2ce2dcaa57e3c01a6c218ce4e88d5ef6a201298115d59a076d19b8be7e1",
+          "config_name": "B0",
+          "kind": "config"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 105,
+        "rep": 5,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 106,
+        "rep": 1,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 107,
+        "rep": 2,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 108,
+        "rep": 3,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 109,
+        "rep": 4,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "B2",
+        "dataset_seed": 3,
+        "executable": false,
+        "family": "F4_ski",
+        "identity": {
+          "executable": false,
+          "kind": "undefined",
+          "reason": "DEC-019 Option A / DEC-021 s.6: no frozen B2 configuration exists for the unseen family F4_ski; 0 Spark, no fallback, no substitution"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 110,
+        "rep": 5,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 111,
+        "rep": 1,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 112,
+        "rep": 2,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 113,
+        "rep": 3,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 114,
+        "rep": 4,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s0",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "b801f4a7df200b04c630978f0476c29245da9a9336802f26bff4c2e5b8a7d033",
+          "policy_path": "models/policies/policy-b801f4a7df200b04.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 115,
+        "rep": 5,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 116,
+        "rep": 1,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 117,
+        "rep": 2,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 118,
+        "rep": 3,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 119,
+        "rep": 4,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s1",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "af41d8ae7a21d81f5c570f3d96246e26c393bc32018f3b82126a7a0600a9566c",
+          "policy_path": "models/policies/policy-af41d8ae7a21d81f.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 120,
+        "rep": 5,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 121,
+        "rep": 1,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 122,
+        "rep": 2,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 123,
+        "rep": 3,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 124,
+        "rep": 4,
+        "scale": "small",
+        "split": "test"
+      },
+      {
+        "arm": "RL-s2",
+        "dataset_seed": 3,
+        "executable": true,
+        "family": "F4_ski",
+        "identity": {
+          "kind": "policy",
+          "policy_id": "d8fd7b9859d2feeab753d9a40f89f07fb759a481accdf9d86bb1d578d54bc16b",
+          "policy_path": "models/policies/policy-d8fd7b9859d2feea.json"
+        },
+        "provenance": {
+          "decision": "DEC-021 (cells/arms/reps/budget)",
+          "spec": "results/evaluation/exp006_spec.json",
+          "split_authority": "sparkrl.experiments.spec.split_of"
+        },
+        "queue_index": 125,
+        "rep": 5,
+        "scale": "small",
+        "split": "test"
+      }
+    ],
+    "undefined": 20
+  },
+  "queue_ordering": "Deterministic and non-random: selected cells sorted by (family, scale, seed); within a cell the canonical arm order ['B0', 'B2', 'RL-s0', 'RL-s1', 'RL-s2']; repeats 1-5 ascending. No random or outcome-derived order.",
+  "repetitions": 5,
+  "repetitions_basis": "PLAN s.23 ('all evaluation = 5 repetitions x fixed seeds, medians analyzed'); sparkrl.evaluation.spec.EVALUATION_REPETITIONS = 5; results/evaluation/evaluation_spec.json; EXP-005 precedent (results/experiments/exp-005/spec.json).",
+  "sc5": {
+    "reason": "DEC-020 s.E / DEC-021 s.10: PLAN s.25's SC5 requires '>=50% of its seen relative advantage', and no pre-TEST artifact in the repository defines that seen advantage. No value is derived from TEST data and no new threshold is invented, so SC5 is not evaluable under the current frozen definition. EXP-006 therefore yields descriptive generalization evidence only.",
+    "status": "NOT EVALUABLE"
+  },
+  "schema_version": "exp006-pre-exec-spec/v1",
+  "selected_cells": {
+    "cells": [
+      {
+        "arms_applicable": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "dataset_fingerprint": "d2167712dfc1735d0ad37db601e267dabc5f4eb0411a9acb541d667e04c2908b",
+        "dataset_id": "skew1_large_s0",
+        "decided_by": "DEC-021 s.5",
+        "executable_arms": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F1_agg",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.0,
+        "split": "test",
+        "undefined_arms": [],
+        "unseen_dimension": "unseen scale L for a non-F4 family"
+      },
+      {
+        "arms_applicable": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "dataset_fingerprint": "87ed7ae2e2d82d6de119995494c0be604947ee3178e3d577e99647d1e78bc034",
+        "dataset_id": "skew1.5_large_s0",
+        "decided_by": "DEC-021 s.4",
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 0,
+        "skew": 1.5,
+        "split": "test",
+        "undefined_arms": [
+          "B2"
+        ],
+        "unseen_dimension": "unseen family F4 (skew 1.5)"
+      },
+      {
+        "arms_applicable": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "dataset_fingerprint": "fc44e583ec7139f7d01bb6d410d824f30850ace92405b5f3bfbb2a57d494a0dd",
+        "dataset_id": "skew1.5_large_s4",
+        "decided_by": "DEC-021 s.4",
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "large",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 4,
+        "skew": 1.5,
+        "split": "test",
+        "undefined_arms": [
+          "B2"
+        ],
+        "unseen_dimension": "unseen family F4 (skew 1.5)"
+      },
+      {
+        "arms_applicable": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "dataset_fingerprint": "debcd23fae6a96e0ad206150f4158d0c114a51c937be8158ac82757796a7e19a",
+        "dataset_id": "skew1.5_medium_s3",
+        "decided_by": "DEC-021 s.4",
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "medium",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 3,
+        "skew": 1.5,
+        "split": "test",
+        "undefined_arms": [
+          "B2"
+        ],
+        "unseen_dimension": "unseen family F4 (skew 1.5)"
+      },
+      {
+        "arms_applicable": [
+          "B0",
+          "B2",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "dataset_fingerprint": "f6561e735f1c4069b29e82fca8c734feae138fdbcd45381c9ee671972c21d018",
+        "dataset_id": "skew1.5_small_s3",
+        "decided_by": "DEC-021 s.4",
+        "executable_arms": [
+          "B0",
+          "RL-s0",
+          "RL-s1",
+          "RL-s2"
+        ],
+        "family": "F4_ski",
+        "scale": "small",
+        "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+        "seed": 3,
+        "skew": 1.5,
+        "split": "test",
+        "undefined_arms": [
+          "B2"
+        ],
+        "unseen_dimension": "unseen family F4 (skew 1.5)"
+      }
+    ],
+    "count": 5,
+    "selection_rule": "DEC-021 s.4-s.5 deterministic coverage rule, declared BEFORE execution and independent of any runtime, reward, or TEST outcome."
+  },
+  "split": "test",
+  "split_policy": "DESCRIPTIVE generalization study only. The TEST set stays frozen; no TEST metric retunes, selects, or trains anything; the 3 RL policies are used exactly as published before the test set was opened.",
+  "tail_digest_note": "Reproducibility: re-running this builder on the same frozen inputs must reproduce the same fingerprints; only created_utc may differ.",
+  "total_runs": 125,
+  "undefined_semantics": "B2 x F4_ski rows are UNDEFINED-BY-DESIGN (DEC-019 Option A class): the row is preserved in the queue for accounting, executed 0 times, carries config_name=null and fingerprints=null, execution_time=null, event_log_status=NOT_EXECUTED, and is excluded from B2's pooled statistics for those cells. No fallback to B1 and no configuration substitution is permitted."
+}
