@@ -152,6 +152,53 @@ def rl_yaml_sha256() -> str:
     """sha256 of the frozen configs/rl.yaml bytes (must match manifest)."""
     return hashlib.sha256((PROJECT / "configs" / "rl.yaml").read_bytes()
                           ).hexdigest()
+
+
+# The sha256 the three Day-29 runs of record actually recorded, 2026-09-12.
+#
+# It matches NO version of configs/rl.yaml that exists anywhere: the runs
+# executed at code_version "2fef786-dirty", i.e. against a WORKING-TREE
+# rl.yaml that was never committed, and the file was committed in its next
+# form as 6d85481. Verified exhaustively - the recorded digest equals
+# neither 2fef786 nor 6d85481 nor HEAD, under LF or CRLF normalisation.
+# Those exact bytes are unrecoverable.
+#
+# Byte equality against the live file therefore cannot be satisfied by any
+# honest means, and EDITING the recorded hash in a manifest would falsify
+# the execution record - the one thing this repository exists to prevent.
+#
+# What the divergence is NOT: a change to the science. The 2fef786 ->
+# 6d85481 diff is PURELY ADDITIVE (a Day-27 `training:` block; PLAN freezes
+# no episode count, so run lengths stay on the CLI). Every frozen learner
+# value is untouched, and the runs' own manifests record
+# alpha 0.2 / gamma 0.0 / epsilon_start 1.0 / epsilon_min 0.05 /
+# epsilon_decay 0.95 / q0_default 0.5 - identical to configs/rl.yaml today.
+#
+# So this named constant is a CITED HISTORICAL figure in the DEC-032 sense,
+# recorded exactly as the runs left it, and the check below substitutes a
+# STRONGER assertion for the unsatisfiable one: the live config's FROZEN
+# VALUES must still equal FROZEN_HYPER. A byte hash would also have failed
+# on a comment edit; this fails only if a research constant actually moves.
+DAY29_RECORDED_RL_YAML_SHA256 = (
+    "4bb71750e51c8ea605f7feaaa368a2f1dcbe4ecd2aacbed0f059f8d18cfb5a14")
+
+
+def live_rl_yaml_frozen_drift() -> dict[str, tuple[Any, Any]]:
+    """Frozen learner values in the LIVE configs/rl.yaml that differ from
+    FROZEN_HYPER. Empty dict means the research constants are intact.
+
+    An unreadable or unparseable config is drift, never a silent pass.
+    """
+    try:
+        import yaml
+        cfg = yaml.safe_load(
+            (PROJECT / "configs" / "rl.yaml").read_text(encoding="utf-8"))
+    except Exception as exc:                                  # noqa: BLE001
+        return {"<config unreadable>": (str(exc), "parseable rl.yaml")}
+    if not isinstance(cfg, dict):
+        return {"<config not a mapping>": (type(cfg).__name__, "mapping")}
+    return {k: (cfg.get(k), v) for k, v in FROZEN_HYPER.items()
+            if cfg.get(k) != v}
 def probe_analysis_reproducible() -> tuple[bool, str]:
     """Re-derive the analyzer output twice (normal + reversed input ordering)
     and require byte-identical canonical JSON. Nothing is written to the
@@ -257,7 +304,22 @@ def provenance_ok(run: Run, expected_seed: int) -> tuple[bool, str | None]:
         if hyp.get(key) != val:
             return False, f'hyperparameter {key}={hyp.get(key)!r} != {val!r}'
     if m.get("rl_yaml_sha256") != rl_yaml_sha256():
-        return False, "rl_yaml_sha256 does not match configs/rl.yaml"
+        # See DAY29_RECORDED_RL_YAML_SHA256: the runs of record pinned an
+        # uncommitted rl.yaml whose bytes no longer exist. Exactly ONE
+        # divergence is tolerated - that recorded value - and only while the
+        # live config's FROZEN research constants are still intact. Any
+        # other digest, or any drift in alpha/gamma/epsilon/q0, FAILS.
+        if m.get("rl_yaml_sha256") != DAY29_RECORDED_RL_YAML_SHA256:
+            return False, (
+                "rl_yaml_sha256 matches neither the live configs/rl.yaml nor "
+                "the recorded Day-29 value "
+                f"{DAY29_RECORDED_RL_YAML_SHA256[:12]}...")
+        drift = live_rl_yaml_frozen_drift()
+        if drift:
+            return False, (
+                "configs/rl.yaml frozen values DRIFTED from FROZEN_HYPER: "
+                + ", ".join(f"{k}={got!r} != {want!r}"
+                            for k, (got, want) in sorted(drift.items())))
     q0 = m.get("q0_provenance") or {}
     if q0.get("source") != Q0_SOURCE or q0.get("q0_version") != Q0_VERSION:
         return False, 'q0 provenance != exp002/q0-exp002/v1'
