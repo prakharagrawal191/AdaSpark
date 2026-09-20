@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-09-07T11:10:11.230022+00:00",
+  "generated_utc": "2026-09-20T08:00:49.149707+00:00",
   "verdict": "PASS",
   "project_root": "C:\\Users\\prakh\\OneDrive\\Desktop\\PDS PROJECT",
   "platform": {
@@ -8,12 +8,12 @@
     "cpu_model": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
     "cpu_logical_cores": 24,
     "ram_total_GB": 31.4,
-    "ram_available_GB": 14.5
+    "ram_available_GB": 13.0
   },
   "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU, 8151 MiB",
   "disk": {
-    "project_free_GB": 532.8,
-    "data_free_GB": 532.8,
+    "project_free_GB": 483.4,
+    "data_free_GB": 483.4,
     "data_root": "C:\\Users\\prakh\\sparkrl_data"
   },
   "java": "openjdk version \"17.0.20.1\" 2026-08-18",
@@ -24,11 +24,11 @@
   "pyspark": "3.5.9",
   "spark": {
     "spark_version": "3.5.9",
-    "session_startup_s": 2.1,
-    "app_id": "local-1788779415742",
+    "session_startup_s": 2.0,
+    "app_id": "local-1789891253691",
     "count_result": 1000000,
     "parquet_roundtrip_count": 100000,
-    "eventlog_file": "local-1788779415742",
+    "eventlog_file": "local-1789891253691",
     "eventlog_events": 63
   },
   "checks": [
@@ -45,7 +45,7 @@
     {
       "name": "Disk",
       "status": "PASS",
-      "detail": "project volume 532.8 GB free; data root C:\\Users\\prakh\\sparkrl_data 532.8 GB free"
+      "detail": "project volume 483.4 GB free; data root C:\\Users\\prakh\\sparkrl_data 483.4 GB free"
     },
     {
       "name": "Python",
@@ -80,7 +80,7 @@
     {
       "name": "SparkSession",
       "status": "PASS",
-      "detail": "Spark 3.5.9 local[2] started in 2.1s"
+      "detail": "Spark 3.5.9 local[2] started in 2.0s"
     },
     {
       "name": "Spark job (count)",
@@ -100,7 +100,7 @@
     {
       "name": "Event log",
       "status": "PASS",
-      "detail": "local-1788779415742: 63 events, 0 bad lines; first='SparkListenerLogStart', last='SparkListenerApplicationEnd'"
+      "detail": "local-1789891253691: 63 events, 0 bad lines; first='SparkListenerLogStart', last='SparkListenerApplicationEnd'"
     }
   ]
 }

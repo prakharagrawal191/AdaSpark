@@ -861,38 +861,57 @@ def main(argv: list[str] | None = None) -> int:
             except (ValueError, TypeError):
                 ledger_errors.append(
                     f"{exp007_art.name}: corrupt total_live_executions")
-    # DEC-033 sections 4-5 charged-but-unauthorized 2026-09-19 smoke term.
-    # Two completed same-day smoke manifests (train-a0-d0-20260919T130241Z
-    # and train-a0-d0-20260919T130614Z) record 3 live TRAIN executions
-    # each under DEC-031 section 5 categories 1+3, for 6 newly classified
-    # executions. Read as a NAMED, BOUNDED constant recorded by DEC-033 -
-    # the same shape as the Day-29/B4/EXP-001/EXP-007 terms above - never
-    # by re-summing the same manifests that produce live_total, which
-    # DEC-032 section 6 forbids as self-cancelling. A seventh same-day
-    # completed smoke manifest, or a changed live count in either named
-    # directory, leaves the residual non-zero and FAILS loudly.
+    # Charged-but-unauthorized SMOKE term: DEC-033 (2026-09-19, 6) and
+    # DEC-038 (2026-09-20, 15), both charged under DEC-031 section 5
+    # categories 1+3 as real TRAIN executions inside charged accounting.
+    #
+    # EVERY contributing manifest is named EXPLICITLY below and must be
+    # status=completed with exactly 3 live executions; the total is then a
+    # NAMED, BOUNDED constant recorded by those decisions - the same shape
+    # as the Day-29/B4/EXP-001/EXP-007 terms above. It is NEVER computed by
+    # re-summing the same manifests that produce live_total, which DEC-032
+    # section 6 forbids as self-cancelling. An additional completed smoke
+    # manifest, or a changed live count in any named directory, leaves the
+    # residual non-zero and FAILS loudly.
+    #
+    # The aborted zero-live smoke rows are deliberately ABSENT from this
+    # list: they charge 0 (DEC-031 section 5 charged-category 3) and under
+    # DEC-037 they count toward no manifest-COUNT invariant either, so they
+    # contribute nothing here and are not asserted on.
     smoke_spent = 0
-    smoke_names = ("train-a0-d0-20260919T130241Z",
-                   "train-a0-d0-20260919T130614Z")
-    _smoke_live: list[int] = []
-    for _name in smoke_names:
-        _mp = TRAINING_ROOT / "smoke" / _name / "manifest.json"
-        try:
-            _md = json.loads(_mp.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            ledger_errors.append(f"{_name}: {type(exc).__name__}")
-            continue
-        try:
-            _live = int((_md.get("budget") or {}).get("live_executions", 0))
-        except (ValueError, TypeError):
-            ledger_errors.append(f"{_name}: corrupt live_executions")
-            continue
-        if _md.get("status") != "completed" or _live != 3:
-            ledger_errors.append(f"{_name}: expected completed/3")
-            continue
-        _smoke_live.append(_live)
-    if len(_smoke_live) == len(smoke_names) and not ledger_errors:
-        smoke_spent = 6  # DEC-033 sections 4-5 recorded charge, bounded here
+    SMOKE_CHARGED = {
+        "DEC-033": ("train-a0-d0-20260919T130241Z",     # 3
+                    "train-a0-d0-20260919T130614Z"),    # 3   -> 6
+        "DEC-038": ("train-a0-d0-20260920T073748Z",     # 3
+                    "train-a0-d0-20260920T073953Z",     # 3
+                    "train-a0-d0-20260920T074224Z",     # 3
+                    "train-a0-d0-20260920T075301Z",     # 3
+                    "train-a0-d0-20260920T075643Z"),    # 3   -> 15
+    }
+    SMOKE_RECORDED_CHARGE = 21          # 6 (DEC-033) + 15 (DEC-038)
+    SMOKE_LIVE_PER_RUN = 3
+    _smoke_ok = 0
+    _smoke_expected = sum(len(v) for v in SMOKE_CHARGED.values())
+    for _dec, _names in sorted(SMOKE_CHARGED.items()):
+        for _name in _names:
+            _mp = TRAINING_ROOT / "smoke" / _name / "manifest.json"
+            try:
+                _md = json.loads(_mp.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                ledger_errors.append(f"{_dec} {_name}: {type(exc).__name__}")
+                continue
+            try:
+                _live = int((_md.get("budget") or {}).get("live_executions", 0))
+            except (ValueError, TypeError):
+                ledger_errors.append(f"{_dec} {_name}: corrupt live_executions")
+                continue
+            if _md.get("status") != "completed" or _live != SMOKE_LIVE_PER_RUN:
+                ledger_errors.append(
+                    f"{_dec} {_name}: expected completed/{SMOKE_LIVE_PER_RUN}")
+                continue
+            _smoke_ok += 1
+    if _smoke_ok == _smoke_expected and not ledger_errors:
+        smoke_spent = SMOKE_RECORDED_CHARGE
     unexplained = (live_total - DAY29_LIVE_EXECUTIONS - b4_spent
                    - exp001_spent - exp007_spent - smoke_spent)
     check("22 every live execution is authorized",
@@ -901,7 +920,7 @@ def main(argv: list[str] | None = None) -> int:
           f"{n_manifests} manifests (reported, not asserted); {live_total} "
           f"live executions = {DAY29_LIVE_EXECUTIONS} Day-29 baseline + "
           f"{b4_spent} B4 + {exp001_spent} EXP-001 + {exp007_spent} EXP-007 "
-          f"+ {smoke_spent} DEC-033 2026-09-19 smoke "
+          f"+ {smoke_spent} DEC-033+DEC-038 smoke "
           f"+ {unexplained} unexplained (must be exactly 0; a NEGATIVE value "
           f"means authorized spend exceeds the measured ledger and FAILS "
           f"loudly as inconsistent accounting); "

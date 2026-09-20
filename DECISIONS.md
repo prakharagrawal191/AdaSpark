@@ -2278,3 +2278,867 @@ The repair **MUST NOT**: weaken, delete, skip, xfail or bypass check 22; remove 
 
 
 **12 — Amendment record (2026-09-18, chronology correction; this entry amended in place, nothing withdrawn).** §§1, 2 and 6(3) previously treated DEC-031 §3's *"10 manifests"* wording as if the canonical **Day-29 baseline** were ten manifests, and instructed the future Day-31 repair to account for the count as *"10 baseline + 4 EXP-007 = 14."* That silently backdated a **2026-09-16** artifact into a baseline signed **2026-09-13**, and would have put a future validator in direct textual conflict with signed DEC-011 §7 (*"recomputed from all **9** training manifests"*). Corrected to three distinct strata, never collapsed: **historical Day-29 baseline 9 manifests / 232 live** (DEC-011 §7, unchanged); **+ 1 later zero-live aborted-smoke manifest (2026-09-16), 0 live, 0 charged, attribution ABSENT, counting rule UNRESOLVED**; **+ 4 later EXP-007 manifests / 126 live** (DEC-026); **= 14 current manifest directories / 358 live represented by manifests**; plus B4 **84** and EXP-001 **20** gives the canonical **462**, remaining **38** (DEC-031 §§4, 8, unchanged). This amendment does not reinterpret DEC-011's historical ledger, invents no accounting policy for zero-live manifests, redesigns no ledger, modifies neither DEC-030 nor DEC-031, touches neither validator, regenerates no freeze artifact and changes no authorization. The §6 invariant is retained verbatim (`462−232−84−20−126 = 0` PASS; `463−...= 1` FAIL), as is its anti-pattern clause forbidding a self-cancelling subtrahend. Separately recorded, not re-decided: §7.1's provisional description of `validate_day30.py` as *"a genuine historical-preservation framing"* is **superseded as to characterization** by the completed read-only Day-30 audit (which found check 14 an obsolete assumption under §3's own discriminator, and found `9e83742` left it alone because it still passed); §7.1's **scope ruling stands** — DEC-032 authorizes nothing for `validate_day30.py`. **0 Spark executions; trains nothing; EXP-008 execution authorization remains NO.**
+
+---
+
+## DEC-033 | 2026-09-19 | 2026-09-19 smoke ledger classification — Option A: the six completed smoke TRAIN executions are CHARGED; ledger 468/500, remaining 32; charged-but-unauthorized (Day 37)
+
+**Status.** **DECIDED (Option A, selected by the operator; committed `c2e980a`).** Standalone companion artifact: `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md` (same decision content, self-contained; its Part II is duplicated in the file and its title and closing line still read "DRAFT" — recorded by DEC-037 s6(b)/(c); **this section is authoritative on status and figures**). **Supervisor counter-signature: PENDING** (conventional expectation only, exactly as DEC-020…DEC-026, DEC-031, DEC-032; not a prerequisite under DEC-018 Decision A). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** This entry performs **0 Spark executions**, trains nothing, executes no TEST, creates no run directory, and modifies no manifest, no result artifact, no implementation file and no prior decision entry. **Supersedes nothing** — DEC-011, DEC-026, DEC-030, DEC-031 and DEC-032 are unchanged.
+
+**0 — Identifier.** `DECISIONS.md` headings run DEC-001…DEC-013, DEC-015…DEC-026, DEC-031, DEC-032; DEC-030 is formally recorded outside this file (DEC-031 s0). Next sequential identifier at the time of decision: **DEC-033**.
+
+**1 — What moved.** DEC-031 recorded the canonical charge **462 / remaining 38** against the frozen SC6 cap **500**, with the invariant `232 + 84 + 20 + 126 = 462`. The live tree then measured **468**. The delta is **exactly +6** and its origin is fully traced to eight 2026-09-19 smoke directories under `results/training/smoke/`: **six aborted attempts** (`…T124348Z`, `…T124413Z`, `…T124425Z`, `…T124736Z`, `…T124832Z`, `…T124900Z`), each `status: failed`, `exit_code: 1`, `live_executions: 0`, 0 transition files, dying before any episode executed; and **two completed runs** (`…T130241Z`, `…T130614Z`), each `status: completed`, `exit_code: 0`, **3 live executions** with 3 matching transition records and a checkpoint. `0+0+0+0+0+0+3+3 = 6`. No other file on the tree contributes an unaccounted live execution.
+
+**2 — Cause, disclosed rather than left anonymous.** The six live executions were caused by an auditing agent running the **full** `pytest tests` suite. `tests/integration/` executes real Spark and writes training manifests under `results/training/smoke/` with non-zero `budget.live_executions`; two invocations completed at 13:02:41 and 13:06:14 UTC. **`pytest tests` charges the SC6 budget.** Every validator that gates on the unit suite correctly runs `tests/unit` only, and nothing in the repository warned that the full suite spends frozen budget. Recorded here as a standing operational finding; the guard for it is a separate decision (DEC-037 s4).
+
+**3 — DECISION: Option A — charge under the standing rule. No new category is invented.** The six completed 2026-09-19 smoke TRAIN executions are **CHARGED ROWS** under **DEC-031 s5 charged-category 1** (TRAIN live executions — real environment transitions consumed by a training run's budget counter, here with matching transition records and checkpoints) and **charged-category 3** (smoke executions inside charged TRAIN accounting — the same category as DEC-011's `(5 runs × 3)` term). The six aborted same-day attempts are **charged rows at 0** under category 3's second sentence: *"A smoke attempt with 0 live executions is still a charged row at 0."* Nothing in DEC-031 s5's NOT-CHARGED list covers any of them: they are not planned-but-unexecuted rows, not cache hits, not EXP-003 validation and not TEST — the TEST seal is untouched and the runs executed TRAIN cells only.
+
+**4 — Canonical ledger under this decision.** `232` (Day-29 baseline, DEC-011 s7) `+ 84` (B4, DEC-016 C / DEC-017) `+ 20` (EXP-001) `+ 126` (EXP-007, DEC-026) `+ 6` (2026-09-19 smoke, this entry) `= **468** of 500`. **Remaining headroom: `500 − 468 = 32`.** The **SC6 cap remains 500 and is NOT raised** — `docs/PLAN.md` line 45 and `configs/rl.yaml` line 17 stand verbatim. DEC-031's chain is not rewritten; this entry adds one named term to it.
+
+> **NOT AN APPROVAL.** "32 remaining" means **only** that 32 charged live TRAIN executions remain under the current global SC6 accounting envelope. It approves **no** execution count, shape, arm set, seed set or schedule.
+
+**5 — Authorization status of the eight runs: CHARGED-BUT-UNAUTHORIZED.** No decision in `DECISIONS.md` (DEC-001 through DEC-032) names, scopes or approves any 2026-09-19 smoke execution; the runs post-date every recorded authorization, and none could have authorized them — they were an accident. **They are counted against the cap and disclosed, not deleted**: deleting an execution record would falsify the thing this ledger exists to protect. **Any future smoke execution requires its own explicit authorization.**
+
+**6 — Why not Option B (exclude) or Option C (defer).** **Option B — REJECTED.** Excluding them would require writing a new exclusion reason into a NOT-CHARGED list that DEC-031 s5 states exhaustively; no already-supported category covers an exclusion, so Option B would invent a category to absorb an accident — the move DEC-032 s6's anti-pattern clause forbids. It would buy back 6 executions at the price of the rule. **Option C — REJECTED.** The evidence supports Option A, and both check 22 and the unit-suite ledger pin require a binding classification.
+
+**7 — Consequential follow-ups (none performed by this entry).** (i) A **validator-only** repair adding a **named, bounded DEC-033 smoke term** to check 22's decomposition — bounded by this entry's recorded **6** and by the two named manifests, **never** by a re-sum of the same manifests that produce `live_total`, which DEC-032 s6 forbids as self-cancelling; anything else must append to `ledger_errors` and FAIL loudly. (ii) Correcting the `tests/unit/test_exp001_maintenance.py` live-tree pin from `462 / 38` to **`468 / 32`**, keeping it an **exact equality** so an unauthorized execution still breaks it; the hermetic fixture-tree siblings stay at 336 and are not touched. (iii) The **zero-live counting question** (DEC-032 s7(3)) stays **UNRESOLVED** by this entry — seven zero-live directories now sit under it and this entry invents no rule for them. (iv) The `pytest tests` budget footgun (s2). (v) The representation-dependent provenance hash.
+
+**8 — What this decision deliberately does NOT decide.** The zero-live manifest **counting** rule; the SC6 cap (500, unchanged); the PLAN line 315 EXP-008 envelope tension (DEC-031 s10, DEC-011 — an internal-PLAN conflict DEC-010's precedence rule cannot arbitrate); the B6 implementation decision; any DEC-030 s12 field; EXP-008 execution authorization; and the retrospective status of any validator repair present in the tree. **`cap_amendment_required` = false. `de_scoping_required` = false.**
+
+**9 — Non-authorization firewall.** **EXP-008 execution authorization = NO.** **Implementation authorization (A3/A4, B6) = NO.** **A5 = DISABLED** (DEC-011; `configs/rl.yaml` `gamma` stays 0.0). **TEST = NOT AUTHORIZED.** **`docs/PLAN.md` = UNCHANGED.** Historical decisions (DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032) = **UNCHANGED**. **Spark / training / TEST executions performed by this entry: 0 / 0 / 0.**
+
+**Status.** **DECIDED — Option A.** The six completed 2026-09-19 smoke TRAIN executions are **CHARGED** under DEC-031 s5 categories 1 and 3; the six aborted same-day attempts are **charged rows at 0**; the canonical ledger is **468 charged of 500, remaining 32**, arithmetic `232 + 84 + 20 + 126 + 6 = 468`; the SC6 cap is **500 and NOT raised**; the eight runs' authorization status is **CHARGED-BUT-UNAUTHORIZED**; `EXP-008 execution authorization = NO`; `A5 = DISABLED`; `TEST = NOT AUTHORIZED`. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated). **This entry performs 0 Spark executions and trains nothing.**
+
+*End of DEC-033.*
+
+---
+
+## DEC-034 | 2026-09-20 | EXP-008 A3/A4 scope resolution — zero-charge derived ablation; SC6 cap NOT amended; register-line exemption held inapplicable to TRAIN-only work (Day 37/38)
+
+**Decision ID:** DEC-034
+**Date:** 2026-09-20
+**Scope:** The EXP-008 scope/envelope question only — what shape EXP-008 A3/A4 may take given the SC6 headroom recorded by DEC-033. Nothing else.
+**Status:** DECIDED — **EXP-008 execution authorization remains NO.**
+**Standalone decision artifact.** The authoritative log entry is this appended DEC-034 section of `DECISIONS.md`; a companion document `docs/research/DEC_034_EXP008_SCOPE_RESOLUTION.md` carries the same decision content, self-contained, following the DEC-031/DEC-032 convention.
+**Supersedes nothing.** DEC-010, DEC-011, DEC-012, DEC-017, DEC-018, DEC-020, DEC-026, DEC-030, DEC-031, DEC-032 and DEC-033 are unchanged; no historical decision entry is rewritten.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, creates no run directory, modifies no result artifact, no manifest, no budget, no ledger, no implementation file and no configuration.**
+> **EXP-008 execution authorization = NO. A5 = DISABLED. TEST = NOT AUTHORIZED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** `DECISIONS.md` headings run DEC-001…DEC-026, DEC-031, DEC-032. DEC-030 is formally recorded outside `DECISIONS.md` (`docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md`, sha256 `ec487bf2a84a9c1a6f506bdd83c71b7c7bb7ae2cceaf7e761f000c7201912a5a`). DEC-033 is likewise recorded outside `DECISIONS.md` (`docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md`, sha256 `3e6d0d7c4b5359990ea6ac6766e226d860c5fea2fb0e8639cc73fff645932b21`, committed `c2e980a`); `grep -c "DEC-033" DECISIONS.md` returns **0**. That out-of-ledger recording is the DEC-030 pattern DEC-031 §0 accepted and is **recorded here, not corrected** — DEC-033's identity is preserved unchanged and this entry does not renumber, fold or edit it. The next sequential identifier is therefore **DEC-034**.
+
+**1 — Scope.** (a) whether the register-line exemption reaches EXP-008 A3/A4; (b) what EXP-008 scope is admissible under the SC6 headroom recorded by DEC-033; (c) the charged live TRAIN execution requirement of that scope. Nothing else is in scope. This entry is **not** the B6 implementation decision and **not** an authorization decision.
+
+**2 — Ledger restated, not re-derived.** SC6 cap **500**, unchanged and **not raised** (`docs/PLAN.md` line 45; `configs/rl.yaml` line 17). Cumulative charge **468**; remaining **32**; `232 + 84 + 20 + 126 + 6 = 468`; `500 − 468 = 32` (DEC-033, Option A selected by the operator). This entry **adds no new accounting and changes no figure**.
+
+**3 — The register-line exemption does NOT reach EXP-008 A3/A4. The discriminator is the SPLIT, not the register line.** DEC-031 §10 left this open; DEC-011 held the pot question unarbitrable. Both stand. What this entry establishes is narrower and is fully supported by the existing record: *what made EXP-003, EXP-005, EXP-005b and EXP-006 exempt was never the existence of a register line.* Every exemption in the ledger is stated as an exemption from the **TRAIN** cap for **non-TRAIN** work:
+
+| Exempt line | Split | The sentence that exempts it |
+|---|---|---|
+| EXP-003 | validation | DEC-012: *"EXP-003 is a separate register line and is NOT charged to SC6's ≤500 **TRAINING** cap (PLAN line 45)"* |
+| EXP-005 | TEST | DEC-018 Decision B: *"245 TEST executions, charged to EXP-005's own register line and **outside** the SC6 **TRAIN** cap"* |
+| EXP-005b | TEST | DEC-017: *"+70 runs, charged to EXP-005's own register line (PLAN line 312, ~245), NOT to SC6's 500-execution **training** cap"* |
+| EXP-006 | TEST | DEC-031 §5: *"EXP-006 TEST — 125/125 **TEST** observations, charged **0**"* |
+
+Against which DEC-031 §5 charged-category 1 reads: *"**TRAIN live executions** — every real environment transition consumed by a training run's budget counter … charged to the training register lines."*
+
+**The decisive counter-example is EXP-007.** `docs/PLAN.md` line 314 registers it on its own line with the **identical** `~300` envelope and the **identical** `ablation table` acceptance column as EXP-008 at line 315. It was charged **126 to SC6** anyway — DEC-031 §6: *"EXP-007 = 126 charge (35+35+35+21 live, **TRAIN-split**, 0 failures, 0 smoke, 14 unexecuted planned rows charging nothing)"*, authorized against SC6 by DEC-026 §10: *"maximum 140 live Spark executions charged to SC6 (remaining 164, headroom 24)."* EXP-008 A3/A4 possesses no property EXP-007 lacked.
+
+**EXP-008 A3/A4 is TRAIN-only, enforced in code.** `src/sparkrl/training/exp008.py` lines 207–214:
+
+```
+def guard_split(split: str) -> None:
+    """EXP-008 A3/A4 is TRAIN-only: TEST and VALIDATION never enter."""
+    if split != TRAIN:
+        raise Exp008ScopeError(...)
+```
+
+**Recorded finding.** Any charged live TRAIN execution performed under EXP-008 A3/A4 falls inside SC6's subject ("training ≤500", PLAN line 45) and is charged. Routing it to PLAN line 315 instead would require writing a new exclusion reason into DEC-031 §5's exhaustively stated NOT-CHARGED list — the move DEC-032 §6's anti-pattern clause forbids and which DEC-033 §12 already refused on identical grounds. **That route is closed.**
+
+**4 — The PLAN-internal conflict is MOOTED for EXP-008, not arbitrated.** DEC-011 recorded that whether EXP-008's envelope is charged to SC6's ≤500 or to its own ~300 line is *"internal to PLAN; DEC-010's precedence rule cannot arbitrate it."* **This entry does not arbitrate it and claims no authority to.** It does not need to: §5 fixes EXP-008 A3/A4's charged requirement at **0**, and a zero-charge experiment charges the same amount — nothing — under either reading of PLAN. The conflict is therefore **inert for EXP-008 and remains OPEN** for any future experiment that would charge live TRAIN executions. No arbitration is enacted, implied or available to be cited from this entry.
+
+**5 — Decision: EXP-008 A3/A4 is scoped as a ZERO-CHARGE DERIVED ABLATION. Charged live TRAIN executions = 0.**
+
+* **A3 (reward variants)** is produced by recomputation over the already-recorded EXP-002 TRAIN observation store, using the machinery the repository already runs for exactly this purpose: `src/sparkrl/agent/q0.py` builds the offline Q-function from *"the EXP-002 stored run records (`results/experiments/exp-002`), and only TRAIN cells"*, valuing each observation by *"the per-observation FROZEN R3 reward (`sparkrl.rl.reward`), using T_ref from the EXP-002 gate artifact (B0 median, seed 0)"*. The registered A3 comparator — `A3-time-only`, `R = 1.0 · clip((T_ref − T)/T_ref, −1, +1)`, failure `R = −1.0` (DEC-030 §3.2; `src/sparkrl/training/exp008.py` header) — is a function of the same stored fields. Recomputing it consumes **no live Spark execution**.
+* **A4 (action-space granularity)** is produced as a structural restriction. `mode4 = {0, 3, 6, 9}` is a strict subset of the frozen 12-action grid (DEC-030 §4.3; `src/sparkrl/rl/action.py` `MODE4_SUBSET`), so a mode4 greedy policy is derivable from any mode12 Q-table by argmax over the subset. No execution is required to derive it.
+* **A3-R4-log-ratio is NOT retained under this scope.** It remains INCOMPLETE in the eight respects DEC-030 §3.4 enumerates and is refused before any computation by `IncompleteFormulaError`. Whether R4 is ever retained is DEC-030 §12 field 1 and is **not decided here**.
+* **Charged requirement: 0.** This satisfies DEC-031 §11 by the **scope-reduction** route — *"an explicit scope reduction to ≤ [32] charged live TRAIN executions, enacted by its own decision"* — and requires **no cap amendment**. `cap_amendment_required` = **false**.
+
+**6 — Cache hits are not the basis of this decision.** DEC-031 §5 non-charged category 2 (*"Cache hits — a replayed/cached transition consumes no live Spark execution"*) is **not** invoked here and is **not** extended. §5's zero charge rests on the fact that **nothing is executed at all** — no environment step, cached or live, is taken. No policy about cache accounting is created, relaxed or implied.
+
+**7 — What this costs scientifically. Stated plainly, not minimised.**
+
+**This decision does not execute EXP-008 as `docs/PLAN.md` line 315 registered it. It substitutes a derived ablation for a trained one, and it weakens a scientific claim.** A3 under this scope is an ablation of the **offline initialization**, not of **online learning**. RQ4 asks *"How do reward-function variants and action-space granularity affect **learning stability** and final policy quality?"* — the **learning-stability half of RQ4 is UNANSWERED and is left unanswered by this decision.**
+
+Following DEC-011's template verbatim in form: the write-up **must state that A3/A4 were not executed as trained arms and why, making no claim about what they would have shown**, and the learning-dynamics dimension of RQ4 is left unexamined **by decision, and that limitation must be stated as such in the report — it is not a measured result.** No inferential claim, no threshold and no statistic is created by this entry (DEC-030 §8 stands: any EXP-008 analysis *"remains descriptive-only with no thresholds invented"*).
+
+**8 — What survives, and one result available at zero cost.** PLAN line 315's stated acceptance is *"ablation table"*, and a derived ablation table discharges that column. Beyond it, the following is derivable today from signed evidence, with **0** executions, and is recorded as available — **not asserted as a finding, which requires the analysis the B6 and authorization decisions still gate**:
+
+Under the frozen grid mapping `grid_index = parallelism_index × 4 + shuffle_index` (`src/sparkrl/experiments/grid.py` lines 177–188; DEC-030 §4.3), `G-p8-sp16` = index **8** and `G-p8-sp64` = index **10**, and **neither is in `mode4 = {0, 3, 6, 9}`**. Index 8 is byte-identical to the frozen B1 (DEC-016/DEC-017: *"parallelism 8 this is `G-p8-sp16`, byte-identical to the frozen B1"*), is B2 for F1/F2, and is the configuration DEC-020 §A records the statics as having converged on. Index 10 is B2 for F3 (DEC-020 §C). **Two of the three frozen B2 definitions, and B1 itself, are unreachable under the reduced action space.** That is a structural statement about action-space granularity, derived from already-signed artifacts.
+
+**9 — Alternative considered and NOT adopted, recorded so the choice is on the record.** The other route DEC-031 §11 admits is an **explicit cap/PLAN amendment**: raising SC6's cap at `docs/PLAN.md` line 45 under the PLAN header's change-control rule (*"Any change requires a new `DEC-xxx` entry in `DECISIONS.md` and explicit user/supervisor approval"*), and executing EXP-008 at EXP-007 parity (70 charged executions per arm; 3 shared-control arms = 210, 4 arms = 280). **It is the only route that answers RQ4 as registered, and it is defensible.** It is not adopted because **it amends a SUCCESS CRITERION that is currently SATISFIED** (468 ≤ 500) — SC6 would then pass only because the bar moved — and because it erodes the claim `docs/PLAN.md` line 35 identifies as the project's research gap (*"sample-efficient online adaptation (tabular/bandit RL) for Spark config selection"*), line 27 (*"within ≤500 cached executions"*) and line 101 (Candidate C at *"~600–900 total, cache-bounded"* against *"B: Pure online RL — 1000s (infeasible)"*). It would additionally change a load-validated frozen research constant (`configs/rl.yaml` line 17, under the file's own rule that *"these are research constants, NOT tuning parameters. Any disagreement is a hard error"*) and every validator and test pinning 500. **No DEC has ever amended `docs/PLAN.md`**; DEC-031 §15 and DEC-032 §11 both record its sha256 `db5e8210…ee63` as unchanged, re-verified current at this entry's recording. **This entry forecloses nothing: §5's zero-charge scope leaves the amendment route fully open, and a later decision may take it.** Choosing it is the operator's call.
+
+**10 — Also considered, and FORECLOSED by arithmetic and by signed decisions.**
+
+* **Re-scope to fit 32 by consuming R8 scope-ladder rung 3** (`docs/PLAN.md` line 361, *"shrink ablations to A1+A3"*; rungs 2–4 recorded as available by DEC-011). The mechanism is real and rung 3 is genuinely unconsumed. The arithmetic is not favourable: 2 arms × 1 seed × 2 epochs = **28**, or 2 arms × 2 seeds × 1 epoch = **28**, both ≤ 32, but at one epoch each of the 7 T_ref-calibrated TRAIN cells is visited once — **7 of 7 × 12 = 84 (cell, action) pairs, 8.3% coverage**; epsilon under the frozen schedule (1.0 → 0.05, decay 0.95/episode) stands at **0.698** after 7 episodes and **0.488** after 14, against **0.166** for EXP-007's arms and **0.050 / 0.081 / 0.116** for the three main-study policies; the frozen early-stop rule (2 consecutive stable epochs) cannot meaningfully fire; and DEC-011's measured reference is that **175 executions covered only 68.3% of the 5-state footprint**. At one seed there is no cross-seed variance estimate; at two seeds it is n = 1 per cell against the measured noise band (median CV **0.045485**, worst cell **0.118864**, DEC-018 Decision F — the 11.89% band DEC-020 §A used to bound every EXP-005 finding). DEC-020 §A closed **245** TEST executions as descriptive-only with SC2/SC3/SC4 **UNDECIDED**; 28 cannot do better. **It would spend the entire remaining SC6 headroom for a result no stronger than §5's, and leave 4 executions forever.** Rung 3 is therefore **NOT consumed by this entry and remains available under R8.**
+* **Charging EXP-008 to its own PLAN line 315 envelope** — **foreclosed by §3.**
+* **Not executing EXP-008 at all and recording RQ4 unanswered** (the DEC-011/A5 shape) — viable and honest, but strictly dominated: it costs the same 0 executions as §5 while producing neither the register's ablation-table deliverable nor §8's derivable result.
+
+**11 — What this decision deliberately does NOT decide.** The **B6 implementation decision** (DEC-030 §15 gate item 3); the **authorization decision** (gate item 4); the **final arm set** (DEC-030 §12 field 1), including whether A3-R4 is ever retained; the **Q0 source per arm** (field 2); the **state schema** (field 3); the **A3 action schema** (field 4); the **A4 control-pairing reward** (field 5); whether A3 and A4 share a basis (field 13); the **statistical governance** of EXP-008 (field 14; DEC-030 §8 stands unchanged); the **R4 complete specification** (field 15); the **amendment mechanism** for the PLAN tension of DEC-031 §10; the classification of the 2026-09-16 and 2026-09-19 **zero-live manifests** (DEC-032 §7.3, still UNRESOLVED); and **`scripts/validate_day30.py` / `validate_day31.py`** maintenance. DEC-030 §12 fields **6–12 and 16** (seeds, TRAIN cells, episode horizon, early-stop rule, AQE confirmation, warm-up, cache behaviour, hyperparameter deviations) are **INAPPLICABLE BY CONSTRUCTION** under §5's zero-execution scope — they are **not** silently resolved, and they **revive in full** if any later decision restores a trained scope. Field **17 (B5 charging rule)** is resolved by §3 and §5 for EXP-008 only.
+
+**12 — Non-authorization firewall (explicit).**
+
+| Item | State recorded by this entry |
+|---|---|
+| **EXP-008 execution authorization** | **FALSE / NO** |
+| **Implementation authorization (A3/A4, B6)** | **FALSE / NO** |
+| **EXP-008 charged live TRAIN executions** | **0** |
+| **SC6 cap** | **500 — UNCHANGED, NOT RAISED** |
+| **SC6 ledger** | **468 charged / 32 remaining — UNCHANGED** |
+| **A5** | **DISABLED** (DEC-011; re-affirmed DEC-030 §9, DEC-031 §14); `configs/rl.yaml` `gamma` stays 0.0 |
+| **TEST** | **NOT AUTHORIZED** — nothing here opens TEST for anything |
+| **R8 scope-ladder rungs 2–4** | **UNCONSUMED — all remain available** |
+| **`docs/PLAN.md`** | **UNCHANGED — no line edited** |
+| **`configs/rl.yaml`** | **UNCHANGED** |
+| **Historical decisions** | **UNCHANGED** — DEC-001 … DEC-026, DEC-030 … DEC-033 are not rewritten; this entry is appended, never substituted |
+| **Spark / training / TEST executions performed by this entry** | **0 / 0 / 0** |
+
+**13 — Evidence and fingerprints (read-only; nothing listed here was modified).**
+
+| Source | Role | SHA256 |
+|---|---|---|
+| `docs/PLAN.md` | SC6 line 45; EXP-007 line 314; EXP-008 line 315; R8 scope tier line 361; header change-control lines 3–7 | `db5e82102833efe6bab8db1adaf1b35ad195faf385e63ab296d50562e349ee63` (**unchanged**; identical to the value DEC-031 §15 and DEC-032 §11 record) |
+| `configs/rl.yaml` | `live_execution_cap: 500` (line 17); epsilon schedule (lines 9–11); `early_stop_stable_epochs: 2` | `8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80` (**unchanged**) |
+| `src/sparkrl/training/exp008.py` | `guard_split` TRAIN-only enforcement (lines 207–214); frozen A3/A4 arm layer | `0a2252b378dda0a630106795ef13287eda86d3a50c0e294ef26f3768bc54ceba` (**unchanged**) |
+| `docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md` | DEC-030 identity preserved; §12 fields; §15 gate chain | `ec487bf2a84a9c1a6f506bdd83c71b7c7bb7ae2cceaf7e761f000c7201912a5a` (**unchanged**) |
+| `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md` | canonical 468/32 ledger | `3e6d0d7c4b5359990ea6ac6766e226d860c5fea2fb0e8639cc73fff645932b21` (**unchanged**; committed `c2e980a`) |
+| `src/sparkrl/agent/q0.py`, `src/sparkrl/experiments/grid.py`, `src/sparkrl/rl/action.py`, `src/sparkrl/training/ablation.py` | cited for §5 and §8 mechanics | **NOT MODIFIED** |
+| `results/training/**/manifest.json` | 22 manifests | **NOT MODIFIED** |
+
+**14 — Validation of this entry (read-only, zero Spark).**
+
+| Check | Result |
+|---|---|
+| DEC-034 is the next free identifier (`grep` for DEC-033/DEC-034 headings in `DECISIONS.md`) | PASS |
+| `DECISIONS.md` appended only; every prior byte intact | PASS |
+| DEC-030 / DEC-031 / DEC-032 / DEC-033 artifacts unchanged (SHA256 re-checked) | PASS |
+| `docs/PLAN.md`, `configs/rl.yaml` unchanged (SHA256 re-checked) | PASS |
+| SC6 cap = 500; charge = 468; remaining = 32; `232+84+20+126+6 = 468` | PASS |
+| EXP-008 charged requirement under §5 = 0 ≤ 32; DEC-031 §11 satisfied by scope reduction | PASS |
+| No cap amendment enacted | PASS |
+| No R8 scope-ladder rung consumed | PASS |
+| TRAIN-only enforcement quoted verbatim from `exp008.py:207–214` | PASS |
+| No execution, implementation or TEST authorized | PASS |
+| A5 remains DISABLED | PASS |
+| Spark / training / TEST executions performed | **0 / 0 / 0** |
+
+**Status.** **DECIDED.** The register-line exemption is recorded as turning on the **SPLIT**, not on the existence of a register line, and is therefore **inapplicable** to TRAIN-only EXP-008 A3/A4 — with EXP-007 (own ~300 register line, charged 126 to SC6) as the controlling counter-example. EXP-008 A3/A4 is scoped as a **ZERO-CHARGE DERIVED ABLATION**: charged live TRAIN executions = **0**, satisfying DEC-031 §11 by scope reduction with **no cap amendment**. The DEC-011 PLAN-internal pot conflict is **MOOTED for EXP-008, not arbitrated, and remains OPEN**. The **learning-stability half of RQ4 is UNANSWERED by decision** and must be reported as a stated limitation with no claim about what it would have shown. The cap-amendment alternative (§9) is recorded, **not foreclosed**. `SC6 cap = 500, NOT RAISED`. `Ledger = 468 / 32, unchanged`. `EXP-008 execution authorization = NO`. `A3/A4 implementation = NOT AUTHORIZED`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `PLAN.md = UNCHANGED`. Historical decisions DEC-001 … DEC-026, DEC-030 … DEC-033 = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** A future review is a new entry; this one is never rewritten. **This entry performs 0 Spark executions and trains nothing.**
+
+*End of DEC-034.*
+
+---
+
+**Ledger supersession note (appended 2026-09-20, before signature).** This entry was drafted against the then-current ledger **468 / 32** (DEC-033). Five completed smoke TRAIN executions dated 2026-09-20 07:37-07:56Z were discovered afterwards and classified by **DEC-038**, making the canonical ledger **483 / 17** at signature. The figure is corrected here rather than in the body, so the drafting chronology stays visible. No conclusion in this entry depends on the difference: the scope resolved here has a charged requirement of **0**, which satisfies any headroom. The change strengthens it - the 28-execution single-epoch alternative rejected in the body no longer fits at all (28 > 17), so that option is now foreclosed by arithmetic as well as by design.
+
+## DEC-035 | 2026-09-20 | EXP-008 A3/A4 implementation decision (B6; DEC-030 s15 gate item 3) - ADOPTED with fields 1/13/14 deferred; execution authorization remains NO (Day 38, C2)
+
+**Decision ID:** DEC-035
+**Date:** 2026-09-20
+**Scope:** DEC-030 §15 gate-chain item (3) only — the implementation decision resolving B6, with green zero-Spark tests. **Nothing else.**
+**Status:** DECIDED — the EXP-008 A3/A4 implementation at HEAD `c2e980a` is ADOPTED as the B6 resolution, with DEC-030 §12 fields **1, 13 and 14** explicitly DEFERRED to the methodology/authorization decisions. **`EXP-008 execution authorization = NO`.**
+**Standalone decision artifact.** The authoritative log entry is the appended DEC-035 section of `DECISIONS.md`; this document carries the same decision content, self-contained, so the decision also exists as an addressable artifact (the DEC-031/DEC-032 convention).
+**Supersedes nothing.** DEC-030, DEC-031, DEC-032 and DEC-033 are unchanged; no historical decision entry is rewritten. `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md` and `results/evaluation/exp008_b6_implementation.json` are **adopted as evidence and retained byte-identical** — they are B6-time records and are not regenerated.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, creates no run directory, and modifies no manifest, result, budget, ledger, configuration or implementation file.**
+> **EXP-008 execution authorization remains NO. A5 remains DISABLED. TEST remains NOT AUTHORIZED. `docs/PLAN.md` is UNCHANGED. The SC6 cap remains 500 and is NOT raised.**
+
+---
+
+## 0 — Identifier resolution
+
+`DECISIONS.md` headings run **DEC-001 … DEC-026**, plus **DEC-031** (`DECISIONS.md:2113`) and **DEC-032** (`DECISIONS.md:2241`). Two further decisions are formally recorded **outside** `DECISIONS.md`, by the convention DEC-031 §0 established for DEC-030: **DEC-030** (`docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md`) and **DEC-033** (`docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md`; `grep -n "DEC-033" DECISIONS.md` returns **zero** lines). A repository-wide search for `DEC-034` and `DEC-035` returns **nothing**: neither identifier is occupied by any artifact, heading or code reference.
+
+**DEC-035 is the identifier assigned to this entry by the operator's decision-drafting pass.** This entry does **not** claim, reserve, describe or depend on DEC-034; if DEC-034 is recorded by a sibling entry, its content is not read into this one. That DEC-033 currently has no `DECISIONS.md` section is **recorded, not corrected here** — DEC-030 is in the same position and DEC-031 §0 preserved its identity rather than renumbering it.
+
+## 1 — Scope
+
+DEC-030 §15 (`docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md:372`) sets the gate chain: *"(1) this DEC-030; (2) a separate budget DEC resolving B5; (3) a separate implementation DEC resolving B6 with green zero-Spark tests; (4) a separate authorization DEC … with worst-case counts and ledger charge, plus a clean preflight re-run."*
+
+Item (1) is DONE (DEC-030). Item (2) is DONE (DEC-031, as the ledger was later moved by DEC-033). **This entry is item (3), and only item (3).** Item (4) is untouched and remains open.
+
+In scope: (a) what the EXP-008 A3/A4 implementation actually is today; (b) whether its zero-Spark tests are green; (c) which DEC-030 §12 fields the implementation enforces fail-closed and which it does not; (d) whether anything implemented exceeds what DEC-030 froze, and whether A5 is inert; (e) the disposition of the one owed item the B6 report left open. Nothing else.
+
+## 2 — Why a decision is required, and what the existing evidence is
+
+The B6 evidence exists and disclaims decision status in terms. `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md:12`:
+
+> *"This report is **not a decision**. DEC-030 §15 gate-chain item (3) expects a separate decision entry to record B6; this document and its JSON supply the evidence that item needs, nothing more. No DEC number is claimed, no authorization is granted, and no methodological field is frozen here."*
+
+Its §10 row 1 restates the same gap: *"The B6 implementation decision itself (DEC-030 §15 gate item 3) … This report and its JSON are evidence, not a decision entry."* **DEC-035 is that decision entry.** It adds no implementation, changes no code, and invents no methodology.
+
+The adopted evidence is: `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md`, `results/evaluation/exp008_b6_implementation.json`, `src/sparkrl/training/exp008.py`, the additive change to `src/sparkrl/rl/reward.py`, `configs/exp008.yaml`, and the three zero-Spark test files `tests/unit/test_exp008_{scope,action,reward}.py` — all tracked at HEAD `c2e980a` (`git log --oneline -1 -- src/sparkrl/training/exp008.py` → `2c00236 feat(gov): commit the EXP-006/007/008 implementation and repair the validator chain`), working tree clean.
+
+## 3 — What is actually implemented today (established by reading the code, not the report)
+
+**3.1 The arm set — exactly the DEC-030 four, and no A5.**
+
+```python
+A3_ARMS  = (ARM_A3_R3, ARM_A3_TIME_ONLY, ARM_A3_R4_LOG_RATIO)   # exp008.py:92
+A4_ARMS  = (ARM_A4_MODE4,)                                       # exp008.py:93
+ALL_ARMS = A3_ARMS + A4_ARMS                                     # exp008.py:94
+```
+
+`ARM_REWARD_FORMULA` (`exp008.py:99-103`) binds each A3 arm to its own reward by arm identity; A4's reward is deliberately absent from that map because DEC-030 §12 field 5 leaves the A4 control pairing unfrozen.
+
+**3.2 The reward handling.**
+
+* `R3` — unchanged. `RewardCalculator.__init__` takes `formula` as **keyword-only**, defaulting to the frozen `R3` (`src/sparkrl/rl/reward.py:191-192`), so no existing call site changes behaviour. `configs/reward.yaml` is byte-identical at `a52131d5…db1b`.
+* `A3-time-only` — implemented exactly as DEC-030 §3.2 froze it: `TIME_ONLY_WEIGHTS` (`reward.py:99`) gives `w_time=1.0, w_task=0.0, w_spill=0.0, w_failure=1.0`, clip `[-1,+1]`, failure `-1.0`, module constants never read from `configs/reward.yaml`. **DEC-030 §3.2's mandatory classification is carried through unchanged and is restated here: time-only is a MULTI-TERM REMOVAL from R3 — the task-imbalance term AND the spill-waste term are removed simultaneously — and no future analysis may attribute an A3-time-only-versus-R3 difference to a single removed term.**
+* `A3-R4-log-ratio` — registered, not executable. `REGISTERED_FORMULAS` contains it; `IMPLEMENTED_FORMULAS` (`reward.py:93`) does not. `build_reward_calculator` (`exp008.py:284-301`) raises `IncompleteFormulaError` naming all eight DEC-030 §3.4 unresolved semantics before any computation and before any Spark execution.
+
+**3.3 The action subset — reused, never redefined.**
+
+```python
+A4_ACTION_MODE   = MODE4
+A4_ACTION_SUBSET = MODE4_SUBSET          # frozenset({0, 3, 6, 9})   exp008.py:108-109
+```
+
+`A4_ACTION_SUBSET` **is** the frozen `MODE4_SUBSET` object from `src/sparkrl/rl/action.py`, which is byte-identical at `580cf010…c0528` — the value DEC-030's freeze JSON recorded. `a4_action_configurations()` (`exp008.py:320-339`) derives all four configurations from the frozen `ActionMapper`, preserving original indices and config names. No action is renumbered and no 4-wide table is produced.
+
+**3.4 The guards (all firing before any Spark execution).**
+
+| Guard | Location | Refuses |
+|---|---|---|
+| `guard_arm` | `exp008.py:177-183` | any arm outside `ALL_ARMS`; routes `A5` to its own error first |
+| `guard_a5` | `exp008.py:186-204` | `arm == "A5"`; `multi_step=True`; any `gamma != 0.0` |
+| `guard_split` | `exp008.py:207-214` | any split != `TRAIN` |
+| `guard_cell` / `guard_train_cells` | `exp008.py:217-243` | cells outside the frozen domain (re-raised as `Exp008ConfigError`) and any non-TRAIN cell |
+| `guard_metrics` | `exp008.py:246-257` | metrics carrying `split`/`test_family`/`test_scale`/`test_seed` |
+| `guard_agent_seeds` | `exp008.py:260-281` | unset seeds (`Exp008IncompleteError`), non-int, duplicate, empty — **never invents a seed set** |
+| `build_reward_calculator` / `guard_reward_variant` | `exp008.py:284-311` | unregistered variants; R4 |
+| `guard_action_mode_for_arm` | `exp008.py:342-357` | unset mode; unknown mode; any non-`mode4` mode for the A4 arm |
+| `guard_q0_projection` / `guard_q0_source` / `guard_q0_rows` / `guard_q0_for_mode` | `exp008.py:384-438` | every projection; any source outside `q0-exp002/v1` and `q0-neutral/v1`; any Q0 row not 12 wide; any Q0 at all for A3-R4 |
+| `arm_config_from_mapping` | `exp008.py:673-721` | unknown configuration keys (closed schema) and wrong value types |
+
+**3.5 The scope constants that ARE fixed, and their DEC-030 authority.**
+
+| Constant | Value | Frozen by |
+|---|---|---|
+| `FROZEN_DATASET_SEED` (`exp008.py:116`) | `0`, and any other value is refused | DEC-030 §3.2 *"Dataset seed \| 0 (frozen: T_ref calibrated for seed 0 only)"* — a measured fact |
+| `q0_projection` | `False`, unconditionally | DEC-030 §5.1 rules 2–4 |
+| `Q0_ROWS_WIDE` (`exp008.py:119`) | `12` | DEC-030 §5.4 *"EXISTING FROZEN MAPPING"* |
+| A4 action mode | `mode4`, locked | DEC-030 §4.2 / §4.3 |
+| A3 arm→reward binding | by arm identity | DEC-030 §3 |
+| `EXECUTION_AUTHORIZED` (`exp008.py:78`) | `False`; `SPARK_EXECUTIONS = TRAINING_EXECUTIONS = TEST_EXECUTIONS = 0` | DEC-030 §11; DEC-031 §14 |
+
+## 4 — Zero-Spark tests: GREEN (re-run for this entry)
+
+```
+$ python -m pytest tests/unit/test_exp008_scope.py tests/unit/test_exp008_action.py tests/unit/test_exp008_reward.py
+103 passed in 0.24s        (exit 0)
+```
+
+The 0.24 s wall time is itself evidence that no Spark session was started. The per-file split recorded by the B6 artifact is `test_exp008_scope.py` **50**, `test_exp008_action.py` **32**, `test_exp008_reward.py` **21** = **103**, which matches the re-run total exactly.
+
+**What this entry did NOT run, and does not assert:** the full `tests/unit` suite, any validator in `scripts/` (several regenerate tracked artifacts), any integration test, any training, any TEST, and any Spark. The *"full unit suite green, seven validators PASS"* state reported to this drafting pass is **not re-verified here** and must be re-verified at gate item (4)'s clean preflight re-run, as DEC-030:372 already requires.
+
+**Gate item (3)'s "with green zero-Spark tests" condition is therefore SATISFIED on the evidence this entry itself produced.**
+
+## 5 — What the implementation presumes: NOTHING that DEC-030 left unfrozen (one named consequence)
+
+This was the specific risk B6 exists to surface: a presumption baked into code while the field is marked *"UNFROZEN — SEPARATE DECISION REQUIRED"*. DEC-030 §3.2 does record presumed values for state schema (state-v1.5), action schema (mode12), alpha (0.2), gamma (0.0), epsilon (1.0→0.05 @0.95), AQE (off) and T_ref (EXP-002 TRAIN B0 median). **The implementation inherits none of them.** Every one is a required-but-unset field (`exp008.py:150-166`) and an explicit `null` in the shipped artifact (`configs/exp008.yaml`: `action_mode: null`, `state_schema: null`, `q0_source: null`, `alpha: null`, `gamma: null`, `epsilon_schedule: null`, `aqe_condition: null`, `t_ref_source: null` on all four arms). `validate_configuration()` raises `Exp008IncompleteError` listing them (`exp008.py:625-633`), and `tests/unit/test_exp008_scope.py:138` proves it field by field.
+
+**One named consequence, recorded not hidden.** DEC-030 §12 field 16 covers *"Epsilon schedule / alpha / gamma if deviating from frozen values"*. `gamma` is required-but-unset, but `guard_a5` (`exp008.py:200-204`) then refuses every value except `0.0`. The admissible set for `gamma` is therefore `{0.0}`. That is **not** a new freeze: it is DEC-030 §9's A5 lock (*"`configs/rl.yaml` gamma remains 0.0; DEC-030 makes no change and permits none"*) expressed in code. DEC-035 adopts it as a restatement of the A5 lock and freezes nothing new.
+
+## 6 — DEC-030 §12 coverage: fail-closed on 15 of 18 (16 for A4) — CORRECTION OF RECORD
+
+`A3_REQUIRED_FIELDS` (`exp008.py:150-166`) contains exactly **fifteen** names; `A4_REQUIRED_FIELDS` adds `reward_variant` (`exp008.py:167`), giving **sixteen** for A4. DEC-030 §12 (`…METHODOLOGY_FREEZE.md:333-354`) lists **eighteen** fields.
+
+| §12 # | Field | Representation in code | Fail-closed? |
+|---|---|---|---|
+| 1 | Final arm set to execute | none — all four arms always present | **NO** |
+| 2 | Q0 source per arm | `q0_source` + `guard_q0_source` | YES |
+| 3 | State schema per arm | `state_schema` | YES |
+| 4 | Action schema for A3 | `action_mode` + `guard_action_mode_for_arm` | YES |
+| 5 | Reward arm for A4 control pairing | `reward_variant` (A4 only) | YES (A4) |
+| 6 | Seeds | `agent_seeds` + `guard_agent_seeds` | YES |
+| 7 | TRAIN cells | `train_cells` + `guard_train_cells` | YES |
+| 8 | Episode horizon | `episode_horizon` | YES |
+| 9 | Early-stop rule | `early_stop_rule` | YES |
+| 10 | AQE condition | `aqe_condition` | YES |
+| 11 | Warm-up behavior | `warm_up_behavior` | YES |
+| 12 | Cache behavior | `cache_behavior` | YES |
+| 13 | Whether A3 and A4 share seeds/cells/horizon | none — a cross-arm field with no per-arm slot | **NO** |
+| 14 | Statistical governance | `statistical_governance` field EXISTS but is **not required** | **NO** |
+| 15 | R4 complete specification | `IncompleteFormulaError` — strongest enforcement in the module | YES |
+| 16 | Epsilon / alpha / gamma deviations | `epsilon_schedule`, `alpha`, `gamma` (see §5) | YES |
+| 17 | Live-execution charging rule | `live_execution_charging_rule` | YES |
+| 18 | Implementation authorization (B6) | `EXECUTION_AUTHORIZED = False`; this entry | n/a |
+
+**Proved by direct read-only construction, not inferred.** An `A3-time-only` configuration supplying all fifteen required fields, with `statistical_governance`, `execution_budget`, `code_fingerprint`, `t_ref_fingerprint` and `q0_variant` left `None`, makes `validate_configuration()` return normally, `unresolved_fields()` return `()`, and `arm_runtime_kwargs()` return component kwargs including a constructed `RewardCalculator`. The repository's own test records the same behaviour by name: `tests/unit/test_exp008_scope.py:144` — `test_a_fixture_complete_config_validates_without_authorizing_anything`.
+
+> **Correction of record (following the DEC-032 §4 precedent for correcting a work-stream statement without rewriting the artifact).** The B6 report §9.4 states that the implementation *"gives the 18 fields of DEC-030 §12 an explicit, schema-safe, fail-closed representation."* The **explicit** and **schema-safe** halves are accurate — every one of the eighteen appears, and unresolved values are emitted as `null` and listed under `unresolved_fields`. The **fail-closed** half is accurate for fifteen of them (sixteen for A4) and **not** for fields 1, 13 and 14. The B6 report is **not edited**; it is a B6-time record and stands as written. This decision carries the corrected statement.
+
+**Consequence, binding on gate item (4):** `validate_configuration()` passing is **not** methodological completeness and **not** authorization. The authorization DEC must check DEC-030 §12 fields **1, 13 and 14** by hand; the configuration layer will not stop it.
+
+## 7 — Scope-creep audit: nothing implemented exceeds what DEC-030 froze
+
+**7.1 Exactly one governed source file changed.** `src/sparkrl/rl/reward.py` (now `e98a1351…fd95`; DEC-030's recorded pre-B6 fingerprint `0c5e67f4…9798` remains a correct historical record of the earlier state). DEC-030 §13 anticipated precisely this: *"Current `sparkrl.rl.reward` implements exactly one frozen formula (R3) and refuses any other — an additive, default-preserving extension would be required."* Every other DEC-030-fingerprinted file is byte-identical to its recorded value: `action.py` `580cf010…c0528`, `q0.py` `7d2ffb0c…de195`, `q_learning.py` `1c5fab89…bb31`, `loop.py` `b513238d…83611`, `ablation.py` `69ab9c40…b5216a`. `docs/PLAN.md` `db5e8210…ee63`, `configs/rl.yaml` `8ca70d6d…8b80`, `configs/reward.yaml` `a52131d5…db1b` — all unchanged.
+
+**7.2 No runner exists, by design.** `loop.py` is untouched; B6 report §7 states why: *"Doing so would require choosing a seed set, a cell set, a horizon and an early-stop rule — every one of which DEC-030 §12 leaves unresolved — so any wiring would have had to invent methodology."* `tests/unit/test_exp008_scope.py:393` (`test_module_never_imports_spark_or_a_runner`) passes; the module's imports are `yaml`, `sparkrl.agent.q0`, `sparkrl.experiments.spec`, `sparkrl.rl.action`, `sparkrl.rl.reward` — no `pyspark`, no `sparkrl.rl.env`, no `subprocess`.
+
+**7.3 Two surfaces recorded, neither a creep, both disclosed.**
+
+* `arm_runtime_kwargs()` (`exp008.py:645-667`) returns a live `RewardCalculator` and component kwargs for a validated configuration. It is the closest thing in the change to executable machinery. It builds nothing, launches nothing and grants nothing; it is recorded so the authorization gate knows what surface it is fingerprinting.
+* `arm_scope_summary()` (`exp008.py:776`) emits `"executable": arm != ARM_A3_R4_LOG_RATIO`, i.e. `true` for three arms. In that dict the word means **"this arm's reward formula can be constructed"**, nothing more; the same dict carries `execution_authorized: False`, `spark_executions: 0`, `training_executions: 0`, `test_executions: 0` (`exp008.py:787-790`). **No consumer may read that key as an authorization signal.**
+
+**7.4 A narrowing relative to PLAN, stated so it is never mistaken for a de-scoping.** `docs/PLAN.md:315` registers EXP-008 with split *"Train/Test"* and arms *"A3, A4, A5"*. The implementation is TRAIN-only by hard guard and contains no A5. **This decision does NOT amend PLAN and does NOT de-scope EXP-008.** `docs/PLAN.md` is unchanged. The TRAIN-only guard binds the A3/A4 implementation layer only; any TEST component of EXP-008 would require its own decision and its own treatment of the TEST seal (PLAN §18: *"no test metric influences training or tuning"*; DEC-018 Decision B). Refusing TEST is the conservative direction and is left in place.
+
+## 8 — A5 is genuinely inert
+
+Four independent facts, each checked: (a) `A5` is absent from `ALL_ARMS` (`exp008.py:92-94`); (b) `guard_a5` (`exp008.py:186-204`) raises `A5DisabledError` for the `A5` arm, for `multi_step=True`, and for any `gamma != 0.0`; (c) `configs/exp008.yaml:26-27` states *"A5 is DISABLED … and is not representable here at all"*, and `load_exp008_config` refuses unknown arms (`exp008.py:181-184`); (d) `configs/rl.yaml:8` still reads `gamma: 0.0` and the file is byte-identical at `8ca70d6d…8b80`. Three tests assert it: `test_a5_arm_is_refused`, `test_multi_step_and_non_zero_gamma_are_refused`, `test_a5_is_absent_from_the_scope_summary_arms`. **A5 remains DISABLED** (DEC-011; re-affirmed DEC-016 §7, DEC-023 §2, DEC-024 A5 row, DEC-025 §7, DEC-030 §9). Nothing here opens multi-step RL.
+
+## 9 — The B6 report's one owed item is DISCHARGED (§8 / §10 row 5)
+
+The B6 report classified the stale SC6 pin in `tests/unit/test_exp001_maintenance.py::test_exp003_or_exp005_are_never_charged_to_sc6` as owed work needing a decision: *"Re-pinning a governance ledger constant to `462`/`38` is a DEC-031 follow-up, not an implementation-only change"* (§8), repeated as §10 row 5. Two later decisions discharged it, in sequence:
+
+1. **DEC-032 §8** adopted the `336/164 → 462/38` re-pin as operator-authorized Day-37 work, *"on the same reasoning as §3 (the assertion re-derives from the live tree; it does not cite a historical figure) and subject to the same invariant as §6 (the pin was not weakened — it remains an exact equality)"*, and named the B6 report as the reason for recording it: *"the B6 implementation report (§8, §10 row 5) had classified that repair as 'a DEC-031 follow-up' … **DEC-032 is that decision.**"*
+2. **DEC-033** then charged the six completed 2026-09-19 smoke TRAIN executions under DEC-031 §5 categories 1 and 3, moving the canonical ledger to `232 + 84 + 20 + 126 + 6 = 468`, remaining `500 − 468 = 32`, with follow-up (ii) *"correcting the test pin from 462/38 to 468/32, keeping it an exact equality so an unauthorized execution still breaks it."*
+
+The pin now reads `tests/unit/test_exp001_maintenance.py:161` — `assert live == 468 and CAP - live == 32` — an exact equality, unweakened, with the hermetic fixture-tree assertions correctly left at 336. **B6 §10 row 5 is closed. DEC-035 re-opens nothing and re-decides nothing about the ledger.**
+
+## 10 — CITED versus RE-DERIVED: the B6 artifacts are frozen as evidence
+
+Applying the DEC-032 §3 discriminator: `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md` and `results/evaluation/exp008_b6_implementation.json` **CITE** figures as of 2026-09-18 — `cumulative_charge: 462`, `remaining_headroom: 38`, `decisions_md_fingerprint: 7579e551…`, and a `pre_existing_failures` entry for the ledger test that has since been repaired. They do not re-derive anything from the live tree.
+
+**They are therefore CITED historical records and are NOT edited, NOT regenerated and NOT corrected.** This restates DEC-032 §8's ruling verbatim in effect: *"The B6 report and `results/evaluation/exp008_b6_implementation.json` are **not** regenerated: they are correct as B6-time records and their historical status is preserved."*
+
+**The current canonical ledger is DEC-033's: charged 468 of 500, remaining 32.** No reader may take the B6 JSON's `462/38` as current headroom. This entry changes no ledger figure and charges 0.
+
+## 11 — WHAT IS DECIDED
+
+1. **B6 is RESOLVED.** The EXP-008 A3/A4 implementation at HEAD `c2e980a` — `src/sparkrl/training/exp008.py`, the additive `src/sparkrl/rl/reward.py` extension, `configs/exp008.yaml`, the two `__init__` re-export blocks, and the three zero-Spark test files — is **ADOPTED** as the implementation DEC-030 §15 gate item (3) requires. DEC-030 §15's *"with green zero-Spark tests"* condition is **satisfied**: 103/103 passed, exit 0, 0.24 s, re-run for this entry (§4).
+2. **Adoption is retrospective**, following DEC-018 Decision E and DEC-032 §8: the code was written and committed before any decision covered it. It is adopted as operator-authorized Day-37 work, on the evidence of §§3–8, not ratified blindly.
+3. **DEC-030 §12 fields 1, 13 and 14 are explicitly DEFERRED** to the methodology/authorization decisions and are recorded as **NOT** enforced by the configuration layer (§6). Fields 2–12 and 15–17 are enforced fail-closed per arm.
+4. **`validate_configuration()` passing is not authorization and not methodological completeness.** Recorded as binding on gate item (4).
+5. **The DEC-030 §3.2 multi-term-removal classification stands** and is restated: A3-time-only removes the task-imbalance AND spill-waste terms simultaneously; no analysis may attribute a difference to a single removed term.
+6. **B6 report §10 row 5 is discharged** by DEC-032 §8 as amended by DEC-033 (§9).
+7. **The B6 report and JSON are frozen as CITED evidence** and are not regenerated (§10).
+
+## 12 — Authorized but NOT performed here (following DEC-025 §11 / DEC-032 §6)
+
+A **validator-only, minimal, local** repair is AUTHORIZED for a **separate later task**: `scripts/validate_day31.py:1015` currently reads `"exp008_b6_implementation.json": "DEC-031",` inside `AUTHORIZED_ARTIFACTS`, while DEC-031 §13 states *"It is **not** the B6 implementation decision."* Once DEC-035 is at HEAD, the correct attribution for that artifact is **DEC-035**.
+
+**The repair MUST:** change only the attribution string for that one artifact key; leave `exp008_methodology_freeze.json` → `DEC-030`, `exp008_preflight_audit.json` → `DEC-030` and `exp008_budget_reconciliation.json` → `DEC-031` untouched; and preserve `_authorized()`'s requirement that the named decision be present at HEAD.
+
+**The repair MUST NOT:** weaken, delete, skip or bypass any check; add any artifact to the allowlist; change any ledger, manifest, result or budget artifact; or alter authorization state. **It is NOT performed by this entry**, and this entry does not modify `scripts/validate_day31.py`.
+
+## 13 — What this decision deliberately does NOT decide
+
+* **EXP-008 execution authorization** — gate item (4). Not granted, not prepared, not implied.
+* **DEC-030 §12 fields 1–14 and 16–17** — every one remains UNFROZEN and REQUIRES A SEPARATE DECISION. Naming fields 1, 13 and 14 in §6 **resolves none of them**; it records that the code will not catch them.
+* **Field 15 / the A3-R4-log-ratio arm** — its eight unresolved semantics are not frozen here. The arm can never become configuration-complete as the code stands; either a decision freezes all eight, or field 1 drops it from the executed arm set. DEC-035 does neither.
+* **The PLAN-internal scope/envelope tension.** `docs/PLAN.md:315` registers EXP-008 at **~300** executions; the canonical remaining headroom is **32** (DEC-033). DEC-031 §10 recorded this as an unresolved governance dependency and DEC-011 held it to be an internal-PLAN conflict DEC-010's precedence rule cannot arbitrate. **DEC-035 does not resolve it, does not raise the cap, does not amend PLAN and does not de-scope EXP-008.** No amount of implementation creates executions that do not exist.
+* **Statistical governance** (§12 field 14) — DEC-030 §8's position stands: until a governing DEC exists, any EXP-008 analysis that ever runs is descriptive-only with no invented thresholds.
+* **The zero-live manifest counting rule** (DEC-032 §7.3) — still UNRESOLVED; untouched here.
+* **`scripts/validate_day30.py`** and every other validator beyond the one attribution line in §12.
+* **DEC-034**, whatever it may be. Not read, not assumed, not depended on.
+
+## 14 — Non-authorization firewall (explicit)
+
+| Item | State recorded by this entry |
+|---|---|
+| **EXP-008 execution authorization** | **FALSE / NO** |
+| **A5** | **DISABLED / excluded** (DEC-011; re-affirmed DEC-016 §7, DEC-023 §2, DEC-024 A5 row, DEC-025 §7, DEC-030 §9); `configs/rl.yaml` `gamma` stays `0.0` |
+| **TEST** | **NOT AUTHORIZED** — no TEST queue, specification or ledger is created; the TRAIN-only guards are strengthened by adoption, never relaxed |
+| **Implementation authorization (B6)** | **GRANTED by this entry, for implementation only** — A3/A4 are IMPLEMENTED-AND-ADOPTED, and remain **UNAUTHORIZED IN EXECUTION** |
+| **SC6 cap** | **500 — unchanged, not raised** (`docs/PLAN.md:45`; `configs/rl.yaml:17`) |
+| **Canonical ledger** | **468 charged / 32 remaining** (DEC-033) — restated, not re-derived, not changed |
+| **`docs/PLAN.md`** | **UNCHANGED** — no line edited |
+| **Historical decisions** | **UNCHANGED** — DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032, DEC-033 are not rewritten; this entry is appended, never substituted |
+| **Spark / training / TEST executions performed by this entry** | **0 / 0 / 0** |
+
+## 15 — Evidence and fingerprints (read-only; nothing listed was modified by this entry)
+
+| Source | Role | SHA256 |
+|---|---|---|
+| `src/sparkrl/training/exp008.py` | the adopted scope layer (36 504 bytes) | `0a2252b378dda0a630106795ef13287eda86d3a50c0e294ef26f3768bc54ceba` |
+| `configs/exp008.yaml` | the inert fail-closed configuration artifact | `7b0f3999c08398df2cb956dceed312b32706fc3dca1f33815663bbedbb4cd2d4` |
+| `src/sparkrl/rl/reward.py` | the one changed governed source; additive A3 registry | `e98a1351c42fc2303a4590afc62ed7d485754c43176b8f1b86b57fd77b67fd95` |
+| `tests/unit/test_exp008_scope.py` | 50 zero-Spark tests | `815192962246cbfbb3bd8a1e9676fb09193e2c5419f137701bf7e6b703167d8c` |
+| `tests/unit/test_exp008_action.py` | 32 zero-Spark tests | `e781ca7d10c92121c081f078ca90a81b8150d52c683b05641c71485178535443` |
+| `tests/unit/test_exp008_reward.py` | 21 zero-Spark tests | `20c2d45f5144fe709808bde2e626b9d217110975f83faa5662eb575f13e75a35` |
+| `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md` | adopted evidence — **retained, not regenerated** | `65cbe165fd05e1475f3d66bdd3d9ea971b6366bf85c644a4510c4277e87f0541` |
+| `results/evaluation/exp008_b6_implementation.json` | adopted evidence — **retained byte-identical** | `b6cf45148fcb8d45902b9b81fef86efe5a484886e5dab3cc13cbe7c4f93871b2` |
+| `src/sparkrl/rl/action.py` | reused verbatim | `580cf010f17b2cb0f7c3b7967d4fb560b7f973028e8a1909123e7d337f4c0528` (**unchanged**) |
+| `src/sparkrl/agent/q0.py` | no Q0 builder added | `7d2ffb0c33fc4349a71d3e064781927425092ff86be2eeed595705b3111de195` (**unchanged**) |
+| `src/sparkrl/agent/q_learning.py` | 12-wide rows unchanged | `1c5fab897f8f652b90cd9011b1d84846459f041d31565c9652c4edd578d9bb31` (**unchanged**) |
+| `src/sparkrl/training/loop.py` | **no EXP-008 wiring** | `b513238d5148a16cc8e39283526082b0c199fee5ad7a00326d95f4ad3983a611` (**unchanged**) |
+| `src/sparkrl/training/ablation.py` | EXP-007 layer, pattern reused only | `69ab9c40e1688405b8b6f795783ada7fbf26c753bacb76d0aba215b7fb5b216a` (**unchanged**) |
+| `docs/PLAN.md` | SC6 line 45; EXP-008 envelope line 315 | `db5e82102833efe6bab8db1adaf1b35ad195faf385e63ab296d50562e349ee63` (**unchanged**) |
+| `configs/rl.yaml` | `gamma: 0.0`; `live_execution_cap: 500` | `8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80` (**unchanged**) |
+| `configs/reward.yaml` | frozen R3 weights | `a52131d5a0de63ef06d3dd5b181f1bbeda326df3ffffbd2ae1c69ed96571db1b` (**unchanged**) |
+| `docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md` | DEC-030 identity preserved | `ec487bf2a84a9c1a6f506bdd83c71b7c7bb7ae2cceaf7e761f000c7201912a5a` (**unchanged**) |
+| `docs/research/DEC_031_EXP008_SC6_BUDGET_RECONCILIATION.md` | DEC-031 | `af5c18216c6fdbcba86c891934a4b2d1026a32c4e2ada91eee91f7c8ab12852c` (**unchanged**) |
+| `docs/research/DEC_032_DAY31_VALIDATOR_LEDGER_RECONCILIATION.md` | DEC-032 | `142bcd86b54ad7c369e8f10c7914c07372e63b93520e8e2780e2a68c25ad506d` (**unchanged**) |
+| `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md` | DEC-033 — canonical 468/32 | `3e6d0d7c4b5359990ea6ac6766e226d860c5fea2fb0e8639cc73fff645932b21` (**unchanged**) |
+| `scripts/validate_day31.py` | the §12 attribution line — **NOT MODIFIED by this entry** | out of scope; repair authorized for a later task |
+| `DECISIONS.md` | this entry appended; every prior byte intact | `849197ed5b9d2ca192db68e14bef80916d2ef55af48b5105a3f39301e919953e` **before** this append |
+
+Repository state at recording: branch `main`, HEAD `c2e980a` (*"gov(DEC-033): Option A — the six 2026-09-19 smoke executions are charged; ledger 468/32"*), working tree **clean** (`git status --porcelain` empty).
+
+## 16 — Validation of this entry (read-only, zero Spark)
+
+| Check | Method | Result |
+|---|---|---|
+| DEC-035 identifier free | heading scan of `DECISIONS.md` + repository-wide search for `DEC-034`/`DEC-035` | PASS (both unoccupied) |
+| `DECISIONS.md` appended only | prior bytes intact; append-only | PASS |
+| DEC-030 / DEC-031 / DEC-032 / DEC-033 artifacts unchanged | SHA256 re-checked (§15) | PASS |
+| `docs/PLAN.md`, `configs/rl.yaml`, `configs/reward.yaml` unchanged | SHA256 re-checked | PASS |
+| Zero-Spark EXP-008 tests green | `python -m pytest tests/unit/test_exp008_{scope,action,reward}.py` | **PASS — 103 passed, 0.24 s, exit 0** |
+| Only `reward.py` changed among DEC-030-fingerprinted sources | SHA256 of action/q0/q_learning/loop/ablation vs recorded values | PASS |
+| No EXP-008 runner exists | `loop.py` byte-identical; module imports no `pyspark`/`env`/`subprocess` | PASS |
+| §12 field coverage measured, not assumed | read-only construction of a 15-field-complete config; `unresolved_fields()` → `()` with `statistical_governance=None` | PASS (15/18; 16/18 for A4) |
+| A5 inert | four independent refusals + unchanged `gamma: 0.0` | PASS |
+| No execution authorized | §13, §14 | PASS |
+| Ledger unchanged | 468/32 restated from DEC-033; charged by this entry: **0** | PASS |
+| Full unit suite / validator chain | **NOT RE-RUN by this entry** — deferred to gate item (4)'s clean preflight | NOT ASSERTED |
+| Spark / training / TEST executions performed | — | **0 / 0 / 0** |
+
+**Status.** **DECIDED.** DEC-030 §15 gate-chain item **(3) is SATISFIED**: the EXP-008 A3/A4 implementation is **ADOPTED** as the B6 resolution on green zero-Spark tests (**103/103, exit 0**), with DEC-030 §12 fields **1, 13 and 14** recorded as **NOT** fail-closed in the configuration layer and **explicitly deferred**, and with fifteen fields (sixteen for A4) enforced required-but-unset. One validator-only attribution repair is **AUTHORIZED for a separate later task and NOT performed here**. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `SC6 cap = 500, not raised`. `Canonical ledger = 468 charged / 32 remaining (DEC-033)`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032, DEC-033) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** **This entry performs 0 Spark executions and trains nothing.**
+
+*End of DEC-035.*
+
+---
+
+**Ledger supersession note (appended 2026-09-20, before signature).** This entry was drafted against the then-current ledger **468 / 32** (DEC-033). Five completed smoke TRAIN executions dated 2026-09-20 07:37-07:56Z were discovered afterwards and classified by **DEC-038**, making the canonical ledger **483 / 17** at signature. The figure is corrected here rather than in the body, so the drafting chronology stays visible. No conclusion in this entry depends on the difference: it adopts an implementation and charges nothing; EXP-008 execution authorization remains NO either way.
+
+## DEC-036 | 2026-09-20 | EXP-008 A3/A4 methodological field resolution - all eighteen DEC-030 s12 fields; A3-R4 DROPPED as unspecifiable; execution authorization remains NO (Day 38, C3)
+
+**Decision ID:** DEC-036
+**Date:** 2026-09-20
+**Scope:** The eighteen methodological fields that `docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md` §12 marks *"UNFROZEN — SEPARATE DECISION REQUIRED"*. **Nothing else.**
+**Status:** DECIDED — sixteen fields resolved unconditionally; the two count-driving fields (6 seeds, 8 horizon) resolved as a frozen RULE plus three fully specified branches, one of which a separate decision selects. **`EXP-008 execution authorization = NO`.**
+**Standalone decision artifact.** The authoritative log entry is the appended DEC-036 section of `DECISIONS.md`; this document carries the same decision content, self-contained, so the decision also exists as an addressable artifact (the DEC-031/DEC-032 convention).
+**Supersedes nothing.** DEC-030, DEC-031, DEC-032 and DEC-033 are unchanged; no historical decision entry is rewritten. `docs/PLAN.md` is **UNCHANGED**.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, creates no run directory, and modifies no manifest, no result artifact, no configuration, no implementation file and no prior decision entry.**
+> **EXP-008 execution authorization remains NO. A5 remains DISABLED. TEST remains NOT AUTHORIZED.**
+
+---
+
+## 0 — Identifier resolution and batch context
+
+`DECISIONS.md` headings run DEC-001…DEC-026, DEC-031, DEC-032. DEC-030 is formally recorded outside `DECISIONS.md` (`docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md`, `Decision ID: DEC-030`). **DEC-033 is likewise recorded as a standalone artifact only** (`docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md`, *"STATUS: DECIDED — Option A selected by the operator"*) and has **no section in `DECISIONS.md`** — recorded here as an observation, **not corrected by this entry**. DEC-034 and DEC-035 are the identifiers assigned to the sibling budget and B6 entries of the same Day-38 governance batch; **DEC-036 claims neither of them, cites neither as signed, and takes no effect on either.**
+
+## 1 — Scope
+
+DEC-030 §15: *"Any methodological field marked 'UNFROZEN — SEPARATE DECISION REQUIRED' must be resolved by such a DEC before authorization."* This entry is that DEC for all eighteen §12 fields. It resolves methodology only. It is **not** the B6 implementation decision, **not** a budget decision and **not** an authorization decision.
+
+## 2 — Method, and the rule this entry obeys
+
+Each field is placed in exactly one class:
+
+* **INHERIT** — the project already holds a frozen value that applies unchanged. The frozen value and its authority (file:line, decision id) are given. **Inheriting is not inventing**; a field is only inherited where the value demonstrably already exists.
+* **CHOOSE** — a real choice with no frozen default. Options and reasoning are given.
+* **ALREADY RESOLVED** — by DEC-031/DEC-033 (field 17) or by the separate B6 decision (field 18).
+* **DROP** — the element cannot be specified without invention, so it is removed from the executable set rather than guessed.
+
+**No threshold, statistic, formula, weight or policy absent from the record is created by this entry.** Where a field could only be settled by invention, it is dropped and the cost is stated. CITED historical figures are not edited anywhere (the DEC-032 §3 discriminator); every figure below is either restated from a signed decision or re-derived from the live tree and labelled as such.
+
+## 3 — Canonical figures restated (not re-derived, not changed)
+
+| Quantity | Value | Authority |
+|---|---|---|
+| SC6 cap | **500**, **not raised** | `docs/PLAN.md` line 45; `configs/rl.yaml` line 17 |
+| Cumulative charge | **468** | DEC-033 Option A: `232 + 84 + 20 + 126 + 6 = 468` |
+| Remaining headroom | **32** | `500 − 468` (DEC-033) |
+| PLAN EXP-008 envelope | **~300** | `docs/PLAN.md` line 315 — an internal-PLAN tension DEC-011 and DEC-031 §10 record and do **not** resolve |
+
+**This entry adds no accounting and changes no figure.**
+
+## 4 — The unit of account (evidence, not assumption)
+
+Every execution count below rests on three facts already in the repository:
+
+1. **One episode = one charged live execution.** `docs/architecture/ARCHITECTURE_FREEZE.md`: *"Episode: one cached-or-live execution + update"*; `src/sparkrl/rl/env.py:284` increments the counter once per step; `:300` *"bandit mode: episode terminates"*. EXP-007's four manifests read `35 / 35 / 35 / 21` live against 35 planned episodes per seed.
+2. **One epoch = one full pass over the planned cells.** `configs/rl.yaml:27` `epoch_definition: "one_full_pass_over_the_planned_cell_cycle"`; `src/sparkrl/training/loop.py:232-233`, `episodes_per_epoch` is DERIVED `== len(cells)`.
+3. **No cache exists.** `src/sparkrl/rl/env.py:29-30`: *"the cache itself is COMP-EXP-11 (deferred, Day 26+), so every … step is a live execution and `info[\"cached\"]` is always False."* The frozen *"cache hits free"* rule therefore has no live content and reduces no count.
+
+Therefore **charged live TRAIN executions = arms × seeds × epochs × cells**, with `cells = 7` (§6, field 7).
+
+## 5 — Resolution of all eighteen fields
+
+| # | Field (DEC-030 §12) | Class | Resolution | Authority |
+|---|---|---|---|---|
+| 1 | Final arm set; whether A3-R4 is retained | **CHOOSE** | **Three executable arms: `A3-R3-frozen`, `A3-time-only`, `A4-mode4`. `A3-R4-log-ratio` is DROPPED from the executable arm set** and retained as REGISTERED-BUT-UNEXECUTABLE | §8 |
+| 2 | Q0 source per arm | **CHOOSE** | **`q0-exp002/v1` for all three arms**, uniformly; A4 uses 12-wide rows with selection restricted to {0,3,6,9}, no projection | §7.2 |
+| 3 | State schema per arm | **INHERIT** | **`state-v1.5`** (30 states) for all arms | `src/sparkrl/rl/state.py:73` `STATE_VERSION = "state-v1.5"`; every Day-29 manifest `contract_versions.state_schema = state-v1.5`; DEC-030 §6.1 primary row |
+| 4 | Action schema for A3 | **INHERIT** | **`mode12`** (all 12 frozen actions) for both A3 arms | `src/sparkrl/rl/action.py:30`; `docs/architecture/ARCHITECTURE_FREEZE.md` COMP-RL-07; DEC-030 §4.1 |
+| 5 | Reward arm for A4 control pairing | **CHOOSE** | **R3**, and A4-mode4's control **is** the `A3-R3-frozen` arm (same run set, same seeds, same cells, same horizon) | §7.3 |
+| 6 | Seeds (count + identities) | **CHOOSE — conditional** | **Rule frozen:** seeds are an ascending **prefix of the frozen PLAN §16 set {0,1,2}**; no seed outside it, no re-ordering, no invented seed. **Value: branch-selected (§10).** | `configs/rl.yaml:16` `training_seeds: [0, 1, 2]`; DEC-023/DEC-025 used the prefix {0,1} |
+| 7 | TRAIN cells | **INHERIT (forced)** | **The seven T_ref-calibrated TRAIN cells at dataset seed 0**: `F1_agg|small`, `F1_agg|medium`, `F2_join|small`, `F2_join|medium`, `F3_rdd|small`, `F5_mixed|small`, `F5_mixed|medium`; `F3_rdd|medium` excluded (`t_ref_null`). **No subset is admissible** (§7.5) | `src/sparkrl/training/loop.py:392-396`; DEC-025 §3; the same seven appear in `results/training/train-a0-d0-20260912T112906Z/episodes.jsonl` |
+| 8 | Episode horizon | **CHOOSE — conditional** | **Rule frozen:** the horizon is an **integer number of complete 7-cell epochs**; a non-integer horizon is inadmissible because it truncates the round-robin cycle. **Value: branch-selected (§10).** | DEC-025 §4 (*"40 is rejected because 40 is not an integer number of complete 7-cell epochs"*) |
+| 9 | Early-stop rule | **INHERIT** | **`stable_epochs_required = 2`; greedy snapshot identical at 3 consecutive epoch boundaries.** Inert below 3 epochs (§10 note) | `configs/rl.yaml:29`; `src/sparkrl/training/loop.py:60,100`; PLAN §16 |
+| 10 | AQE condition | **INHERIT** | **`aqe_enabled = false`** for every arm; AQE-on is EXP-005b and is never pooled with this study | `configs/spark.yaml:14`; `src/sparkrl/rl/action.py:97-99` (post-application guard raises); `ARCHITECTURE_FREEZE` §13 |
+| 11 | Warm-up behaviour | **INHERIT** | **`warmup_runs: 2`, `warmup_micro_job: true`, warm-up excluded from the timed region**; unchanged from the frozen runner | `configs/spark.yaml:19-20`; `src/sparkrl/experiments/runner.py:422-429` (a spec disagreeing with the base config is refused); `ARCHITECTURE_FREEZE` COMP-SPARK-04 |
+| 12 | Cache behaviour | **INHERIT** | **No execution cache (COMP-EXP-11 deferred).** Every step is a live execution; `cached` is always False; the "cache hits free" rule is retained verbatim and reduces nothing | `src/sparkrl/rl/env.py:29-30,123,284`; DEC-025 §3 |
+| 13 | Whether A3 and A4 share seeds/cells/horizon | **CHOOSE** | **YES — A3 and A4 share the seed set, the seven cells, the horizon, the early-stop rule and the R3 control arm.** The shared control is what makes A4's isolation claim exact | §7.3 |
+| 14 | Statistical governance | **CHOOSE (forced by norm)** | **DESCRIPTIVE-ONLY. No p-value threshold, no effect-size cutoff, no Holm family, no minimum-n, no superiority threshold, no inferential test.** Any future formal testing requires a separate pre-use methodology amendment | §9; DEC-020 A and F; DEC-026 §13; DEC-030 §8 |
+| 15 | R4 complete specification | **DROP** | **Not specifiable without invention → A3-R4 is dropped from the executable arm set** (see field 1). R4 stays REGISTERED in PLAN §24 and refused pre-computation in code | §8 |
+| 16 | Epsilon / alpha / gamma | **INHERIT** | **alpha = 0.2; gamma = 0.0; epsilon 1.0 → 0.05, decay 0.95 per episode. NO deviation for any arm.** gamma is additionally locked | `configs/rl.yaml:7-11`; PLAN §16; DEC-011; DEC-030 §9; `src/sparkrl/training/exp008.py` `guard_a5` refuses any gamma ≠ 0.0 |
+| 17 | Live-execution charging rule and headroom (B5) | **ALREADY RESOLVED** | By **DEC-031 §5** (charging categories) and **§8** (headroom), re-based by **DEC-033** to **468 charged / 32 remaining** of the unchanged cap 500 | DEC-031; DEC-033 |
+| 18 | Implementation authorization (B6) | **ALREADY RESOLVED — by the separate B6 decision, when signed** | **Not resolved as of this entry's date.** The evidence exists (`docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md`; `results/evaluation/exp008_b6_implementation.json`) and states of itself *"This report is **not a decision**"*. **DEC-036 grants no implementation authorization** | DEC-030 §15 gate item (3) |
+
+## 6 — The INHERIT fields: proof that each frozen value exists and applies
+
+Each value below is already in force for the main study and for EXP-007; EXP-008 A3/A4 adopt it **unchanged**, so no control differs between the treatment arms and the frozen design except the factor each arm is testing.
+
+* **state-v1.5 / mode12 (fields 3, 4).** Both are the primary-study values (`state.py:73`; `action.py:30`) and are recorded in every Day-28/29 manifest (`contract_versions.state_schema = state-v1.5`, `contract_versions.action_mode = mode12`). Pinning A3 to mode12 is load-bearing: if A3 varied the action space, A3 and A4 would confound each other, contrary to DEC-030 §6.
+* **The seven cells (field 7).** `loop.py:392-396` refuses any TRAIN cell without a calibrated T_ref at dataset seed 0 and names `F3_rdd|medium` as the null one; `env.step` would raise `TRefMissing`. The set is therefore forced by calibration, not chosen for convenience.
+* **Early-stop (field 9).** `configs/rl.yaml:29` is frozen-validated `== 2` by `loop.py:164-167`; the rule text is `loop.py:100`.
+* **AQE off (field 10).** `configs/spark.yaml:14`; `action.py:97-99` raises `"AQE became enabled after action application (PLAN section 7)"` — the control is enforced in code, not merely declared.
+* **Warm-up (field 11).** `configs/spark.yaml:19-20`; `runner.py:422-429` refuses to run a design whose declared warm-up policy differs from the executed one. SC6 charges **env-level live executions**, exactly as every one of the 468 already-charged executions was counted; this entry changes no charging rule.
+* **Cache (field 12).** `env.py:29-30`. Recorded so that no future reader mistakes the inherited *"cache hits free"* clause for a budget reduction.
+* **alpha / gamma / epsilon (field 16).** `configs/rl.yaml:7-11`, matching PLAN §16 verbatim. gamma = 0.0 is the A5 lock and is re-affirmed, not re-decided.
+
+## 7 — The CHOOSE fields
+
+**7.1 — Field 1, the arm set.** Three executable arms: `A3-R3-frozen` (R3, mode12), `A3-time-only` (the DEC-030 §3.2 multi-term removal, mode12), `A4-mode4` (R3, mode4 = {0,3,6,9}). `A3-R4-log-ratio` is dropped (§8). DEC-030 §3.2's mandatory classification is carried forward verbatim: **time-only is a MULTI-TERM REMOVAL from R3, not a one-factor ablation** — the task-imbalance and spill-waste terms are removed simultaneously, so no observed difference is attributable to either term alone. This statement must appear in any analysis of that arm.
+
+**7.2 — Field 2, Q0 source: `q0-exp002/v1` for every arm.**
+
+* It exists at the right shape: `src/sparkrl/agent/q0.py:64-78` builds it with a `state-v1.5` encoder and 12-wide rows; `configs/rl.yaml:13` `q0_source: "exp002"`.
+* It is admissible for every retained arm under the already-implemented policy (`src/sparkrl/training/exp008.py` `q0_policy`, `allowed_sources = (q0-exp002/v1, q0-neutral/v1)`).
+* For A4 it is DEC-030 §5.4's **"EXISTING FROZEN MAPPING"**: rows stay 12 wide, columns {0,3,6,9} are used as-is, **no projection, no pooling, no construction**.
+* **One source across all arms holds Q0 constant**, which removes DEC-030 §6.1 confound 2 (*"differing Q0 sources across arms would confound reward effects with initialization"*) by construction.
+
+Rejected alternatives, with reasons: **`q0-neutral/v1`** — `build_neutral_q0` accepts only `"A1"` or `"A2"` (`q0.py:239-250`), so no neutral table exists for `state-v1.5`; creating one is new implementation work outside the B6 scope, which recorded *"No new Q0 builder may be added (DEC-030 §5); B6 added none."* The EXP-007 neutral-Q0 precedent does **not** transfer: `q0.py:190-196` records that A1/A2 went neutral because the EXP-002 table could not be mapped onto their 15- and 2-state spaces — a dimensional problem that does not arise here. **Per-arm reward-matched Q0** (rebuilding from the same EXP-002 TRAIN records under each arm's own reward) — refused: it is post-hoc Q0 construction (DEC-030 §5.1 rule 2), and it would make Q0 differ across arms, reinstating exactly the confound the uniform choice removes.
+
+> **Limitation, recorded and binding on any future analysis.** `q0-exp002/v1` was derived from EXP-002 TRAIN records scored under the frozen **R3** reward. For `A3-time-only` this is initialization computed under a different reward from the one the arm optimizes — DEC-030 §5.3 calls that *"methodologically defensible IF frozen"*. This entry freezes it and requires the limitation to be disclosed wherever that arm is reported.
+
+**7.3 — Fields 5 and 13, the A4 control and sharing.** A4-mode4's control reward is **R3**, and its control arm **is** `A3-R3-frozen`. A3 and A4 share the seed set, the seven cells, the horizon and the early-stop rule. This makes DEC-030 §6.2's requirement — *"All other factors must equal the control arm"* — exactly true rather than approximately true, and it removes one arm's worth of executions from every branch in §10. DEC-030 §6.2 confound 3 is carried forward unrepaired and **must be reported, not corrected**: ε-greedy over 4 actions versus 12 yields different exploration coverage under the same schedule; that is inherent to the factor.
+
+**7.4 — Field 14.** See §9.
+
+**7.5 — Why no cell subset is admissible.** A smaller cell set would cut every count proportionally, and is refused: no artifact, decision or criterion selects a subset of the seven, so choosing one would be an invented selection rule; and a subset would break comparability with the main study, with EXP-007 and with the R3 control. The cell count stays 7.
+
+## 8 — Field 15: A3-R4 is DROPPED from the executable arm set
+
+**What the record supplies for R4:** the name and the formula, and nothing else — `docs/PLAN.md` §24 (*"R4 log-ratio"*) and `docs/architecture/ARCHITECTURE_FREEZE.md` (*"R4 = −ln(T/T_ref) ablation-only"*).
+
+**What the record does not supply** — the eight semantics enumerated by DEC-030 §3.4 and pinned in code at `src/sparkrl/rl/reward.py:111-120`: `failure_rule`, `coefficients`, `clipping`, `edge_T_le_0`, `edge_T_ref_le_0`, `edge_failures_timeouts`, `edge_missing_execution_time`, `term_structure_vs_time_only`. `configs/reward.yaml` holds R3 weights only. No DEC supplies any of them.
+
+**Why none can be derived.** The failure rule is the clearest case: R3's `−1.0` failure constant is commensurate with a reward clipped to `[−1, +1]`, whereas `−ln(T/T_ref)` is unbounded in both directions. Carrying `−1.0` across is a **scale decision with no authority behind it**, not a derivation. The same applies to clipping (R4 has none), to `T ≤ 0` (undefined), and to whether R4 is a functional-form change of the time term or also a multi-term removal — DEC-030 §3.4 lists that last question as unresolved, and it changes what the arm even measures.
+
+**Decision.** `A3-R4-log-ratio` is **DROPPED from the EXP-008 executable arm set**. It remains **REGISTERED** — `docs/PLAN.md` §24 is **not amended**, the enum stays in `src/sparkrl/rl/reward.py:85`, and the code keeps failing closed before any computation (`reward.py:197-206`, `IncompleteFormulaError`). A later decision may freeze all eight semantics from a real authority and reinstate the arm; this entry does not.
+
+> **This weakens the scientific claim, and the entry says so in those words.** A3 as executed becomes a **two-way** reward comparison (time-only vs frozen R3), not the **three-way** comparison PLAN §24 registers. RQ4's reward-design question is answered for coefficient/term removal only, and **not at all for functional form**. Any A3 report must state that the R4 log-ratio variant was never executed and why. **No success criterion is amended by this**: PLAN line 45 (SC6) and PLAN line 315 stand verbatim, and SC1–SC8 are untouched.
+
+## 9 — Field 14: statistical governance — DESCRIPTIVE-ONLY
+
+**Frozen:** EXP-008 A3/A4 analysis is **descriptive**. Per-arm and per-cell medians and the registered ablation table; coverage and failures reported as first-class; no inferential test and **no threshold of any kind**.
+
+**Explicitly NOT created by this entry:** p-value threshold, alpha, effect-size cutoff, Cliff's δ decision rule, Holm family definition, multiple-testing scope, minimum successful cells, superiority threshold, hypothesis-to-comparison mapping.
+
+**Authority for following this rather than inventing a procedure.** DEC-020 A closed EXP-005 with *"H2, H3, SC2, SC3, SC4 are **UNDECIDED** — not failed. No Wilcoxon, no Cliff's δ decision, no Holm decision, no alpha, no minimum-n, no effect threshold … No generic defaults are retrofitted."* DEC-020 F: *"Any future formal testing needs a separate pre-use methodology amendment."* DEC-026 §13 applied the same rule to the most recent ablation: *"No numerical pass/fail threshold and no inferential statistic is introduced."* DEC-030 §8 records that the Day-37 audit's proposed Wilcoxon/Holm procedure is *"EVIDENCE, not authority; it is not adopted here."* This entry adopts none of it either.
+
+**Consequence, stated plainly.** RQ4 receives a **descriptive** answer, not a tested one. That matches what `docs/PLAN.md` line 315 registers as EXP-008's deliverable (*"ablation table"*), so no registered deliverable is lost; but no claim of statistical significance may ever be attached to EXP-008 A3/A4 under this entry.
+
+## 10 — Fields 6 and 8: the count-driving fields, the arithmetic, and the conditional freeze
+
+**Frozen unconditionally (the rule):** horizon = an integer number of complete 7-cell epochs (DEC-025 §4); seeds = an ascending prefix of the frozen `{0, 1, 2}` (`configs/rl.yaml:16`); the same seeds and horizon for every arm (field 13).
+
+**The arithmetic** (`arms × seeds × epochs × 7`, per §4; worst case = planned, since early stop can only reduce):
+
+| Shape (per arm) | 2 arms | 3 arms | 4 arms | Fits inside 32? |
+|---|---|---|---|---|
+| 1 seed × 1 epoch = **7** | 14 | **21** | 28 | **yes** (all three) |
+| 1 seed × 2 epochs = **14** | **28** | 42 | 56 | only 2 arms |
+| 2 seeds × 1 epoch = **14** | **28** | 42 | 56 | only 2 arms |
+| 1 seed × 3 epochs = **21** | 42 | 63 | 84 | no |
+| 2 seeds × 2 epochs = **28** | 56 | 84 | 112 | no |
+| 1 seed × 5 epochs = **35** | 70 | 105 | 140 | no |
+| **2 seeds × 5 epochs = 70** (EXP-007 parity, DEC-025 §5) | 140 | **210** | 280 | no |
+
+**Two facts the operator should read off this table.** First, **the complete list of shapes that fit inside the 32 remaining executions is: 14, 21 and 28** — nothing else. Second, the EXP-007-parity shape for the three-arm set is **210**, and PLAN line 315's registered envelope is **~300**; neither is within a factor of six of what exists.
+
+**Early-stop note.** The frozen rule needs three consecutive epoch boundaries (`loop.py:100`). At 1 or 2 epochs it **cannot fire**, so worst case equals actual. At 5 epochs it can (EXP-007's A2 seed 1 stopped at 21 of 35).
+
+**The three branches. The authorization decision selects exactly one; DEC-036 selects none.**
+
+* **Branch P — PARITY (210 worst case).** 3 arms × seeds {0,1} × 5 epochs × 7 cells. Requires a separate scope/cap governance action making ≥210 charged live TRAIN executions available, exactly as DEC-031 §11 requires. **This is the only branch DEC-036 endorses methodologically**: it is the EXP-007 shape, and it is the only branch in which each arm has a replicate and a learning phase.
+* **Branch R — REUSE-PARITY (140 worst case).** 2 new arms (`A3-time-only`, `A4-mode4`) × seeds {0,1} × 5 epochs × 7 cells; the `A3-R3-frozen` control is **read from the already-charged 2026-09-12 training records, truncated episode-for-episode to 35 episodes**, at **0 additional charge**. Those records match on everything: `results/training/train-a0-d0-20260912T112906Z/manifest.json` and `train-a1-d0-20260912T115123Z/manifest.json` carry `reward_formula = R3`, `state_schema = state-v1.5`, `action_mode = mode12`, `q0_version = q0-exp002/v1`, `dataset_seed = 0`, `t_ref_gate_sha256 = e30a7b0c953d…`, the same seven cells in the same round-robin order and the same epsilon trajectory (`episodes.jsonl` episode 1 ε = 1.0, episode 8 ε = 0.6983). **Cost, which must be stated if this branch is taken:** the control was measured on 2026-09-12 under `code_version 8a9ca54-dirty`, the treatment arms would run later under the post-B6 tree, so every A3/A4 difference confounds the intended factor with cross-session timing drift against the 11.89% noise band DEC-018 F recorded. **Admissible; not recommended as the default.**
+* **Branch M — MINIMUM (21 worst case), the only branch that fits today.** 3 arms × seed {0} × 1 epoch × 7 cells = 21, leaving 11. **ARITHMETICALLY ADMISSIBLE, METHODOLOGICALLY NOT RECOMMENDED.** With one seed and one epoch: each arm sees each cell exactly once; ε never falls below `0.95^7 = 0.6983` (`configs/rl.yaml:9-11`), so most actions are random; there is no replicate; and the early-stop rule cannot fire. **This weakens the scientific claim to the point of removing it**: the result would be a 21-execution random-policy probe, not an ablation of a trained policy, and it cannot support RQ4. It would also consume 21 of the 32 executions the project has left. (`docs/PLAN.md` lines 316-320 register EXP-009/010/011/012 with envelopes ~20/~25/~60/~10; **no decision states whether any of them charges SC6**, and this entry asserts nothing about them.)
+
+**DEC-036 selects no branch.** Selection belongs to the authorization decision (DEC-030 §15 gate item 4), because it depends on capacity this entry has no power to create.
+
+## 11 — What this decision deliberately does NOT decide
+
+The branch selection (§10); the execution schedule; the authorization itself; any budget figure, charging rule or cap amendment; the amendment mechanism for the PLAN line 45 vs line 315 tension (DEC-031 §10, DEC-011); the B6 implementation authorization; R4's semantics (dropped, not specified); A5 in any form; TEST for anything; any statistical threshold; and the counting rule for zero-live manifests (DEC-032 §7.3, still open). It also does not decide whether Branch R's reuse is acceptable — it records the option and its confound.
+
+## 12 — Gate-chain status after this entry
+
+| Gate (DEC-030 §15) | State |
+|---|---|
+| (1) DEC-030 methodology freeze | **DONE** |
+| (2) separate budget DEC resolving B5 | **DONE** — DEC-031, re-based by DEC-033 to 468/32 |
+| (3) separate implementation DEC resolving B6 with green zero-Spark tests | **NOT DONE** — evidence exists; **DEC-036 does not supply it** |
+| (4) separate authorization DEC with worst-case counts, ledger charge and a clean preflight re-run | **NOT DONE** — and blocked by capacity, not by methodology, once this entry is signed |
+| §12's eighteen fields | **RESOLVED by this entry**, with fields 6 and 8 frozen as a rule plus three branches |
+
+**Implementation consequence (NOT implemented here; DEC-025 §11 template).** The B6 report §7 refused to wire EXP-008 into `src/sparkrl/training/loop.py` because *"Doing so would require choosing a seed set, a cell set, a horizon and an early-stop rule — every one of which DEC-030 §12 leaves unresolved."* This entry removes that cause for the cell set, the early-stop rule and the horizon rule, and supplies the seed rule. A **separate later task** may therefore wire an EXP-008 runner **without inventing methodology** — under the B6 decision's authorization, not this one, and it must remain incapable of granting execution authorization.
+
+## 13 — Non-authorization firewall (explicit)
+
+| Item | State recorded by this entry |
+|---|---|
+| **EXP-008 execution authorization** | **FALSE / NO** |
+| **Implementation authorization (A3/A4, B6)** | **FALSE / NO** — not granted here |
+| **A5** | **DISABLED** (DEC-011; re-affirmed DEC-016 §7, DEC-023 §2, DEC-024, DEC-025 §7, DEC-030 §9); `configs/rl.yaml` `gamma` stays 0.0 |
+| **TEST** | **NOT AUTHORIZED** — no TEST queue, specification or ledger is created |
+| **SC6 cap** | **500 — not raised, not amended** |
+| **Ledger** | **468 charged / 32 remaining — restated, not re-derived, not changed** |
+| **`docs/PLAN.md`** | **UNCHANGED** — no line edited; R4 remains registered in §24 |
+| **`configs/*.yaml`, `src/**`, `scripts/**`** | **UNCHANGED** — no file modified by this entry |
+| **Historical decisions** | **UNCHANGED** — DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032, DEC-033 are not rewritten; this entry is appended |
+| **Spark / training / TEST executions performed by this entry** | **0 / 0 / 0** |
+
+## 14 — Evidence (read-only; nothing listed was modified)
+
+| Source | Role |
+|---|---|
+| `docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md` §12 (lines 337-354), §15 (line 372) | the eighteen fields and the gate chain |
+| `docs/PLAN.md` line 45 (SC6), line 143 (§16 hyperparameters), line 188 (§24 ablations), line 315 (EXP-008 envelope) | registered intent; **unchanged** |
+| `configs/rl.yaml` lines 7-11, 13, 16, 17, 27, 29 | alpha/gamma/epsilon, q0 source, seeds, cap, epoch definition, early stop |
+| `configs/reward.yaml`, `configs/spark.yaml` lines 14, 19-20 | R3 weights; AQE off; warm-up policy |
+| `src/sparkrl/rl/state.py:73`; `action.py:30,35,97-99`; `env.py:29-30,284,300`; `reward.py:85,111-120,197-206` | state schema, action grid, AQE guard, cache/step/budget semantics, R4 refusal |
+| `src/sparkrl/agent/q0.py:47,64-78,190-196,239-250` | `q0-exp002/v1`; why the neutral builder is A1/A2-only |
+| `src/sparkrl/training/loop.py:60,100,232-233,392-396` | early stop, epoch/cell derivation, the seven-cell refusal |
+| `src/sparkrl/training/exp008.py` | the B6 scope layer; required-but-unset fields; Q0 policy; A5 guard |
+| `results/training/train-a0-d0-20260912T{083120,112906}Z`, `train-a1-d0-20260912T115123Z`, `train-a2-d0-20260912T120648Z` (manifests + `episodes.jsonl`) | the existing charged R3/mode12/state-v1.5/q0-exp002 runs cited by Branch R |
+| `docs/research/DEC_031_…md`; `DEC_032_…md`; `DEC_033_GOVERNANCE_RECONCILIATION.md`; `DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md` | budget, validator, ledger re-base, B6 evidence |
+| `DECISIONS.md` DEC-011, DEC-018 A/F, DEC-020 A/F, DEC-023, DEC-025 §§1-6, DEC-026 §13 | gamma lock, operator gate, descriptive-closure norm, EXP-007 scope and arithmetic |
+
+**Working-tree disclosure.** DEC-033 exists as a standalone artifact with no `DECISIONS.md` section (§0). Any future entry citing DEC-033's 468/32 cites an authority in that form. Disclosed, not hidden, matching DEC-031 §15 / DEC-032 §11.
+
+## 15 — Validation of this entry (read-only, zero Spark)
+
+| Check | Result |
+|---|---|
+| DEC-036 is the identifier assigned to this cluster; no DEC-036 exists elsewhere | PASS (§0) |
+| All eighteen DEC-030 §12 fields appear exactly once in the §5 table | PASS |
+| Every INHERIT field cites a frozen value with a file:line | PASS (§5, §6) |
+| No threshold, statistic, weight, formula or policy invented | PASS (§2, §8, §9) |
+| No CITED historical figure edited | PASS (DEC-032 §3 discriminator) |
+| Canonical figures restated, none re-derived | PASS (500 / 468 / 32) |
+| Execution arithmetic derived from cited mechanics | PASS (§4, §10) |
+| No execution authorized; no branch selected | PASS (§10, §13) |
+| `docs/PLAN.md`, `configs/**`, `src/**`, `scripts/**`, all manifests and results unmodified | PASS |
+| EXP-008 = NO; A5 = DISABLED; TEST = NOT AUTHORIZED | PASS (§13) |
+| Spark / training / TEST executions performed | **0 / 0 / 0** |
+
+**Status.** **DECIDED.** All eighteen DEC-030 §12 fields are resolved: **eleven INHERIT** (state-v1.5; mode12; the seven T_ref-calibrated cells; early stop at 2 stable epochs; AQE off; warm-up 2 + micro-job; no cache; alpha 0.2; gamma 0.0; epsilon 1.0 → 0.05 @ 0.95 — all with cited frozen authority), **five CHOOSE** (arm set = `A3-R3-frozen` + `A3-time-only` + `A4-mode4`; Q0 = `q0-exp002/v1` uniformly; A4 control reward = R3 paired to the `A3-R3-frozen` arm; A3/A4 share seeds, cells, horizon and control; statistics = descriptive-only with no threshold), **one DROP** (`A3-R4-log-ratio` removed from the executable arm set — **this weakens the scientific claim**, turning A3 from the registered three-way reward comparison into a two-way one; PLAN §24 is **not** amended and R4 stays registered), and **two ALREADY RESOLVED** (field 17 by DEC-031/DEC-033 at 468/32; field 18 by the separate B6 decision, **which is not signed as of this entry**). Fields **6 (seeds)** and **8 (horizon)** are frozen as a **rule** — integer 7-cell epochs; seeds an ascending prefix of {0,1,2} — with three fully specified branches (**P** 210, **R** 140, **M** 21) of which a separate authorization decision selects exactly one; **DEC-036 selects none, because the shapes that fit the current 32-execution envelope are 14, 21 and 28, and none of them is a training comparison.** `SC6 cap = 500, not raised`. `EXP-008 execution authorization = NO`. `A3/A4 implementation = NOT AUTHORIZED`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032, DEC-033) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **This entry performs 0 Spark executions and trains nothing.**
+
+*End of DEC-036.*
+
+---
+
+**Ledger supersession note (appended 2026-09-20, before signature).** This entry was drafted against the then-current ledger **468 / 32** (DEC-033). Five completed smoke TRAIN executions dated 2026-09-20 07:37-07:56Z were discovered afterwards and classified by **DEC-038**, making the canonical ledger **483 / 17** at signature. The figure is corrected here rather than in the body, so the drafting chronology stays visible. One consequence: the count-driving branches for fields 6 (seeds) and 8 (horizon) must be selected against **17**, not 32, by the separate authorization decision. Every field resolution in the body is unchanged, and this entry still charges nothing.
+
+## DEC-037 | 2026-09-20 | Record-integrity closure — DEC-033 log entry supplied; zero-live manifests excluded from count invariants; live-Spark test gate authorized; provenance hash made representation-independent additively (Day 38, C4)
+
+**Status.** **DECIDED (record-integrity cluster C4).** Standalone companion artifact convention: this section is the **authoritative log entry** (DEC-032 s0). **Supervisor counter-signature: PENDING** (conventional expectation only, exactly as DEC-020…DEC-026, DEC-031, DEC-032, DEC-033; DEC-018 Decision A converted the self-imposed supervisor gate into an operator decision, and PLAN line 276 requires only that a decision be "recorded"). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** A future review is a new entry; this one is never rewritten. This entry performs **0 Spark executions**, trains nothing, executes no TEST, creates no run directory, and modifies no manifest, no result artifact, no budget, no ledger, no configuration and no prior decision entry. **Supersedes nothing.** DEC-011, DEC-026, DEC-030, DEC-031, DEC-032 and DEC-033 are unchanged.
+
+> **EXP-008 execution authorization remains NO. A5 remains DISABLED. TEST remains NOT AUTHORIZED. `docs/PLAN.md` is UNCHANGED. The SC6 cap remains 500 and is NOT raised. The canonical ledger remains 468 charged / 32 remaining (DEC-033 Option A) and is NOT changed by this entry.**
+
+**0 — Identifier.** `DECISIONS.md` headings currently run DEC-001…DEC-013, DEC-015…DEC-026, DEC-031, DEC-032 (27 headings; `grep -n "^## DEC-" DECISIONS.md`). DEC-014 was never given a heading; DEC-030 is formally recorded outside `DECISIONS.md` as `docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md` (DEC-031 s0); **DEC-033 is DECIDED but has no heading in this file at all** — the defect s2 resolves. This entry is assigned **DEC-037**; DEC-034, DEC-035 and DEC-036 are reserved for the concurrently drafted clusters C1 (budget/scope), C2 (B6 implementation) and C3 (the DEC-030 s12 fields). No DEC-034/035/036/037 artifact exists anywhere in the tree today (repository-wide search by heading and by string). `DECISIONS.md` is not maintained in identifier order — DEC-022 (:1163) precedes DEC-021 (:1255) and DEC-019 (:1418) — so appending in any order creates no inconsistency.
+
+**1 — Scope.** Five record-integrity items and nothing else: (1) the missing DEC-033 log entry; (2) the zero-live / aborted manifest **counting** rule; (3) the live-Spark test gate; (4) the representation-dependent provenance hash; (5) a sweep of every remaining open item not belonging to C1, C2 or C3. **Explicitly out of scope and untouched:** the PLAN line 315 / SC6 envelope tension (DEC-031 s10, DEC-011 — an internal-PLAN conflict DEC-010's precedence rule cannot arbitrate); the B6 implementation decision (DEC-030 s15 gate item 3); the eighteen DEC-030 s12 fields marked "UNFROZEN — SEPARATE DECISION REQUIRED"; and the EXP-008 authorization decision (DEC-030 s15 gate item 4).
+
+**2 — Item 1: DEC-033 is supplied with its `DECISIONS.md` section (DECIDED).**
+
+**The defect.** DEC-033 is DECIDED (Option A, committed `c2e980a`, artifact `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md`) but `grep -n "DEC-033" DECISIONS.md` returns nothing and `git show HEAD:DECISIONS.md | grep -c "DEC-033"` returns `0`. DEC-031 and DEC-032 each have a section, and DEC-032 s0 names the `DECISIONS.md` section "the authoritative log entry", with the standalone document carrying the same content.
+
+**Why it is mechanical, not cosmetic.** Five validators now decide authorization by reading a heading line out of `git show HEAD:DECISIONS.md`: `scripts/validate_rl_environment.py:130-135` (`re.search(r"^##\s*DEC-022\b", …, re.M)`), `scripts/validate_rl_agent.py:217-220` and `scripts/validate_rl_training.py:500-503` (a level-two `DEC-022` heading test via `ln.startswith(...)`), `scripts/validate_day28.py:520-523` (`"## DEC-018"`), and `scripts/validate_day31.py:991-994`, which builds `_head_decs = set(re.findall(r"^##\s*(DEC-\d+)", …, re.M))` and gates every carved-out artifact on `dec in _head_decs` (`:1019-1022`). **A decision absent from that file cannot be relied on by a check.** DEC-030 needed a bespoke `git cat-file -e` special case (`:995-1001`) precisely because it lives outside. DEC-033 is in neither path, which is why `scripts/validate_day31.py:895` carries `smoke_spent = 6  # DEC-033 sections 4-5 recorded charge, bounded here` with no HEAD gate at all — correct today because the term is bounded by two named manifests, but the only DEC-cited carve-out in that file that a mechanical check cannot confirm.
+
+**Decision.** The `DECISIONS.md` section for DEC-033 is supplied **verbatim in Appendix A** of this entry and is to be appended to `DECISIONS.md` as a transcription, not a new drafting act. It **re-decides nothing**: DEC-033's Option A was selected by the operator and committed in `c2e980a`; this supplies the log entry that selection was always supposed to have. Every figure in Appendix A is read from DEC-033; none is re-derived and none is changed.
+
+**Consequence, permitted but not required.** Once the heading exists, a future validator MAY gate check 22's DEC-033 term on `"DEC-033" in _head_decs`, matching `_authorized()`. This entry authorizes that as validator maintenance in the DEC-032 s6 shape — **named, bounded, never a re-sum of the manifests that produce `live_total`** — and does not require it.
+
+**3 — Item 2: the zero-live / aborted manifest COUNTING rule (DECIDED — option (a)).**
+
+**The gap.** DEC-032 s7(3) recorded, and DEC-032 s12 and DEC-033 s4.2 and s12(iii) re-recorded, that the repository has **no written rule** answering *should an aborted / zero-live manifest count toward a manifest-count invariant?* DEC-031 s5 charged-category 3 supplies a **charging** rule only — *"a smoke attempt with 0 live executions is still a charged row at 0"* — and says nothing about counting. Seven directories now sit under the gap: `results/training/smoke/train-a0-d0-20260916T043003Z` (2026-09-16) and the six `train-a0-d0-20260919T1243…1249Z` attempts, every one `status: failed`, `exit_code: 1`, `live_executions: 0`. Its consequence is in the code: `scripts/validate_day31.py:798-810` removed the manifest-count conjunct and *"deliberately did not replace"* it, because replacing it *"could not be repaired here without deciding whether an aborted, zero-live manifest counts toward a manifest-count invariant — a question the record leaves explicitly UNRESOLVED, and which this validator must not settle by implication."*
+
+**DECISION (option (a)).** **A manifest recording `live_executions == 0` is a charged row at 0 under DEC-031 s5 category 3, and does NOT count toward any manifest-COUNT invariant.** Count invariants are asserted over **CHARGING manifests** — those with `live_executions > 0`. Zero-live rows are **REPORTED, never asserted**, in the shape `scripts/validate_day30.py:550-557` already uses for the 9/232 citation.
+
+**What this lets a future validator assert that it cannot assert today.** Today check 22 has **no** count conjunct: `scripts/validate_day31.py:901` prints `n_manifests` as *"(reported, not asserted)"*. Under this rule a future validator may restore one, **derived and never pinned**: the number of charging manifests must equal the number of authorized charging runs the decision chain records — `9` (DEC-011 s7 Day-29 baseline) `+ 4` (EXP-007, DEC-026) `+ 2` (the two completed 2026-09-19 smoke runs, DEC-033 s4) `= 15`. Verified read-only against the current tree: 22 manifest directories, 7 with `live_executions == 0`, therefore **15 charging manifests** — the identity holds exactly. An unauthorized run that CHARGES is then caught twice, by count and by sum, and can no longer hide inside a mis-attributed subtrahend.
+
+**What this gives up, stated plainly.** `scripts/validate_day31.py:800` records that the removed conjunct *"existed to catch a training run that charged ZERO (which the arithmetic below cannot see)."* **This decision permanently forgoes catching that case by counting.** A real training run that records zero live executions remains invisible to the count invariant on any date other than 2026-09-13, which `scripts/validate_day30.py` check 14 covers by date (`DAY30_DATE = "2026-09-13"`, `:106`, `:351`). That residual gap is **disclosed here, not closed**, and a future decision may close it by other means. This entry **invents no replacement detector**.
+
+**Why not option (b) (zero-live rows DO count).** It requires pinning a total — `n_manifests == 22` — which is the shape DEC-032 s6(1) forbids in terms (*"never hard-code a new total"*, *"A constant is **never** re-pinned to a new total"*) and which saturated both check 22 and `validate_day30.py` check 14 (DEC-032 s3: *"check 22 is SATURATED … its pass/fail bit therefore carries **zero information**"*). Under (b), every crashed run becomes a governance event requiring a new decision to re-pin the constant; seven such rows already exist from two unrelated incidents on two dates. **Option (b) is foreclosed by a signed decision, not merely disfavoured.**
+
+**Why not option (c) (leave unresolved).** It has been chosen twice — DEC-032 s7(3) and DEC-033 s12(iii) — and resolved zero times, while the affected directory count grew from one to seven.
+
+**4 — Item 3: the live-Spark test gate (AUTHORIZED; NOT performed by this entry).**
+
+**The defect.** `pytest tests` executes live Spark and charges SC6. `tests/integration/test_rl_training_smoke.py:35` is `pytestmark = pytest.mark.integration` with **no guard of any kind**, and its own docstring (`:7-15`) states that it writes to the real smoke run root and that *"running the integration suite SPENDS frozen budget. Run it when you mean to."* DEC-033 s10 establishes cause: *"The six live executions were caused by the auditing agent running `pytest tests`. … `pytest tests` **charges the SC6 budget**. … Nothing in the repository warns that the *full* suite spends frozen budget."* Four sibling modules already carry a guard — `tests/integration/test_spark_smoke.py:13-17`, `test_workload_families.py:15-19`, `test_datagen_smoke.py:12`, `test_session_runner.py:13`, all `pytest.mark.skipif(os.environ.get("SPARKRL_SKIP_SPARK") == "1")` — but it is an **OPT-OUT**: the default is to run, so it would not have prevented the incident, and the module that actually charged the budget does not have even that.
+
+**AUTHORIZED REPAIR (NOT performed here), following DEC-025 s11's "Implementation consequence (NOT implemented here)" template.** The next separate task is authorized to add **one new file, `tests/integration/conftest.py`**, containing a `pytest_collection_modifyitems` hook that applies the builtin `pytest.mark.skip` to every item collected from that directory **unless** the environment variable `SPARKRL_ALLOW_SPARK` is set to `"1"`. This is the `--allow-spark` gate the repository already uses — `scripts/run_exp005.py:444-450` (*"`--run` requires `--allow-spark`"*) and `scripts/run_exp006.py:823-831` — expressed in the only form pytest collection can see. **The default becomes SAFE:** a bare `pytest`, `pytest tests`, or `pytest -m integration` collects the live-Spark tests and skips them, charging 0. A deliberate live run is `SPARKRL_ALLOW_SPARK=1 python -m pytest -m integration`.
+
+**The repair MUST NOT break, each verified read-only:** (i) **the validator unit-test gate** — `scripts/validate_day30.py:631` and `scripts/validate_day31.py:1148` both run `[py, "-m", "pytest", "tests/unit", "-q", …]`; a conftest under `tests/integration/` is never loaded for `tests/unit`, and no rootdir or package conftest exists to interfere (`git ls-files | grep -i conftest` returns nothing — the repository tracks **zero** conftest files today); (ii) **`--strict-markers`** (`pyproject.toml:37` `addopts = "-q --strict-markers"`) — the hook applies the builtin `skip` marker, declares no new marker, and requires **no edit to `pyproject.toml`**; the three declared markers (`unit`, `integration`, `system`, `:38-42`) are untouched; (iii) **the existing `SPARKRL_SKIP_SPARK=1` opt-out** on four modules, which remains valid and still short-circuits at import; (iv) **decision D4's ledger rule** — `tests/integration/test_rl_training_smoke.py` is **not edited**, so its refusal to hide real executions in a `tmp_path` (docstring `:12-15`, *"decision D4 refuses a ledger that hides real executions"*) stands unchanged; (v) **check 27** (`scripts/validate_day31.py:1061-1109`), which reads `git diff --name-only` (`:269-283`, tracked files with working-tree changes; *"Untracked NEW files are allowed"*) — a new committed file does not trip it.
+
+**The repair MUST NOT:** delete, relocate or rewrite any integration test; redirect any manifest away from `results/training/smoke/`; alter `pyproject.toml`'s markers or `testpaths`; add any guard to `tests/unit/`; or change any authorization state. It charges **0** executions: adding a collection hook executes no Spark.
+
+**Explicitly rejected as insufficient.** Copying the existing `skipif(SPARKRL_SKIP_SPARK)` onto `test_rl_training_smoke.py` is a one-line diff and reuses an in-repo pattern, but it is opt-out: the default would still charge, and it would not have prevented the incident that cost 6 of the 32 remaining executions. The guard must default to safe and must cover the directory, because the hazard is the directory, not the file.
+
+**5 — Item 4: the representation-dependent provenance hash (DECIDED — additive, FUTURE runs only).**
+
+**The defect.** `src/sparkrl/training/loop.py:643-647` `_sha256_file` hashes **raw bytes**: `hashlib.sha256(Path(path).read_bytes()).hexdigest()`. It is used at `:773` for `rl_yaml_sha256` and at `:764` for `t_ref_gate_sha256` (`src/sparkrl/rl/tref.py:25`, `results/experiments/exp-002/analysis/gate.json`). Both files are governed by `.gitattributes` `* text=auto` (`git check-attr text -- configs/rl.yaml` → `text: auto`) under `core.autocrlf=true`, so the digest depends on checkout line endings and **can never be stable across clones**. This is the direct cause of the Day-29 check 05/06 provenance failures (`scripts/validate_day29.py:315-330`). `docs/research/DAY28_29_PROVENANCE_RECONSTRUCTION.md:174` states it: *"raw-byte hashing of a `text=auto` file makes provenance **checkout-representation dependent** — two byte-different, content-identical, Git-clean states of the same blob produce two different recorded hashes (`4bb71750…` vs `8ca70d6d…`)."* It bears directly on **SC8** — PLAN line 45, *"tests green; repo reproducible from fresh clone."*
+
+**DECISION.** **The existing `rl_yaml_sha256` field keeps its exact current meaning — raw bytes — forever.** No recorded manifest hash is edited, no field is redefined, and `DAY29_RECORDED_RL_YAML_SHA256` (`scripts/validate_day29.py:191`, `4bb71750e51c8ea605f7feaaa368a2f1dcbe4ecd2aacbed0f059f8d18cfb5a14`) remains a **CITED historical constant** under the DEC-032 s3 discriminator and is never touched. **Going forward, runs additionally record an LF-normalised digest of the same file in a NEW sibling field** (e.g. `rl_yaml_sha256_lf`), computed with the standard library over content normalised to LF. The same **additive** treatment is authorized in the same shape for `t_ref_gate_sha256`, which shares `_sha256_file` and the identical `text=auto` exposure.
+
+**Why additive and not a change in place.** Changing `_sha256_file` itself would silently change what `t_ref_gate_sha256` means as well, and would make every future `rl_yaml_sha256` incomparable to every recorded one. An added field is the only shape in which **no field ever means two things**, no historical byte moves, and the property that failed becomes assertable for new runs.
+
+**Why not the git blob id.** It is representation-independent and precedented in validators (`scripts/validate_day31.py:996-1001` shells to `git cat-file -e`), but it would put a subprocess dependency on a git binary and a git checkout inside the manifest writer, where no code under `src/` currently shells to git. It buys "which committed blob" on top of "same content", and content identity is already enforced independently: DEC-033 s6 records that *"configuration content is verified identical (hyperparameters, contract fingerprints; **the loader hard-errors on drift**)."* Recorded as available, not adopted.
+
+**Constraint restated (binding).** **No already-recorded manifest hash may be edited.** This decision applies to FUTURE runs only. Manifests written before the change carry no LF field, so any future check must treat it as present-or-absent, never as required. This entry performs no code change and regenerates no manifest; `configs/rl.yaml` is byte-identical before and after (`8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80`, 1826 bytes).
+
+**6 — Item 5: sweep of everything else still open in this cluster (dispositioned).**
+
+**(a) DEC-026 s8's defunct discriminator — NOTHING IS NEEDED NOW; recorded, not corrected, and the reason is now written.** `DECISIONS.md:2062` asserts *"every one of them has an EMPTY `variant` field: no A1/A2 ablation run directory exists."* Re-derived read-only across all 22 manifests: **0** carry a `variant` key; **12** carry `exp007_variant` — the eight 2026-09-19 smoke manifests at `None` and the four EXP-007 manifests at `A1`, `A1`, `A2`, `A2`. Under the DEC-032 s3 discriminator this is a **CITED** assertion inside a signed historical decision: it records what a gate saw on 2026-09-17 and is chronology, not a measurement anything re-runs. It has **no consumer**: no `scripts/validate_*.py` reads a bare `variant` manifest key (the only `"variant"` reads in `scripts/` are in `analyze_exp007.py`, over its own run specs, not manifests). DEC-032 s7(4) already ruled it *"Recorded, **not corrected**"*; **DEC-037 affirms that ruling and adds the operative instruction: any FUTURE check that distinguishes ablation runs must key on `exp007_variant`, never on `variant`.** DEC-026 is not rewritten.
+
+**(b) DEC-033's Part II is duplicated in the committed artifact — recorded; clerical de-duplication AUTHORIZED, not required.** `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md` is 238 lines and contains the block `# PART II — COMPLETION (appended 2026-09-20; …)` twice, at line 110 and line 176, with sections 9, 10, 11 and 12 each appearing twice. A read-only diff of the two copies shows them identical but for a trailing blank line and a `---` separator on the first. **No figure differs between the copies**, so nothing is impeached. Because s2 makes the `DECISIONS.md` section the authoritative log entry, the duplicate is cosmetic. A clerical correction deleting the **second** copy only, recording the file's SHA256 before (`3e6d0d7c4b5359990ea6ac6766e226d860c5fea2fb0e8639cc73fff645932b21`, 37 468 bytes) and after, is authorized under the DEC-021 clerical-correction tradition and is **not required**.
+
+**(c) DEC-033 states three different statuses — resolved by s2, and the discrepancy is recorded.** Its title (`:1`) says *"(DRAFT — pending operator classification decision)"*, its header (`:3`) says *"**STATUS: DECIDED — Option A selected by the operator**"*, and the closing line of each Part II copy says *"**Status: DRAFT — section 8 remains the operator's to check.**"* The operative status is **DECIDED**: commit `c2e980a` reads *"DECIDED (section 8, Option A selected)."* **Appendix A's section is authoritative on this point**, per DEC-032 s0. The artifact's internal contradiction is **recorded, not rewritten**; the same optional clerical correction as (b) may reconcile its title and closing line, and is not required.
+
+**(d) The 65-character transcription artifact — clerical correction AUTHORIZED.** `docs/research/DAY28_29_GOVERNANCE_REVERIFICATION.md:62`, `:124`, `:172` and `docs/research/DAY29_TRAINING_REPLICATES_AND_M8_AUDIT.md:59` quote the Day-29 digest as 65 hex characters (`…2aacbeed0f059f8d18cfb5a14`, doubled `e`). A SHA-256 is exactly 64. `docs/research/DAY28_29_PROVENANCE_RECONSTRUCTION.md:37` establishes it as *"a transcription artifact in prose records only — every manifest stores the correct 64-character value"*, confirmed read-only: `results/training/train-a1-d0-20260917T062346Z/manifest.json` records `4bb71750e51c8ea605f7feaaa368a2f1dcbe4ecd2aacbed0f059f8d18cfb5a14`. Correcting the four prose occurrences to the 64-character value is authorized as a **clerical correction under the DEC-021 tradition**. It touches **no manifest, no validator constant and no decision entry**, and it is a correction of a transcription, not of a historical figure — the figure was always the 64-character digest.
+
+**(e) The Day-28/29 provenance reconstruction has no governance entry — SUPPLIED HERE.** `docs/research/DAY28_29_PROVENANCE_RECONSTRUCTION.md:179` lists three owed gates: *"(a) a governance entry … recording this reconstruction and attaching the resolved-provenance note to the four affected runs; (b) the P3 decision on whether the raw-byte hash design should be representation-insensitive; (c) correction of the two 65-character quotations."* **(b) is s5 of this entry; (c) is s6(d); (a) is this paragraph.** The finding, recorded and not re-derived: the `4bb71750…` digest is the **same committed content** in a different checkout representation — the committed blob written with CRLF on its first 19 lines and LF on the 15 appended lines, 1811 bytes, the state `core.autocrlf=true` plus `* text=auto` leaves on Windows; the current file is the uniform-CRLF representation of that same content, 1826 bytes, `8ca70d6d…`. Three distinctions are preserved exactly as the reconstruction draws them: **byte identity — never identical, and no record claims it was; semantic identity — configuration content verified identical, so no experiment result is impeached; representation — the gap existed only at the working-tree byte level.** The Day-29 check 05/06 failures are fully explained as an EOL-representation difference with **no content difference**. The resolved-provenance note attaches to the four runs of record that pinned `4bb71750…`. **No historical byte is rewritten and no manifest is regenerated.**
+
+**(f) The `scripts/validate_day30.py` check-14 repair — ADOPTED RETROSPECTIVELY.** DEC-032 s7(1) recorded check 14 as out of scope and *"authorizes nothing there"*; the repair was nonetheless performed and committed (`2c00236`) and DEC-033 s5.2 records it as *"performed **without a covering decision** — a process gap the decision text must record explicitly rather than normalize silently."* The repair's content is verified read-only and follows the same cited-vs-re-derived pattern DEC-032 s3 sanctions: `DAY29_MANIFEST_COUNT = 9` and `DAY29_LIVE_EXECUTIONS = 232` are kept verbatim as the DEC-011 citation (`:102-103`); a `DAY30_DATE = "2026-09-13"` constant (`:106`) and a `day30_execution_evidence()` helper (`:347-358`) attribute runs by the manifests' own `started_utc`/`finished_utc`, returning malformed manifests as loud errors and never skipping them; check 14 (`:550-557`) now asserts *"Day 30 spent nothing"* — `not day30_runs and day30_live == 0 and not ledger_errors` — with the 9/232 citation **REPORTED beside** current totals, never compared. **Adopted here as operator-authorized work**, on the DEC-018 Decision E / DEC-032 s8 retrospective-adoption precedent and subject to the same condition: the check was not weakened — it fails loudly on any 2026-09-13 run directory, **including one that charged zero**. Its known limitation is recorded rather than left in a code comment: **being date-scoped, it cannot catch a zero-charge run dated any other day**, which is the residual gap s3 discloses.
+
+**(g) The remaining Day 25/26/27/28/29/31 validator-chain repairs in `2c00236` — RECORDED, and adopted retrospectively for completeness only.** DEC-033 s11 offers them *"for ratification"*: the **PEP 701 f-string leak** (on Python ≥ 3.12 an f-string tokenizes as `FSTRING_START/MIDDLE/END`, not `STRING`, so f-string prose leaked into "executable source" and a *mention* scored as an implementation — which is why the same tree gave different verdicts on 3.11.9 and 3.12.10); the **token-boundary hole** (helpers joined tokens with `""`, so `import torch` became `importtorch` and `\btorch\b` could never match — the deep-RL half of these scans had been silently toothless on *every* interpreter); the **EXP-006 driver allowlist** recast as a DEC-022 content contract plus a mechanical `git show HEAD:DECISIONS.md` lookup, which *enforces* rather than asserts the rule that uncommitted decisions authorize nothing; the **A5 refusal carve-out** for `guard_a5()`, which raises on `multi_step` or `gamma != 0` and therefore *enforces* DEC-011; the **authorized-artifact carve-outs** (`scripts/validate_day31.py:1004-1017`), each naming its decision and gated on that decision being at HEAD, with EXP-003 and EXP-005b keeping a **zero** allowance and check 26's `executed=True` conjunct untouched and fully strict; and the **narrowing of day31 ch21** from a blanket filename pass to an experiment-id-only exemption for two named files, both still fully machinery-scanned. **Nothing required their ratification:** DEC-032 s5 records that *"the repository has **no written rule** requiring a decision before amending a validator"*, that the only change-control rule (`DECISIONS.md:161-166`) is scoped to *"substantive architectural changes"*, and that `scripts/validate_day31.py:842` already pre-names a standing **validator maintenance** category. They are **adopted here for record completeness, not because a rule demanded it**, and this entry **does not** decide whether that standing carve-out would have sufficed — DEC-032 s5 left that undecided and it stays undecided.
+
+**7 — What this decision deliberately does NOT decide.** The PLAN line 315 EXP-008 envelope (~300) versus the 32 remaining under SC6 — **DEC-011 and DEC-031 s10 hold this is an internal-PLAN conflict DEC-010's precedence rule cannot arbitrate, and no amount of signing creates executions that do not exist**; the B6 implementation decision (DEC-030 s15 gate item 3), for which `docs/research/DAY37_EXP008_B6_IMPLEMENTATION_REPORT.md:12` states in terms *"This report is **not a decision**"*; any of the eighteen DEC-030 s12 fields marked "UNFROZEN — SEPARATE DECISION REQUIRED"; the EXP-008 authorization decision (gate item 4); any cap amendment or de-scoping; the replacement detector for the zero-charge-run case s3 forgoes; whether the standing "validator maintenance" carve-out suffices without a decision (DEC-032 s5); and whether `t_ref_gate_sha256` should receive its LF sibling immediately or later. **`cap_amendment_required` = false. `de_scoping_required` = false. No success criterion is amended and no scientific claim is weakened by this entry.**
+
+**8 — Non-authorization firewall (explicit).**
+
+| Item | State recorded by this entry |
+|---|---|
+| **EXP-008 execution authorization** | **FALSE / NO** — unchanged |
+| **Implementation authorization** (A3/A4, B6) | **FALSE / NO** — unchanged |
+| **A5** | **DISABLED / excluded** (DEC-011; re-affirmed DEC-016 s7, DEC-023 s2, DEC-024, DEC-025 s7, DEC-030 s9, DEC-031 s14, DEC-032); `configs/rl.yaml` `gamma` stays 0.0 |
+| **TEST** | **NOT AUTHORIZED** — no TEST queue, specification or ledger is created |
+| **SC6 cap** | **500 — NOT raised** (`docs/PLAN.md` line 45; `configs/rl.yaml` line 17) |
+| **Canonical ledger** | **468 charged / 32 remaining** (DEC-033 Option A) — restated, not re-derived, not changed |
+| **`docs/PLAN.md`** | **UNCHANGED** — no line edited |
+| **Historical decisions** | **UNCHANGED** — DEC-001 … DEC-026, DEC-030, DEC-031, DEC-032, DEC-033 are not rewritten; this entry is appended, never substituted |
+| **Spark / training / TEST executions performed by this entry** | **0 / 0 / 0** |
+
+**9 — Evidence and fingerprints (read-only; nothing listed was modified by this entry).**
+
+| Source | Role | SHA256 / value |
+|---|---|---|
+| `docs/PLAN.md` | SC6 line 45; EXP-008 envelope line 315 | `db5e82102833efe6bab8db1adaf1b35ad195faf385e63ab296d50562e349ee63` (**unchanged**) |
+| `configs/rl.yaml` | `live_execution_cap: 500`; the `text=auto` file of s5 | `8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80`, 1826 bytes (**unchanged**) |
+| `.gitattributes` | `* text=auto` — the cause in s5 | `1ad05b14637474dc8c263e31b96964930b203adcc371b89a6491145f30736944`, 45 bytes (**unchanged**) |
+| `DECISIONS.md` | this entry and Appendix A appended; every prior byte intact | `849197ed5b9d2ca192db68e14bef80916d2ef55af48b5105a3f39301e919953e`, 182 402 bytes **before** this append |
+| `docs/research/DEC_033_GOVERNANCE_RECONCILIATION.md` | DEC-033 content authority; duplication recorded in s6(b) | `3e6d0d7c4b5359990ea6ac6766e226d860c5fea2fb0e8639cc73fff645932b21`, 37 468 bytes (**unchanged**) |
+| `src/sparkrl/training/loop.py` | `_sha256_file:643-647`; `t_ref_gate_sha256:764`; `rl_yaml_sha256:773` | `b513238d5148a16cc8e39283526082b0c199fee5ad7a00326d95f4ad3983a611` — the DEC-026 s8 fingerprint, **unchanged, NOT MODIFIED** |
+| `scripts/validate_day31.py` | check 22, `_head_decs`, check 27 | `d8a151706208be119c91ec4d18b52f86309fee27f110cbaf4031b3c68049f01c` — **NOT MODIFIED** |
+| `scripts/validate_day30.py` | check 14, adopted in s6(f) | `e6138355e565f72783762618d3530bf0d92155a9c72cb823c4e03236333dce29` — **NOT MODIFIED** |
+| `scripts/validate_day29.py` | `rl_yaml_sha256():151`; `DAY29_RECORDED_RL_YAML_SHA256:191`; checks 05/06 | `44743e4a858f621a230bfdd4719b6ecfed4e08344415bf5388ebc2e79ed26d46` — **NOT MODIFIED** |
+| `tests/integration/test_rl_training_smoke.py` | the unguarded live-Spark test of s4 | `3fc71cdd4e23ef34cf59f2f6c95c610403ecbaac2dd96b015334bee1a5f5166e` — **NOT MODIFIED** |
+| `pyproject.toml` | `testpaths`, `--strict-markers`, three markers (`:35-42`) | `bc4a1c7eaacecdcea5fd93048964c8d24cb379361b2ffe51ed899a7c46503d70` — **NOT MODIFIED** |
+| `results/evaluation/exp008_budget_reconciliation.json` | canonical DEC-031 machine artifact | `bd67da1735aaaa9d62ac977f2874034dca1f70db7da849db436b2ca939a596c5` (**unchanged, byte-identical**) |
+| `results/training/**/manifest.json` | 22 manifests, 364 live, 7 at zero | **NOT MODIFIED** |
+
+**Working-tree disclosure.** HEAD is `c2e980a8cc47248056c8a3f774ba26befe405540`; the working tree was clean when this entry was drafted. `git show HEAD:DECISIONS.md | grep -c "DEC-033"` returns `0`, which is the defect s2 resolves; until Appendix A is appended and committed, any check citing DEC-033 cites an authority absent from `DECISIONS.md` at HEAD. Disclosed, matching DEC-024 s6 / DEC-026 / DEC-031 s15 / DEC-032 s11.
+
+**10 — Validation of this entry (read-only, zero Spark).**
+
+| Check | Evidence | Result |
+|---|---|---|
+| DEC-037 is a free identifier | repository-wide search for `DEC-034`…`DEC-037` returns nothing | PASS |
+| DEC-033 has no `DECISIONS.md` heading today | `grep -n "^## DEC-" DECISIONS.md` → 27 headings, none DEC-033 | PASS |
+| Heading lookups are real and load-bearing | `validate_rl_environment.py:130-135`, `validate_rl_agent.py:217-220`, `validate_rl_training.py:500-503`, `validate_day28.py:520-523`, `validate_day31.py:991-994` | PASS |
+| 7 zero-live manifests, 15 charging manifests | re-summed read-only over all 22 `manifest.json`: 364 live; 7 rows at 0 | PASS |
+| 9 + 4 + 2 = 15 charging identity holds | DEC-011 s7 + DEC-026 + DEC-033 s4 vs the measured 15 | PASS |
+| ledger unchanged at 468 / 32 | 232 + 84 + 20 + 126 + 6 = 468; 500 − 468 = 32; `tests/unit/test_exp001_maintenance.py:161` pins `live == 468 and CAP - live == 32` | PASS |
+| `test_rl_training_smoke.py` has no guard | `:35` is a bare `pytestmark` | PASS |
+| no conftest.py is tracked anywhere | `git ls-files | grep -i conftest` → empty | PASS |
+| validators gate on `tests/unit` only | `validate_day30.py:631`, `validate_day31.py:1148` | PASS |
+| `configs/rl.yaml` is `text=auto` | `git check-attr text -- configs/rl.yaml` → `text: auto`; `core.autocrlf=true` | PASS |
+| no manifest carries a `variant` key; 12 carry `exp007_variant` | re-derived read-only over all 22 manifests | PASS |
+| DEC-033 Part II is duplicated | block at lines 110 and 176, identical but for a trailing `---` | PASS |
+| no historical DEC text changed | `DECISIONS.md` appended to only | PASS |
+| `docs/PLAN.md`, `configs/rl.yaml` unchanged | SHA256 re-checked | PASS |
+| no execution authorized | s7, s8 | PASS |
+| Spark / training / TEST executions performed | **0 / 0 / 0** | PASS |
+
+**Status.** **DECIDED (C4 record integrity).** (1) DEC-033's `DECISIONS.md` section is **SUPPLIED VERBATIM** in Appendix A for append-only transcription. (2) **A zero-live manifest is a charged row at 0 and does NOT count toward any manifest-COUNT invariant; count invariants are asserted over CHARGING manifests only, derived as 9 + 4 + 2 = 15 and never pinned** — with the forgone zero-charge-run detection disclosed, not closed. (3) A **`tests/integration/conftest.py` collection gate defaulting to SKIP unless `SPARKRL_ALLOW_SPARK=1`** is **AUTHORIZED for a separate later task** and is **NOT performed by this entry**. (4) `rl_yaml_sha256` **keeps its raw-byte meaning permanently**; an **LF-normalised sibling field is added for FUTURE runs only**, and **no recorded manifest hash is edited**. (5) The `validate_day30.py` check-14 repair and the remaining `2c00236` validator repairs are **adopted retrospectively for record completeness**; the Day-28/29 provenance reconstruction is **recorded**; the 65-character transcription and the DEC-033 duplication/status contradiction are **authorized as optional clerical corrections**; DEC-026 s8's defunct discriminator **needs nothing now** and is affirmed as recorded-not-corrected, with future checks directed to `exp007_variant`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `SC6 cap = 500, NOT raised`. `Ledger = 468 / 32, unchanged`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-033) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **This entry performs 0 Spark executions and trains nothing.**
+
+*End of DEC-037.*
+
+---
+
+**Ledger supersession note (appended 2026-09-20, before signature).** This entry was drafted against the then-current ledger **468 / 32** (DEC-033). Five completed smoke TRAIN executions dated 2026-09-20 07:37-07:56Z were discovered afterwards and classified by **DEC-038**, making the canonical ledger **483 / 17** at signature. The figure is corrected here rather than in the body, so the drafting chronology stays visible. No conclusion in this entry depends on the difference: it changes no figure and authorizes no execution. Its s4 live-Spark test gate is the standing mitigation for exactly the accidental-execution path that produced the 2026-09-20 runs.
+
+---
+
+## DEC-038 | 2026-09-20 | 2026-09-20 smoke ledger classification — the five completed smoke TRAIN executions are CHARGED; ledger 483/500, remaining 17; charged-but-unauthorized (Day 38)
+
+**Decision ID:** DEC-038
+**Date:** 2026-09-20
+**Scope:** Classification of the 2026-09-20 smoke run directories against the SC6 ledger, and the consequential validator/test terms. **Nothing else.**
+**Status:** DECIDED — the same treatment DEC-033 gave the 2026-09-19 six, applied to the 2026-09-20 five.
+**Standalone decision artifact.** The authoritative log entry is this appended DEC-038 section of `DECISIONS.md`; `docs/research/DEC_038_20260920_SMOKE_LEDGER_CLASSIFICATION.md` carries the same decision content, self-contained (the DEC-031/DEC-032 convention).
+**Supersedes nothing.** DEC-011, DEC-026, DEC-030, DEC-031, DEC-032 and DEC-033 are unchanged. DEC-033's figures remain correct **as of its own date** and are not edited.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, creates no run directory, and modifies no manifest, no result artifact and no prior decision entry.**
+> **EXP-008 execution authorization = NO. A5 = DISABLED. TEST = NOT AUTHORIZED. SC6 cap = 500, NOT raised. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** `DECISIONS.md` headings run DEC-001…DEC-026 and DEC-031…DEC-037 (DEC-030 is recorded outside the ledger, per DEC-031 §0). No DEC-038 artifact exists. The next sequential identifier is **DEC-038**.
+
+**1 — Scope.** (a) whether the 2026-09-20 smoke executions are charged to SC6; (b) the resulting canonical ledger; (c) the consequential validator term and test pin. Not in scope: any EXP-008 methodology, implementation or authorization question; the SC6 cap; `docs/PLAN.md`; the zero-live counting rule (DEC-037 §3).
+
+**2 — Evidence: the six 2026-09-20 smoke directories, read from their own manifests.**
+
+| Directory | Started (UTC) | Status | exit | Live | `code_version` |
+|---|---|---|---|---|---|
+| `train-a0-d0-20260920T072732Z` | 07:27:32 | failed | 1 | **0** | `c2e980a` |
+| `train-a0-d0-20260920T073748Z` | 07:37:48 | completed | 0 | **3** | `c2e980a` |
+| `train-a0-d0-20260920T073953Z` | 07:39:53 | completed | 0 | **3** | `c2e980a` |
+| `train-a0-d0-20260920T074224Z` | 07:42:24 | completed | 0 | **3** | `c2e980a` |
+| `train-a0-d0-20260920T075301Z` | 07:53:01 | completed | 0 | **3** | `c2e980a-dirty` |
+| `train-a0-d0-20260920T075643Z` | 07:56:43 | completed | 0 | **3** | `c2e980a-dirty` |
+
+Five completed runs at 3 live TRAIN executions each = **15**. The sixth aborted at startup and contributes **0**. `code_version` places all six **after** commit `c2e980a` (the DEC-033 commit). Separately, `docs/environment_report.json` records `generated_utc: 2026-09-20T08:00:49Z` with `spark_version 3.5.9` and `python 3.11.9` — the canonical `sparkrl_env311` stack, immediately after the run window.
+
+**3 — Canonical arithmetic.** DEC-033 recorded **468 / 32**. Adding the five completed runs:
+
+`232 (Day-29, DEC-011 §7) + 84 (B4, DEC-016 C / DEC-017) + 20 (EXP-001) + 126 (EXP-007, DEC-026) + 6 (2026-09-19 smoke, DEC-033) + 15 (2026-09-20 smoke, this entry) = **483**`
+
+`500 − 483 = **17 remaining**`. Measured independently: `ledger_from_manifests()` returns **(28 manifests, 483 live)**. The residual against the DEC-033 chain was exactly **15** before this entry, which is the quantity this entry classifies and no other.
+
+**4 — The charging rule applied is the standing one; no new category is invented.** DEC-031 §5 **charged-category 1** covers *"TRAIN live executions — every real environment transition consumed by a training run's budget counter"*, and **charged-category 3** covers smoke executions inside charged TRAIN accounting. The five completed runs are real smoke TRAIN executions with `status: completed` and non-zero `budget.live_executions`; they satisfy both on the evidence alone. The aborted sixth is a **charged row at 0** under charged-category 3's second sentence (*"a smoke attempt with 0 live executions is still a charged row at 0"*). Nothing in DEC-031 §5's NOT-CHARGED list reaches them: they are not planned-but-unexecuted rows, not cache hits, not EXP-003 validation, and not TEST — the TEST seal is untouched and these executed TRAIN cells only.
+
+**5 — Authorization status: CHARGED-BUT-UNAUTHORIZED.** No decision in `DECISIONS.md` (DEC-001 … DEC-037) names, scopes or approves any 2026-09-20 smoke execution. They post-date every recorded authorization. They are counted against the cap and disclosed; they are **not** deleted, because deleting an execution record would falsify the register this ledger exists to protect. **Any future smoke execution requires its own explicit authorization.** This is the identical status DEC-033 assigned the 2026-09-19 six, applied on identical evidence.
+
+**6 — Causation, stated as far as the evidence supports and no further.** The runs were **not** produced by the governance audit in progress at the time: none of `scripts/validate_rl_environment.py`, `scripts/validate_rl_agent.py`, `scripts/validate_rl_training.py`, `scripts/validate_day28.py`, `scripts/validate_day29.py`, `scripts/validate_day30.py` or `scripts/validate_day31.py` opens a Spark session or invokes a training driver, and the only test target exercised by that work was `tests/unit`, which executes no Spark. The `code_version` values and the 08:00:49Z environment-report regeneration are consistent with an operator working session on the canonical venv. **This entry attributes the runs to no person and invents no narrative beyond the artifacts.** The DEC-037 §4 live-Spark test gate remains the standing mitigation for the accidental-execution path.
+
+**7 — Consequential implementation (performed with this entry, in the amend-and-ratify-concurrently shape of `9e83742` / DEC-018 Decision E).**
+
+1. `scripts/validate_day31.py` check 22: the charged-smoke subtrahend is extended from DEC-033's 6 to **21** (`6 + 15`). Every contributing manifest is **named explicitly** and must be `status=completed` with exactly 3 live executions; the total is a **named, bounded constant** recorded by DEC-033 and this entry. It is **never** computed by re-summing the manifests that produce `live_total` — the self-cancelling anti-pattern DEC-032 §6 forbids. An additional completed smoke manifest, or a changed live count in any named directory, leaves the residual non-zero and FAILS loudly. The aborted zero-live rows are deliberately absent from the list: they charge 0 and, under DEC-037 §3, count toward no manifest-COUNT invariant.
+2. `tests/unit/test_exp001_maintenance.py`: the live-tree pin is set to **483 / 17** and **restored to an exact equality**. It had been relaxed to `assert live <= CAP`, which cannot fail on an unauthorized execution and therefore detects nothing — the saturation DEC-032 §6 forbids. That relaxation is **recorded and reverted**, not carried forward. The hermetic fixture-tree assertions remain at 336 and are untouched.
+
+**8 — Effect on DEC-034 … DEC-037, which were drafted hours earlier against 468/32.** Those four entries were drafted before this run window was discovered and cite **468 / 32** as the then-current ledger. The canonical figure at signature is **483 / 17**. A supersession note is appended to each; none of their conclusions depends on the difference, and each states why. In particular **DEC-034's zero-charge scope resolution is unaffected and is strengthened**: a charged requirement of **0** satisfies any headroom, and the 28-execution single-epoch alternative DEC-034 §7 rejected no longer fits at all (28 > 17), so the rejected option is now foreclosed by arithmetic as well as by design.
+
+**9 — What this entry does NOT decide.** It does not raise the SC6 cap (500, unchanged). It does not authorize any execution, retroactively or prospectively. It does not resolve the zero-live counting question beyond DEC-037 §3's resolution. It does not amend `docs/PLAN.md`. It does not alter DEC-033's figures, which remain correct as of DEC-033's date. It does not attribute the runs to any person. It makes no research claim and grades nothing.
+
+**Status.** **DECIDED.** The five completed 2026-09-20 smoke TRAIN executions are **CHARGED** under DEC-031 §5 categories 1+3; the aborted sixth is a **charged row at 0**; the canonical ledger is **483 charged of 500, remaining 17**, arithmetic `232 + 84 + 20 + 126 + 6 + 15 = 483`; the eight-plus-six runs' authorization status is **CHARGED-BUT-UNAUTHORIZED**. `SC6 cap = 500, NOT raised`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-037) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** A future review is a new entry; this one is never rewritten. **This entry performs 0 Spark executions and trains nothing.**

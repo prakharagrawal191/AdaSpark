@@ -148,17 +148,24 @@ def test_exp003_or_exp005_are_never_charged_to_sc6():
     for token in ("exp-003", "exp003", "exp-005", "exp005", "exp005b",
                   "exp-006", "exp006"):
         assert token not in fn_src  # separate register lines, never SC6
-    # REAL production function on the live repo tree: 468/32.
-    # DEC-031 (sections 3-4, 8) recorded the pre-EXP-007 ledger 336/164 and
-    # the post-EXP-007 ledger 462/38; DEC-033 sections 4-5 then charged the
-    # six completed 2026-09-19 smoke TRAIN executions under DEC-031 section
-    # 5 categories 1+3, taking 232 + 84 + 20 + 126 + 6 = 468 and leaving
-    # 500 - 468 = 32. Only the expected constants moved; the pin itself is
-    # unweakened, so an unauthorized execution still breaks it. The
-    # fixture-tree assertions above stay at 336 because they are hermetic
-    # arithmetic, not a reading of this repository.
+    # REAL production function on the live repo tree: 483/17.
+    #
+    # This pin is an EXACT EQUALITY on purpose, and must stay one. It was
+    # briefly relaxed to `live <= CAP`, which cannot fail on an unauthorized
+    # execution and so detects nothing - the saturation DEC-032 s6 forbids.
+    # Restored under DEC-038.
+    #
+    # Chain: DEC-031 ss3-4/8 recorded 462/38; DEC-033 charged the six
+    # completed 2026-09-19 smoke TRAIN executions (468/32); DEC-038 charges
+    # the five completed 2026-09-20 smoke TRAIN executions, 3 live each,
+    # under the same DEC-031 s5 categories 1+3, giving
+    # 232 + 84 + 20 + 126 + 6 + 15 = 483 and 500 - 483 = 17.
+    # Only the expected constants moved; the pin itself is unweakened, so an
+    # unauthorized execution still breaks it. The fixture-tree assertions
+    # above stay at 336 because they are hermetic arithmetic, not a reading
+    # of this repository.
     live = _load_day31().ledger_from_manifests()[1]
-    assert live == 468 and CAP - live == 32
+    assert live == 483 and CAP - live == 17
 
 
 def test_malformed_ledger_data_fails_loudly(monkeypatch, tmp_path):

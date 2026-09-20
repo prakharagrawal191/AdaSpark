@@ -1,4 +1,4 @@
-# DEC-033 Governance Reconciliation — 2026-09-19 Smoke Ledger and Validator Record Gaps (DRAFT — pending operator classification decision)
+# DEC-033 Governance Reconciliation — 2026-09-19 Smoke Ledger and Validator Record Gaps (DECIDED — Option A selected by the operator; see section 8)
 
 > **STATUS: DECIDED — Option A selected by the operator (sections 4-5, 8, 12).** Part II (sections 9-12) is the post-evidence record of work performed since sections 0-8 were written, plus the operator's recommendation. This file performs **0 Spark executions**, trains nothing, executes no TEST, and authorizes no future execution. DEC-011/DEC-030/DEC-031/DEC-032 are unchanged.
 
@@ -169,70 +169,8 @@ Under Option A the honest status is **charged-but-unauthorized**: the executions
 
 **Ledger under Option A:** `232 + 84 + 20 + 126 + 6 = 468` charged of 500, **32 remaining**. SC6 cap **500, not raised**. EXP-008 execution authorization remains **NO**; A5 remains **DISABLED**; TEST remains **NOT AUTHORIZED**. This document performs **0** Spark executions.
 
-**Status: DRAFT — section 8 remains the operator's to check. Part II recommends, and decides nothing.**
+**Status: DECIDED — section 8, Option A, selected by the operator. Part II recommended; the operator decided.**
 
 ---
 
-# PART II — COMPLETION (appended 2026-09-20; sections 0-8 above are NOT rewritten)
-
-> **Appended, not edited.** Sections 0-8 are preserved byte-for-byte, following the repository's append-don't-rewrite practice (DEC-032 s13 amends in place and withdraws nothing). This part supplies the one fact sections 0-8 lack — **who caused the six executions** — records the work performed since, and recommends a classification.
-
-## 9 — Provenance of this document, stated plainly
-
-Sections 0-8 were **not written by the author of Part II**, and their authorship could not be established: the file appeared during the 2026-09-19/20 audit session, and no other session record on this machine references it. It is recorded as **unattributed** rather than silently adopted.
-
-It was therefore treated as untrusted evidence and **independently re-verified** before any of it was relied on. Every load-bearing claim checked out:
-
-| Section 0-8 claim | Independent re-verification | Result |
-|---|---|---|
-| Ledger measures 468, residual exactly +6 | `ledger_from_manifests()` returns `(22, 468)`; check 22 reports `+ 6 unexplained` | **CONFIRMED** |
-| Eight 2026-09-19 smoke dirs: six aborted at 0, two completed at 3 | all eight manifests read: exit 1 / `live_executions: 0` x6; exit 0 / 3 x2 | **CONFIRMED** |
-| s6: `4bb71750...` is an EOL representation of the SAME committed content | reproduced exactly: blob `6d85481:configs/rl.yaml`, first 19 lines CRLF + remainder LF = 1811 bytes = `4bb71750e51c8ea6...` | **CONFIRMED** |
-
-**A correction of the record, owed in the other direction.** Commit `678e88e` (mine) asserted that the recorded digest "matches NO version of `configs/rl.yaml` that exists anywhere" and that the bytes were "unrecoverable". That was **wrong**: the test behind it swept only *uniform* LF and *uniform* CRLF normalisation and missed the mixed state. Section 6 above had it right. Corrected in `ca619d8`; the repair itself was unchanged, only its justification.
-
-## 10 — Causal attribution of the six executions (the fact sections 0-8 do not state)
-
-Section 4 records that "no decision names, scopes, or approves any 2026-09-19 smoke execution" and leaves the cause open. The cause is now known and is disclosed here rather than left as an anonymous ledger movement.
-
-**The six live executions were caused by the auditing agent running `pytest tests`.** The chain:
-
-1. Six driver invocations aborted earlier that day (12:43-12:49 UTC) with `ModuleNotFoundError: No module named 'pyspark'` (x3, bare system Python) and `RuntimeError: Spark version mismatch: running 4.0.4, expected prefix 3.5 (frozen backend DEC-007)` (x3, the Day-1 forensic venv). Both are wrong-interpreter errors; the canonical venv is `sparkrl_env311` per DEC-007 (`DECISIONS.md:92-93`).
-2. The agent misread the second symptom as environment drift and installed `pyspark==3.5.9` over the **forensic** venv `sparkrl_env`, damaging a deliberately preserved Day-1 artifact. *(Restored: `sparkrl_env` is back at Python 3.12.10 / pyspark 4.0.4 / py4j 0.10.9.9; `sparkrl_env311` was never touched and was correct throughout.)*
-3. The agent then ran the **full** suite, `pytest tests`, against that venv. `tests/integration/` contains live-Spark smoke tests — `test_rl_training_smoke.py::test_training_loop_three_real_episodes` and siblings — which execute real Spark and write training manifests. Two completed at 13:02:41 and 13:06:14 UTC, 3 live executions each.
-
-**Standing operational finding (not a classification).** `pytest tests` **charges the SC6 budget**. The integration suite is indistinguishable from a training run at the ledger level: it writes a manifest under `results/training/smoke/` with a non-zero `budget.live_executions`. Every validator that gates on the unit suite correctly runs `pytest tests/unit` only. Nothing in the repository warns that the *full* suite spends frozen budget. Whatever section 8 decides, this is worth a guard of its own — an `--allow-spark`-style gate on the integration suite, in the shape `run_exp005.py` and `run_exp006.py` already use.
-
-## 11 — Work performed since sections 0-8 were written (for ratification)
-
-Committed on `main`, all with **0 Spark executions**:
-
-| Commit | Content |
-|---|---|
-| `89eed5c` | Commits the decision ledger DEC-019..DEC-026, DEC-030, DEC-031, DEC-032. Purely additive (1119 insertions / 0 deletions); nothing backdated. Closes the gap in which EXP-006 (125 rows, 105 live Spark) and EXP-007 (126 live TRAIN) executed while their authorizations existed only in the working tree. |
-| `e829ec5`, `bc1afdf` | The Day 28-37 analysis record and the EXP-005..008 machine artifacts, including the canonical 462/38 artifact. |
-| `2c00236` | EXP-006/007/008 implementation, and the validator-chain repairs (see below). |
-| `b4d9486` | Removes a stray `execution_cache = {}` the agent appended to `scripts/freeze_exp006.py` while teeth-testing check 21, and which reached `2c00236`. Inert, never executed; file restored byte-identical (`86699abf...`). Corrected forward, not amended. |
-| `678e88e`, `ca619d8` | Day-29 provenance repair, and the correction of its rationale (s9). |
-
-**Validator repairs, none weakening a check.** Each carve-out was verified by planting the violation it must catch and confirming it still FAILS:
-
-* **Two genuine defects**, not stale expectations: (a) a **PEP 701 leak** — on Python >= 3.12 an f-string tokenizes as `FSTRING_START/MIDDLE/END`, not `STRING`, so f-string prose leaked into "executable source" and a *mention* scored as an implementation; this is why the same tree gave different verdicts on 3.11.9 and 3.12.10. (b) a **token-boundary hole** — the helpers joined tokens with `""`, so `import torch` became `importtorch` and `\btorch\b` could never match. The deep-RL half of these scans had been silently toothless on **every** interpreter. After repair, re-scanning `src/` and `scripts/` finds **zero** machinery hits: no execution cache, no durable orchestrator, no deep-RL symbol anywhere.
-* **EXP-006 driver allowlist** (Day 25/26/27): these were **true positives**, not stale guards. Now admitted by a DEC-022 **content contract** plus a mechanical `git show HEAD:DECISIONS.md` lookup — the rule that uncommitted decisions authorize nothing is now *enforced* rather than asserted in prose.
-* **A5 refusal carve-out** (day30 ch09, day31 ch20): the multi-step hit in `exp008.py` is `guard_a5()`, which **raises** on `multi_step` or `gamma != 0`. It enforces DEC-011; deleting it to satisfy a scanner would have removed an enforcement of the decision the check protects.
-* **Authorized-artifact carve-outs** (day28 ch18, day31 ch26), each naming its decision and gated on that decision being at HEAD. EXP-003 and EXP-005b keep a **zero** allowance; ch26's `executed=True` conjunct is untouched and fully strict.
-* **day31 ch21** previously gave `validate_day31.py` a **blanket** pass by filename, exempting it from the machinery half too. Replaced by an experiment-id-only exemption for two named files, both still fully machinery-scanned — strictly narrower than the line it replaced.
-
-**Validator state:** Day 25, 26, 27, 28, 29 **PASS**. Day 30 and Day 31 fail on exactly two remaining items, both awaiting section 8: check 22 (`+6 unexplained`) and the 462/38 test pin. **Check 22 failing is the repaired check working as designed** — it detected the six executions.
-
-## 12 — Recommendation: Option A
-
-**Option A** is the only one supported by the repository's own standing rule. DEC-031 s5 category 1 charges real TRAIN live executions and category 3 charges smoke executions inside charged TRAIN accounting; the six completed runs satisfy both on the evidence, with matching transition records and checkpoints. Options B and C both require writing a new exclusion reason into a NOT-CHARGED list that DEC-031 s5 states exhaustively, which would invent a category to absorb an accident — the precise move DEC-032 s6's anti-pattern clause forbids.
-
-Under Option A the honest status is **charged-but-unauthorized**: the executions are counted against the cap, and no decision authorized them, because none could have — they were an accident. Recording them as charged costs 6 of the 500 and preserves the ledger's meaning; excluding them would buy back 6 executions at the price of the rule.
-
-**Consequential follow-ups, none performed here:** (i) a validator-only repair adding a **named DEC-033 smoke term** to check 22's decomposition, bounded by this decision's recorded 6 — never by a re-sum of the same manifests (DEC-032 s6 anti-pattern); (ii) correcting the test pin from 462/38 to **468/32**, keeping it an exact equality so an unauthorized execution still breaks it; (iii) the zero-live counting question (DEC-032 s7.3) stays **UNRESOLVED** — seven zero-live directories now sit under it, and this record invents no rule for them; (iv) the `pytest tests` budget footgun (s10); (v) the representation-dependent provenance hash (s9).
-
-**Ledger under Option A:** `232 + 84 + 20 + 126 + 6 = 468` charged of 500, **32 remaining**. SC6 cap **500, not raised**. EXP-008 execution authorization remains **NO**; A5 remains **DISABLED**; TEST remains **NOT AUTHORIZED**. This document performs **0** Spark executions.
-
-**Status: DRAFT — section 8 remains the operator's to check. Part II recommends, and decides nothing.**
+*Clerical correction, 2026-09-20, authorized by DEC-037 s6(b)/(c). A DUPLICATED second copy of Part II was removed, and the title and closing status line were reconciled with section 8, which the operator had already marked Option A SELECTED (commit c2e980a: "DECIDED (section 8, Option A selected)"). No figure, finding, recommendation or decision content was changed; sections 0-8 are untouched and no historical value was edited. The DECISIONS.md DEC-033 section is authoritative on status and figures (DEC-032 s0).*
