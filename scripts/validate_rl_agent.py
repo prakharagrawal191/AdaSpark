@@ -134,9 +134,114 @@ def _part2() -> int:
             if lib in low]
     check("11 no_deep_rl_libs", not hits, str(hits) or "clean")
 
-    # 12. no EXP-003/005 files and no experiment orchestration
-    exp_files = [p.name for p in (PROJECT / "scripts").glob("*exp00[35]*")]
-    check("12 no_exp003_005", not exp_files, str(exp_files))
+    # 12. no unauthorized future-experiment drivers (DEC-018B exception).
+    #     Original Day-26 invariant (commit 2fef786, 2026-09-12):
+    #         exp_files = scripts.glob("*exp00[35]*"); PASS iff empty.
+    #     That premise was valid on Day-26 because scripts/run_exp005.py
+    #     did not exist anywhere (verified: `git show 2fef786:...` fails)
+    #     and no HEAD decision authorized TEST execution. DEC-018
+    #     Decision B (commit 715a7d3, 2026-09-14, recorded in
+    #     DECISIONS.md) later authorized run_exp005.py -- 7 instances x
+    #     7 arms x 5 reps = 245 TEST executions on EXP-005's own register
+    #     line, outside the SC6 TRAIN cap -- and the driver was committed
+    #     (feb5a16). The bare existence check is therefore stale for
+    #     run_exp005.py only. Surviving invariant (narrower but not
+    #     weaker): run_exp005.py may exist IFF it satisfies the full
+    #     DEC-018B content contract below (filename alone never
+    #     authorizes); every other future driver -- EXP-003 / EXP-005b /
+    #     EXP-006 in any naming form (exp003/exp-003/exp_003,
+    #     exp005/exp-005/exp_005, exp005b/exp-005b/exp_005b,
+    #     exp006/exp-006/exp_006, run/analyze/freeze included) -- remains
+    #     forbidden. Uncommitted worktree decisions grant no authorization.
+    #     Token list is the validator-side DEC-018B contract established
+    #     by the Day-25 repair, copied (not imported) so neither
+    #     validator executes the other: purpose-scoped guard / TEST-only
+    #     boundary / split seal / frozen 7-instance scope / frozen 245-run
+    #     scope / authorization provenance / protocol pin / explicit Spark
+    #     gate / no-fallback path. Ten of the twelve tokens are absent
+    #     from the unauthorized worktree run_exp006.py, so EXP-006 content
+    #     cannot satisfy this contract.
+    _EXP005_CONTRACT_TOKENS = (
+        "exp005_test_guard",
+        "authorize_test_cell",
+        "assert_test_execution_permitted stays sealed",
+        "exp005_instances.json",
+        "len(instances) != 7",
+        "TOTAL_RUNS = 245",
+        "DEC-018",
+        "exp005/v1",
+        "split_guard=guard",
+        "--run requires --allow-spark",
+        "refusing to overwrite",
+        "no retry, no substitution",
+    )
+    _scripts_dir = PROJECT / "scripts"
+    _exp_files = [p.name for p in _scripts_dir.glob("*exp00[356]*")]
+    _exp_files += [p.name for p in _scripts_dir.glob("*exp-00[356]*")]
+    _exp_files += [p.name for p in _scripts_dir.glob("*exp_00[356]*")]
+    _exp_files += [p.name for p in _scripts_dir.glob("*exp005b*")]
+    _exp_files += [p.name for p in _scripts_dir.glob("*exp-005b*")]
+    _exp_files += [p.name for p in _scripts_dir.glob("*exp_005b*")]
+    # DEC-022 contract for the three EXP-006 drivers. They were EXECUTED
+    # (125 queue rows, 105 live Spark, 2026-09-16) while DEC-021/DEC-022
+    # existed only in the working tree, which is why this check was RED and
+    # correctly so: a TRUE POSITIVE, not a stale guard. Those decisions are
+    # now committed. The rule that uncommitted worktree decisions grant no
+    # authorization is UNCHANGED - it is now ENFORCED MECHANICALLY by the
+    # HEAD lookup below instead of asserted in prose, so if DEC-022 ever
+    # leaves the committed ledger these drivers stop being allowlisted.
+    # Filename alone still never authorizes (the DEC-018B rule). Copied,
+    # not imported, so no validator executes another.
+    _ALLOWED_EXP_DRIVERS = ("run_exp005.py", "run_exp006.py",
+                            "freeze_exp006.py", "analyze_exp006.py")
+    _EXP006_CONTRACT_TOKENS = {
+        "run_exp006.py": (
+            "def verify_dec022",
+            "EXP-006 execution authorization = APPROVED",
+            'PROTOCOL_VERSION = "exp006/v1"',
+            "TOTAL_RUNS = 125",
+            "EXECUTABLE_RUNS = 105",
+            "--allow-spark",
+            "DEC-022",
+        ),
+        "freeze_exp006.py": (
+            'PROTOCOL_VERSION = "exp006/v1"',
+            "EXECUTION IS NOT AUTHORIZED BY THIS ARTIFACT",
+            "DEC-021",
+        ),
+        "analyze_exp006.py": (
+            "DEC-019 Option A / DEC-022 scope",
+            "def sha256_canonical",
+        ),
+    }
+    _r22 = subprocess.run(["git", "show", "HEAD:DECISIONS.md"],
+                          cwd=PROJECT, capture_output=True, text=True)
+    _exp006_ok = _r22.returncode == 0 and any(
+        ln.startswith("## DEC-022") for ln in _r22.stdout.splitlines())
+    for _n6, _toks in _EXP006_CONTRACT_TOKENS.items():
+        _p6 = _scripts_dir / _n6
+        if not _p6.exists():
+            continue      # absent is fine; present-but-uncontracted is not
+        try:
+            _s6 = _p6.read_text(encoding="utf-8")
+        except OSError:
+            _s6 = ""
+        _exp006_ok = _exp006_ok and bool(_s6) and all(t in _s6 for t in _toks)
+    _future_files = sorted({f for f in _exp_files
+                            if f not in _ALLOWED_EXP_DRIVERS})
+    if "run_exp005.py" in _exp_files:
+        try:
+            _src5 = (_scripts_dir / "run_exp005.py").read_text(encoding="utf-8")
+        except OSError:
+            _src5 = ""
+        _exp005_ok = bool(_src5) and all(tok in _src5 for tok in _EXP005_CONTRACT_TOKENS)
+    else:
+        _exp005_ok = True
+    check("12 no_exp003_005", not _future_files and _exp005_ok and _exp006_ok,
+          f"run_exp005.py DEC-018B contract={_exp005_ok}; "
+          f"EXP-006 DEC-022 contract (HEAD-committed)={_exp006_ok}; "
+          f"no other EXP-003/005b driver={not _future_files} "
+          f"({_future_files or 'none'})")
     return _part3()
 
 

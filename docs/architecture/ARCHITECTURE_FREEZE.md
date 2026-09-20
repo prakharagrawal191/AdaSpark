@@ -215,3 +215,16 @@ it; DEC-010 records that precedence rule, which was previously undocumented.
 The text above is retained unaltered as the frozen record of what Day 12
 decided. The F-FAIL invariant is unaffected: it constrains the reward's SIGN
 (never positive on failure), not whether the observation trains.
+
+## Superseded on one point — DEC-023 (2026-09-17)
+
+§9's "Ablation A1 = context-only, A2 = full v1.5" is SUPERSEDED by
+**DEC-023**. Under the DEC-010 precedence rule (PLAN governs derived
+Day-12 documents), PLAN §24 ("A2 workload-context removed") and §31 row 36
+("retrain context-only / feedback-only") govern: A1 = context-only
+(state-v1, 15 states), A2 = feedback-only (feedback_bin ∈ {le0, gt0},
+2 states). No "full v1.5" ablation arm exists in EXP-007; the full-state
+main-study policy is the reference condition, not an ablation arm. The §9
+text above is retained unaltered as the frozen record of what Day 12
+decided. Details: DEC-023 in `DECISIONS.md` (methodology frozen; execution
+NOT authorized).

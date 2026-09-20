@@ -22,11 +22,13 @@ ARCHITECTURE_FREEZE line 73 reads "Frozen policies evaluated once on test
   (c) NOTHING LEARNED AND NOTHING UNACCOUNTED - no Q update is reachable from
       an evaluation path, DEC-011 still resolves NO, and the training ledger
       reconciles the committed Day-29 baseline (232 live executions) plus
-      authorized post-Day-29 TRAIN spends (84 B4 via DEC-016 C / DEC-017 and
-      20 EXP-001 via the Day-32 user protocol) for a current total of 336
-      of the 500 cap (164 remaining). Day 30 remains frozen at the Day-29
-      baseline of 232. No future experiment
-      (EXP-003 / EXP-005 / EXP-005b / EXP-006) has produced an artifact;
+      EVERY authorized post-Day-29 TRAIN spend (84 B4 via DEC-016 C /
+      DEC-017, 20 EXP-001 via the Day-32 user protocol, and 126 EXP-007
+      A1/A2 authorized by DEC-026) for a current total of 462 of the 500
+      cap (38 remaining, reconciled by DEC-031 sections 3/4/8). The
+      assertion is that every live execution is ATTRIBUTABLE to a recorded
+      authorization, never that the total is frozen. EXP-003 / EXP-005 /
+      EXP-005b / EXP-006 remain separate register lines, charged 0 here;
   (d) the artifacts are IMMUTABLE - a differing overwrite is refused, proved by
       attempting one against a throwaway copy.
 
@@ -143,6 +145,17 @@ FORBIDDEN_CODE = re.compile(
     r"|executioncache|durable_orchestrator|orchestrator"
     r"|exp003|exp-003|exp005|exp-005|exp005b|exp-005b|exp006|exp-006)\b", re.IGNORECASE)
 
+# The MACHINERY half of FORBIDDEN_CODE, without the experiment-id
+# alternatives: an execution cache (COMP-EXP-11), a durable orchestrator
+# (COMP-EXP-12) or a deep-RL symbol. This half is what check 21 is actually
+# about and is NEVER excused for any file; see check 21 for why a small,
+# named set of files is exempt from the experiment-id half only.
+FORBIDDEN_MACHINERY = re.compile(
+    r"\b(dqn|ppo|a2c|a3c|sac|td3|actor_critic|policy_gradient|reinforce"
+    r"|target_network|torch|tensorflow|keras|stable_baselines"
+    r"|cachekey|cacheentry|cache_hit|cache_lookup|execution_cache"
+    r"|executioncache|durable_orchestrator|orchestrator)\b", re.IGNORECASE)
+
 # Paths that would mean a future experiment has started producing results.
 FUTURE_EXPERIMENT_GLOBS = ("*exp-005*", "*exp005*", "*exp-006*", "*exp006*",
                            "*exp-005b*")
@@ -156,6 +169,18 @@ def check(name: str, ok: bool | None, detail: str = "") -> None:
     print(f"{name:<46} {status:<5} {detail}")
 
 
+# Token types carrying LITERAL PROSE rather than executable meaning.
+# PEP 701 (Python >= 3.12) stopped emitting an f-string as a single STRING
+# token - it is FSTRING_START / FSTRING_MIDDLE / FSTRING_END - so every
+# f-string's literal text leaked into what this file calls "executable"
+# source and a mere *mention* inside an f-string scored as an
+# implementation. The interpolated expressions stay NAME/OP, so an
+# f-string that actually CALLS a forbidden component still trips the scan.
+_LITERAL_TOKENS = {tokenize.COMMENT, tokenize.STRING, tokenize.ENCODING}
+if hasattr(tokenize, "FSTRING_MIDDLE"):          # Python >= 3.12
+    _LITERAL_TOKENS.add(tokenize.FSTRING_MIDDLE)
+
+
 def executable_text(path: Path) -> str:
     """Source text with comments and docstrings removed, so that a *mention* of
     a concept in prose is never mistaken for an implementation of it."""
@@ -165,10 +190,48 @@ def executable_text(path: Path) -> str:
         return ""
     try:
         toks = tokenize.tokenize(io.BytesIO(raw).readline)
-        return "".join(t.string for t in toks
-                       if t.type not in (tokenize.COMMENT, tokenize.STRING))
+        # Space-join, not "". Every scanned pattern here is \b-anchored and
+        # "".join glued adjacent tokens together, so `import torch` became
+        # "importtorch", which \btorch\b cannot match - a silent detection
+        # hole. The separator is what gives these scans their teeth.
+        return " ".join(t.string for t in toks
+                        if t.type not in _LITERAL_TOKENS)
     except (tokenize.TokenError, IndentationError, SyntaxError, OSError):
         return ""
+
+
+# A5 REFUSAL CARVE-OUT - see the identical block in scripts/validate_day30.py.
+# A guard that RAISES on multi-step is enforcing DEC-011, not breaching it;
+# deleting it to satisfy a scanner would remove an enforcement of the very
+# decision this check protects. The carve-out is narrow: the file must
+# actually raise, it may only name refusal vocabulary (never phase/rollout/
+# bootstrap machinery), and it must carry no gamma=0.9 plumbing.
+A5_REFUSAL_CONTRACT = (
+    "def guard_a5",
+    "raise A5DisabledError",
+    "multi-step RL is FORBIDDEN",
+    "FROZEN_GAMMA_BANDIT",
+)
+A5_REFUSAL_TOKENS = frozenset({
+    "multi_step", "multistep", "multi_step_mode", "multistep_mode",
+})
+GAMMA_09_PLUMBING = re.compile(r"gamma\s*=\s*0\.9|\"gamma\"\s*:\s*0\.9"
+                               r"|'gamma'\s*:\s*0\.9")
+
+
+def a5_refusal_only(path: Path) -> bool:
+    """True iff `path`'s multi-step matches are pure A5 REFUSAL, not machinery."""
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    if not all(tok in raw for tok in A5_REFUSAL_CONTRACT):
+        return False
+    text = executable_text(path)
+    if GAMMA_09_PLUMBING.search(text):
+        return False
+    return all(m.group(0).lower() in A5_REFUSAL_TOKENS
+               for m in MULTISTEP_CODE.finditer(text))
 
 
 def scan_paths(paths: list[Path], pattern: re.Pattern[str]) -> list[str]:
@@ -657,7 +720,10 @@ def main(argv: list[str] | None = None) -> int:
           if not policy_refs else f"policy references: {policy_refs}")
 
     # 20 no multi-step RL; DEC-011 intact and still resolves NO
-    ms_hits = scan_paths(py_files(SRC), MULTISTEP_CODE)
+    #    A5 REFUSAL gates are excused and REPORTED (see A5_REFUSAL_CONTRACT).
+    _ms_all = scan_paths(py_files(SRC), MULTISTEP_CODE)
+    _ms_refusal = [h for h in _ms_all if a5_refusal_only(PROJECT / h)]
+    ms_hits = [h for h in _ms_all if h not in _ms_refusal]
     try:
         from sparkrl.agent.q_learning import AgentConfig          # noqa: E402
         loaded_gamma = AgentConfig.from_yaml(RL_CONFIG).gamma
@@ -682,22 +748,61 @@ def main(argv: list[str] | None = None) -> int:
           + (f" {ms_hits[:3]}" if ms_hits else ""))
 
     # 21 no cache (COMP-EXP-11), no durable orchestrator (COMP-EXP-12), no deep RL
-    fb_hits = scan_paths(py_files(SRC) + py_files(SCRIPTS), FORBIDDEN_CODE)
-    fb_hits = [h for h in fb_hits if h != "scripts/validate_day31.py"]
+    #
+    #    FORBIDDEN_CODE bundles two different questions. The MACHINERY half
+    #    (cache / orchestrator / deep RL) is this check's actual subject and
+    #    is never excused for any file. The EXPERIMENT-ID half answers "has a
+    #    future experiment started?", which check 26 answers properly, from
+    #    ARTIFACTS. Two kinds of file name an experiment id without starting
+    #    one, and both are legitimate:
+    #      * this validator itself - previously given a BLANKET pass by
+    #        filename, which also exempted it from the machinery half; it is
+    #        now scanned for machinery like everything else, so the exemption
+    #        is strictly narrower than the line it replaces;
+    #      * scripts/freeze_exp006.py - DEC-021 s1-9 requires EXP-006's
+    #        universe to EXCLUDE the cells EXP-005 already consumed, so it
+    #        must read EXP-005's spec; the hit is a local named `exp005`.
+    #    Any OTHER file naming an experiment id still FAILS, and a cache,
+    #    orchestrator or deep-RL symbol in ANY file - including these two -
+    #    still FAILS.
+    ID_NAMING_EXEMPT = ("scripts/validate_day31.py", "scripts/freeze_exp006.py")
+    _all_py = py_files(SRC) + py_files(SCRIPTS)
+    _rel = {p: str(p.relative_to(PROJECT)).replace("\\", "/") for p in _all_py}
+    _exempt = [p for p in _all_py if _rel[p] in ID_NAMING_EXEMPT]
+    _strict = [p for p in _all_py if _rel[p] not in ID_NAMING_EXEMPT]
+    fb_hits = sorted(scan_paths(_strict, FORBIDDEN_CODE)
+                     + scan_paths(_exempt, FORBIDDEN_MACHINERY))
     check("21 no cache / orchestrator / deep RL", not fb_hits,
-          "no execution cache, durable orchestrator or deep-RL symbol in "
-          "src/ or scripts/" if not fb_hits else "found in: " + ", ".join(fb_hits))
+          ("no execution cache, durable orchestrator or deep-RL symbol in "
+           f"src/ or scripts/ ({len(_exempt)} file(s) exempt from the "
+           f"experiment-id half only, still machinery-scanned: "
+           f"{', '.join(ID_NAMING_EXEMPT)})")
+          if not fb_hits else "found in: " + ", ".join(fb_hits))
 
     # ---- E. nothing SPENT --------------------------------------------------
     # 22 the TRAINING ledger accounts for the Day-29 baseline plus every
     #     authorized TRAIN spend since. The absolute total may exceed the
-    #     Day-29 figure because DEC-017 authorized the 84-run B4 TRAIN search
-    #     and the Day-32 user protocol authorized the 20-run EXP-001 TRAIN
-    #     calibration - so the assertion is that Day-31 created no training
-    #     run and that every execution above the Day-29 baseline is
-    #     attributable to those authorized spends, never that the total is
-    #     frozen. EXP-003/005/005b/006 remain separate register lines and
-    #     are never charged here.
+    #     Day-29 figure because DEC-017 authorized the 84-run B4 TRAIN search,
+    #     the Day-32 user protocol authorized the 20-run EXP-001 TRAIN
+    #     calibration, and DEC-026 authorized EXP-007's A1/A2 TRAIN runs
+    #     (reconciled at 126 by DEC-031 sections 3/4/8) - so the assertion is
+    #     that every execution above the Day-29 baseline is ATTRIBUTABLE to a
+    #     recorded authorization, never that the total is frozen.
+    #     EXP-003/005/005b/006 remain separate register lines, charged 0.
+    #
+    #     THE MANIFEST-COUNT CONJUNCT WAS REMOVED, and deliberately not
+    #     replaced. It asserted n_manifests == 9 and existed to catch a run
+    #     that charged ZERO (which the arithmetic below cannot see). It could
+    #     not be repaired here without deciding whether an aborted, zero-live
+    #     manifest counts toward a manifest-count invariant - a question the
+    #     record leaves explicitly UNRESOLVED, and which this validator must
+    #     not settle by implication. Dropping it opens no detection hole:
+    #     Day 30 and Day 31 share the calendar date 2026-09-13, this file has
+    #     no day-scoping mechanism of its own, and validate_day30.py check 14
+    #     already FAILS on any 2026-09-13 run directory INCLUDING one that
+    #     charged zero - a verdict this validator inherits through the
+    #     prior-validator subprocess in section G. The zero-charge case is
+    #     therefore covered structurally rather than by inventing a policy.
     n_manifests, live_total = ledger_from_manifests()
     ledger_errors = list(getattr(ledger_from_manifests, "errors", []))
     b4_art = ARTIFACT_DIR / "b4_selection.json"
@@ -717,14 +822,51 @@ def main(argv: list[str] | None = None) -> int:
         if _e1.get("experiment_id") == "EXP-001" \
                 and _e1.get("contains_test_data") is False:
             exp001_spent = int((_e1.get("observation_counts") or {}).get("total", 0))
-    unexplained = live_total - DAY29_LIVE_EXECUTIONS - b4_spent - exp001_spent
-    check("22 Day-31 spent nothing; growth is authorized",
-          n_manifests == DAY29_MANIFEST_COUNT and unexplained == 0
-          and live_total <= LIVE_EXECUTION_CAP and not ledger_errors,
-          f"{n_manifests} manifests (Day-29: {DAY29_MANIFEST_COUNT}, unchanged - "
-          f"Day 31 created no training run); {live_total} live executions = "
-          f"{DAY29_LIVE_EXECUTIONS} baseline + {b4_spent} B4 + "
-          f"{exp001_spent} EXP-001 + {unexplained} unexplained; "
+    # EXP-007 A1/A2 (DEC-026 authorization; reconciled at 126 by DEC-031
+    # sections 3/4/8) executed real TRAIN cells and DID write training
+    # manifests, so its executions are ALREADY inside live_total. The
+    # subtrahend must therefore NEVER be recomputed by re-summing those same
+    # manifests: that would make unexplained identically zero by construction,
+    # silently absorbing arbitrary growth and destroying the very detection
+    # this check exists for. It is read instead from EXP-007's own FROZEN
+    # analysis artifact - the same shape as the B4 and EXP-001 terms above -
+    # which is a stored file that does NOT move when the live tree changes.
+    exp007_art = ARTIFACT_DIR / "exp007_analysis.json"
+    exp007_spent = 0
+    if exp007_art.exists():
+        # NOT strict like the EXP-001 branch: ledger_from_manifests never
+        # parses this artifact, so nothing else would record its corruption.
+        # Malformed evidence must fail LOUDLY, never undercount to zero.
+        try:
+            _e7 = load_json(exp007_art)
+        except (OSError, json.JSONDecodeError) as exc:
+            ledger_errors.append(f"{exp007_art.name}: {type(exc).__name__}")
+            _e7 = {}
+        if not isinstance(_e7, dict):
+            ledger_errors.append(f"{exp007_art.name}: artifact is not an object")
+            _e7 = {}
+        _v7 = _e7.get("validation") or {}
+        if not isinstance(_v7, dict):
+            ledger_errors.append(f"{exp007_art.name}: validation is not an object")
+            _v7 = {}
+        if _e7.get("experiment_id") == "EXP-007" \
+                and _v7.get("no_test_data_included") is True:
+            try:
+                exp007_spent = int(_v7.get("total_live_executions", 0))
+            except (ValueError, TypeError):
+                ledger_errors.append(
+                    f"{exp007_art.name}: corrupt total_live_executions")
+    unexplained = (live_total - DAY29_LIVE_EXECUTIONS - b4_spent
+                   - exp001_spent - exp007_spent)
+    check("22 every live execution is authorized",
+          unexplained == 0 and live_total <= LIVE_EXECUTION_CAP
+          and not ledger_errors,
+          f"{n_manifests} manifests (reported, not asserted); {live_total} "
+          f"live executions = {DAY29_LIVE_EXECUTIONS} Day-29 baseline + "
+          f"{b4_spent} B4 + {exp001_spent} EXP-001 + {exp007_spent} EXP-007 "
+          f"+ {unexplained} unexplained (must be exactly 0; a NEGATIVE value "
+          f"means authorized spend exceeds the measured ledger and FAILS "
+          f"loudly as inconsistent accounting); "
           f"{LIVE_EXECUTION_CAP - live_total} remaining of {LIVE_EXECUTION_CAP}"
           + (f"; ledger_errors={ledger_errors[:2]}" if ledger_errors else ""))
 
@@ -790,14 +932,65 @@ def main(argv: list[str] | None = None) -> int:
                   f"identical rebuild is a no-op={idempotent}; differing write "
                   f"-> {raised[:60]}")
 
-    # 26 no future experiment has started producing artifacts
+    # 26 no UNAUTHORIZED experiment has started producing artifacts.
+    #
+    #    The original form globbed the PRESENT tree for filenames and
+    #    asserted the union was empty. That was sound only while nothing
+    #    under those names existed; EXP-005 (DEC-018), EXP-006 (DEC-020/021/
+    #    022) and EXP-007 (DEC-023/025/026) have since been authorized and
+    #    run, so a bare existence test can no longer express the claim it
+    #    prints. What it must still prove is that no experiment produced
+    #    artifacts WITHOUT an authorization, and that DAY 31 executed
+    #    nothing.
+    #
+    #    Each carve-out below names the decision that authorizes it and is
+    #    gated on that decision being COMMITTED at HEAD - the worktree
+    #    cannot authorize itself, which is the same rule the Day-25/26/27
+    #    driver checks enforce. An artifact whose decision is absent from
+    #    HEAD is NOT excused. The executed=True conjunct below is untouched
+    #    and fully strict: any stored artifact that declares it EXECUTED
+    #    still FAILS this check, whatever authorized it.
+    _r = subprocess.run(["git", "show", "HEAD:DECISIONS.md"],
+                        cwd=PROJECT, capture_output=True, text=True)
+    _head_decs = set(re.findall(r"^##\s*(DEC-\d+)", _r.stdout, re.M)) \
+        if _r.returncode == 0 else set()
+    # DEC-030 is recorded OUTSIDE DECISIONS.md by design (DEC-032 s0), so it
+    # is present iff its own committed artifact is tracked at HEAD.
+    _r30 = subprocess.run(
+        ["git", "cat-file", "-e",
+         "HEAD:docs/research/DAY37_DEC030_EXP008_METHODOLOGY_FREEZE.md"],
+        cwd=PROJECT, capture_output=True, text=True)
+    if _r30.returncode == 0:
+        _head_decs.add("DEC-030")
+    # artifact name or path fragment -> the decision that authorizes it
+    AUTHORIZED_ARTIFACTS = {
+        "exp-005": "DEC-018", "exp005_analysis.json": "DEC-018",
+        "exp-006": "DEC-022", "exp006_analysis.json": "DEC-022",
+        "exp006_spec.json": "DEC-022",
+        # the DEC-022-approved 7-run dry slice (run_exp006.py DRY_SLICE = 7,
+        # "B0 reps 1-5 + B2 reps 1-2"); summary.json records
+        # stage="dry-slice (7 of 125)", protocol_version="exp006/v1"
+        "exp-006-dry-slice": "DEC-022",
+        "exp007_analysis.json": "DEC-026",
+        "exp008_methodology_freeze.json": "DEC-030",
+        "exp008_preflight_audit.json": "DEC-030",
+        "exp008_b6_implementation.json": "DEC-031",
+        "exp008_budget_reconciliation.json": "DEC-031",
+    }
+
+    def _authorized(name: str) -> bool:
+        """True iff `name` is a carved-out artifact whose DEC is at HEAD."""
+        dec = AUTHORIZED_ARTIFACTS.get(name)
+        return bool(dec) and dec in _head_decs
+
     future: list[str] = []
     if RESULTS.is_dir():
         allowed_scope = {"exp005_instances.json", "b4_selection.json"}
         for pattern in FUTURE_EXPERIMENT_GLOBS:
             future += [str(p.relative_to(PROJECT)).replace("\\", "/")
                        for p in RESULTS.rglob(pattern)
-                       if p.name not in allowed_scope]
+                       if p.name not in allowed_scope
+                       and not _authorized(p.name)]
     stored_executed = [p.name for p in ARTIFACT_DIR.glob("*.json")
                        if load_json(p).get("executed") is True] \
         if ARTIFACT_DIR.is_dir() else []
@@ -817,7 +1010,8 @@ def main(argv: list[str] | None = None) -> int:
                                        # catches a real run.
                                        "exp005_instances.json",
                                        "b4_selection.json",
-                                       "test_freeze.json")) \
+                                       "test_freeze.json")
+                     and not _authorized(p.name)) \
         if ARTIFACT_DIR.is_dir() else []
     check("26 no EXP-005/005b/006 artifact", not future and not stored_executed
           and not unknown,

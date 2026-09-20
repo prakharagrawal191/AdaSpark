@@ -64,3 +64,10 @@ models/**/*.ckpt
 Thumbs.db
 desktop.ini
 ~$*
+
+# --- Scratch output that has repeatedly landed in the repo root ---
+# Production driver console captures (the scientific record lives in
+# results/experiments/**; these are supplementary stdout/stderr only).
+prod_out.log
+prod_err.log
+tmp_*.json

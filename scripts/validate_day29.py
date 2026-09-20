@@ -321,6 +321,16 @@ def _src_free_of_future_components(tree: Path) -> tuple[bool, str]:
     import io
     import tokenize
 
+    # Token types carrying LITERAL PROSE rather than executable meaning.
+    # PEP 701 (Python >= 3.12) stopped emitting an f-string as one STRING
+    # token - it is FSTRING_START / FSTRING_MIDDLE / FSTRING_END - so the
+    # literal text of every f-string leaked in and a *mention* was scored
+    # as an implementation. The interpolated expressions remain NAME/OP,
+    # so an f-string that actually CALLS a forbidden component still trips.
+    literal_tokens = {tokenize.COMMENT, tokenize.STRING, tokenize.ENCODING}
+    if hasattr(tokenize, "FSTRING_MIDDLE"):      # Python >= 3.12
+        literal_tokens.add(tokenize.FSTRING_MIDDLE)
+
     def executable_text(path: Path) -> str:
         try:
             raw = path.read_bytes()
@@ -330,10 +340,13 @@ def _src_free_of_future_components(tree: Path) -> tuple[bool, str]:
             toks = tokenize.tokenize(io.BytesIO(raw).readline)
             out = []
             for tok in toks:
-                if tok.type in (tokenize.COMMENT, tokenize.STRING):
+                if tok.type in literal_tokens:
                     continue
                 out.append(tok.string)
-            return "".join(out)
+            # Space-join, not "". FORBIDDEN_CODE is \b-anchored and
+            # "".join glued `import torch` into "importtorch", which
+            # \btorch\b cannot match - a silent detection hole.
+            return " ".join(out)
         except (tokenize.TokenError, IndentationError, OSError):
             return ""
 

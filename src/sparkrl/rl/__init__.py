@@ -10,17 +10,32 @@ no exploration schedule, no cache, no policy store. Every module here states
 its frozen source and its deferred responsibilities explicitly.
 """
 from sparkrl.rl.state import (  # noqa: F401
+    ENCODER_SCHEMAS,
     FEEDBACK_BINS,
     FAMILY_TO_CLASS,
     SCHEMA_V1,
     SCHEMA_V15,
+    SCHEMA_V2,
     SIZE_BINS,
     WORKLOAD_CLASSES,
+    FeedbackState,
     StateEncoder,
     StateVector,
 )
 from sparkrl.rl.action import MODE12, MODE4, MODE4_SUBSET, ActionMapper, InvalidAction  # noqa: F401
-from sparkrl.rl.reward import FORMULA_ID, Reward, RewardCalculator, TRefMissing  # noqa: F401
+from sparkrl.rl.reward import (  # noqa: F401
+    FORMULA_A3_R4_LOG_RATIO,
+    FORMULA_A3_TIME_ONLY,
+    FORMULA_ID,
+    IMPLEMENTED_FORMULAS,
+    REGISTERED_FORMULAS,
+    R4_UNRESOLVED_SEMANTICS,
+    TIME_ONLY_WEIGHTS,
+    IncompleteFormulaError,
+    Reward,
+    RewardCalculator,
+    TRefMissing,
+)
 from sparkrl.rl.tref import TRefStore  # noqa: F401
 from sparkrl.rl.env import (  # noqa: F401
     ENV_VERSION,

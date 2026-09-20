@@ -501,13 +501,41 @@ def main() -> int:
           "gradient/replay/target net/torch/tf/keras), no execution cache "
           "(COMP-EXP-11), no orchestrator (COMP-EXP-12)")
 
-    # 18. EXP-003 / EXP-005 / EXP-005b remain unstarted
-    stray = sorted(p.relative_to(PROJECT).as_posix() for p in
-                   list((PROJECT / "scripts").glob("*exp00[35]*"))
-                   + list((PROJECT / "results" / "experiments").glob("*exp-00[35]*"))
-                   + list((PROJECT / "src").rglob("*exp00[35]*")))
+    # 18. EXP-003 / EXP-005 / EXP-005b remain unstarted, EXCEPT where a
+    #     COMMITTED decision authorized them.
+    #
+    #     The original Day-28 invariant was a bare existence glob, valid
+    #     while nothing under those names existed anywhere. DEC-018 Decision
+    #     B later authorized run_exp005.py - 7 instances x 7 arms x 5 reps =
+    #     245 TEST runs on EXP-005's own register line, outside the SC6
+    #     TRAIN cap - and the driver was committed (feb5a16), which produced
+    #     results/experiments/exp-005/. A bare glob cannot express the claim
+    #     it prints once that is true.
+    #
+    #     Surviving invariant, narrower but not weaker: EXP-003 and EXP-005b
+    #     keep a ZERO allowance - any path under those names still FAILS -
+    #     and the EXP-005 carve-out is gated on DEC-018 being COMMITTED at
+    #     HEAD, exactly as the Day-25/26/27 driver checks require. An
+    #     uncommitted worktree decision authorizes nothing here either.
+    _r18 = subprocess.run(["git", "show", "HEAD:DECISIONS.md"],
+                          cwd=PROJECT, capture_output=True, text=True)
+    _dec018_at_head = _r18.returncode == 0 and any(
+        ln.startswith("## DEC-018") for ln in _r18.stdout.splitlines())
+    AUTHORIZED_EXP005_PATHS = {            # literal; never derived from the tree
+        "scripts/run_exp005.py",
+        "results/experiments/exp-005",
+    }
+    hits = sorted(p.relative_to(PROJECT).as_posix() for p in
+                  list((PROJECT / "scripts").glob("*exp00[35]*"))
+                  + list((PROJECT / "results" / "experiments").glob("*exp-00[35]*"))
+                  + list((PROJECT / "src").rglob("*exp00[35]*")))
+    stray = [h for h in hits
+             if not (_dec018_at_head and h in AUTHORIZED_EXP005_PATHS)]
+    _excused = [h for h in hits if h not in stray]
     check("18 no_exp003_005", not stray, str(stray) or
-          "no EXP-003 / EXP-005 / EXP-005b script or artifact exists")
+          ("no EXP-003 / EXP-005b script or artifact exists; "
+           f"DEC-018-authorized EXP-005 paths excused (DEC-018 at HEAD="
+           f"{_dec018_at_head}): {_excused or 'none'}"))
 
     # 19. the run's recorded contracts match the CODE as it stands today
     drift = {k: (got_v, want_v) for k, got_v, want_v in (

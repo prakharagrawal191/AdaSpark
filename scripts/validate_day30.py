@@ -17,7 +17,9 @@ things and nothing else:
       0.0, the frozen hyperparameter block is untouched, no multi-step
       machinery exists anywhere in src/ (no phase-aware state schema, no
       non-terminal transition, no gamma=0.9 plumbing, no 3-phase rollout),
-      the execution ledger is bit-identical to the committed Day-29 figure,
+      Day 30 itself introduced no live executions (the committed Day-29
+      figure is cited as provenance, not re-asserted as a permanent
+      equality - see check 14),
       and the Day-29 M8 artifact still records its FAILED verdict.
 
 A Day 30 that DECIDED the gate must not also have IMPLEMENTED the thing it
@@ -89,8 +91,19 @@ FROZEN_STATE_SCHEMAS = ("state-v1", "state-v1.5")
 # The committed Day-29 ledger (HEAD 4bcc01b): 9 manifests of record,
 # 15 smoke (5 x 3) + 217 training (42 + 84 + 49 + 42) = 232 live executions.
 # Day 30 must move NEITHER number.
+#
+# HISTORICAL CITATION, NOT A LIVE-TREE TARGET. These two numbers are the
+# DEC-011 section 7 Day-29 ledger of record, signed 2026-09-13, and they are
+# kept verbatim as provenance. They are NOT a claim that the tree must stay
+# at 9/232 forever: DEC-011 section 7 recorded "268 remaining" and left that
+# headroom to Days 31-37, and authorized work has since legitimately used
+# part of it. Check 14 therefore cites them and scopes its assertion to DAY
+# 30's OWN conduct; it does not compare them against today's totals.
 DAY29_MANIFEST_COUNT = 9
 DAY29_LIVE_EXECUTIONS = 232
+# Day 30 (PLAN line 276). Check 16 matches the same day in the directory
+# spelling "20260913"; manifest timestamps are ISO, hence the dashes.
+DAY30_DATE = "2026-09-13"
 
 # Day-29 M8 result of record. Day 30 must not have altered it.
 M8_THRESHOLD = 0.70
@@ -117,6 +130,51 @@ MULTISTEP_CODE = re.compile(
     r"|rollout_phases|phase_rollout|step_within_episode|bootstrap_target)\b",
     re.IGNORECASE)
 
+# A5 REFUSAL CARVE-OUT (DEC-011 / DEC-030 s9).
+#
+# A scanner for multi-step VOCABULARY cannot, by itself, tell an
+# implementation of multi-step RL from the guard that REFUSES it. The A5
+# guard in src/sparkrl/training/exp008.py is the second kind: guard_a5()
+# raises A5DisabledError whenever multi_step is true or gamma != 0.0, so
+# the token appears there precisely because the prohibition is enforced.
+# Deleting that guard to satisfy a scanner would REMOVE an enforcement of
+# DEC-011, which is the opposite of what this check exists to protect.
+#
+# The carve-out is therefore narrow and earns itself, DEC-018B style:
+#   (a) the file must satisfy the refusal contract below - it must actually
+#       RAISE on multi-step, not merely mention it;
+#   (b) every multi-step token it matches must be one a refusal gate may
+#       legitimately name. Machinery vocabulary - phase_t, n_phases,
+#       rollout_phases, bootstrap_target, phase_reward, ... - is NEVER
+#       excused, because no refusal gate needs to name a phase index;
+#   (c) the file must carry no gamma=0.9 plumbing.
+# Remove the raise, add a phase field, or set gamma 0.9, and the file stops
+# qualifying and the check FAILS again.
+A5_REFUSAL_CONTRACT = (
+    "def guard_a5",
+    "raise A5DisabledError",
+    "multi-step RL is FORBIDDEN",
+    "FROZEN_GAMMA_BANDIT",
+)
+A5_REFUSAL_TOKENS = frozenset({
+    "multi_step", "multistep", "multi_step_mode", "multistep_mode",
+})
+
+
+def a5_refusal_only(path: Path) -> bool:
+    """True iff `path`'s multi-step matches are pure A5 REFUSAL, not machinery."""
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    if not all(tok in raw for tok in A5_REFUSAL_CONTRACT):
+        return False
+    text = executable_text(path)
+    if GAMMA_09_PLUMBING.search(text):
+        return False
+    return all(m.group(0).lower() in A5_REFUSAL_TOKENS
+               for m in MULTISTEP_CODE.finditer(text))
+
 # Components explicitly out of scope on Day 30 (same set the Day-29 validator
 # forbids): deep RL, the cache (COMP-EXP-11), the orchestrator (COMP-EXP-12),
 # EXP-003 / EXP-005 / EXP-005b.
@@ -142,6 +200,20 @@ def check(name: str, ok: bool | None, detail: str = "") -> None:
     print(f"{name:<46} {status:<5} {detail}")
 
 
+# Token types that carry LITERAL PROSE rather than executable meaning.
+# PEP 701 (Python >= 3.12) stopped emitting an f-string as a single STRING
+# token: it is now FSTRING_START / FSTRING_MIDDLE / FSTRING_END, so an
+# f-string's literal text leaked into what this file calls "executable"
+# source and a mere *mention* inside an f-string was scored as an
+# implementation. FSTRING_MIDDLE is the literal run between the braces;
+# the interpolated expressions stay NAME/OP tokens, so an f-string that
+# actually CALLS a forbidden component still trips the scan. ENCODING is
+# the tokenizer's 'utf-8' preamble and is not source either.
+_LITERAL_TOKENS = {tokenize.COMMENT, tokenize.STRING, tokenize.ENCODING}
+if hasattr(tokenize, "FSTRING_MIDDLE"):          # Python >= 3.12
+    _LITERAL_TOKENS.add(tokenize.FSTRING_MIDDLE)
+
+
 def executable_text(path: Path) -> str:
     """Source text with comments and docstrings removed, so that a *mention*
     of a concept in prose is never mistaken for an implementation of it."""
@@ -151,8 +223,13 @@ def executable_text(path: Path) -> str:
         return ""
     try:
         toks = tokenize.tokenize(io.BytesIO(raw).readline)
-        return "".join(t.string for t in toks
-                       if t.type not in (tokenize.COMMENT, tokenize.STRING))
+        # Join with a SPACE, not "". Every FORBIDDEN_CODE alternative is
+        # \b-anchored, and "".join glues adjacent tokens together, so
+        # `import torch` became "importtorch" where \btorch\b cannot match -
+        # a silent detection hole on every interpreter. The separator is
+        # what gives this scan its teeth.
+        return " ".join(t.string for t in toks
+                        if t.type not in _LITERAL_TOKENS)
     except (tokenize.TokenError, IndentationError, SyntaxError, OSError):
         return ""
 
@@ -233,6 +310,52 @@ def ledger_from_manifests() -> tuple[int, int]:
             continue
         total += int((data.get("budget") or {}).get("live_executions", 0))
     return len(manifests), total
+
+
+def day30_execution_evidence() -> tuple[list[str], int, list[str]]:
+    """Runs ATTRIBUTABLE TO DAY 30, their live executions, and errors.
+
+    Attribution is by the manifest's OWN recorded timestamps, which are the
+    authoritative evidence of when a run happened. Check 16 scopes the same
+    day by DIRECTORY NAME (``20260913``); the two are complementary, not
+    duplicates: check 16 proves no Day-30 run directory exists, this proves
+    no Day-30 run CONSUMED anything. They genuinely come apart - a run
+    directory can exist while charging zero (the aborted 2026-09-16 smoke
+    row is exactly that shape), and a run started before midnight can
+    execute into the following day under an earlier directory name.
+
+    Malformed ledger data is a validation FAILURE, never a silent skip:
+    an unreadable manifest or a non-numeric count is returned in ``errors``
+    so check 14 FAILS loudly instead of undercounting to zero. An
+    unreadable manifest cannot be shown NOT to be a Day-30 manifest, so it
+    is an error regardless of which day it belongs to.
+
+    This function decides nothing about whether a zero-live manifest counts
+    toward any manifest-count policy; that question is recorded as
+    UNRESOLVED and no rule for it is invented here.
+    """
+    runs: list[str] = []
+    live = 0
+    errors: list[str] = []
+    for path in sorted(TRAINING_ROOT.rglob("manifest.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{path.parent.name}: {type(exc).__name__}")
+            continue
+        if not isinstance(data, dict):
+            errors.append(f"{path.parent.name}: manifest is not an object")
+            continue
+        stamps = [str(data.get(k) or "")
+                  for k in ("started_utc", "finished_utc")]
+        if not any(s.startswith(DAY30_DATE) for s in stamps):
+            continue
+        runs.append(path.parent.name)
+        try:
+            live += int((data.get("budget") or {}).get("live_executions", 0))
+        except (ValueError, TypeError):
+            errors.append(f"{path.parent.name}: corrupt live_executions")
+    return runs, live, errors
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -353,11 +476,18 @@ def main(argv: list[str] | None = None) -> int:
           else "found in: " + ", ".join(hits))
 
     # 09 no multi-step implementation anywhere in src/
-    ms_hits = scan_tree(SRC, MULTISTEP_CODE)
+    #    A5 REFUSAL gates are excused (see A5_REFUSAL_CONTRACT): a file that
+    #    RAISES on multi-step is enforcing DEC-011, not breaching it. The
+    #    excused files are REPORTED so the carve-out is never silent.
+    ms_all = scan_tree(SRC, MULTISTEP_CODE)
+    ms_refusal = [h for h in ms_all if a5_refusal_only(PROJECT / h)]
+    ms_hits = [h for h in ms_all if h not in ms_refusal]
+    _refusal_note = (f" ({len(ms_refusal)} A5 refusal gate(s) excused: "
+                     f"{', '.join(ms_refusal)})" if ms_refusal else "")
     check("09 no multi-step implementation in src", not ms_hits,
-          "no phase-aware encoder / phase reward / multi-step rollout "
-          "in executable source" if not ms_hits
-          else "found in: " + ", ".join(ms_hits))
+          ("no phase-aware encoder / phase reward / multi-step rollout "
+           "in executable source" + _refusal_note) if not ms_hits
+          else "found in: " + ", ".join(ms_hits) + _refusal_note)
 
     # 10 state schema still the frozen pair - no phase field
     from sparkrl.rl.state import (SUPPORTED_SCHEMAS,  # noqa: E402
@@ -395,16 +525,40 @@ def main(argv: list[str] | None = None) -> int:
           else "found in: " + ", ".join(fb_hits))
 
     # ---- C. nothing was SPENT --------------------------------------------
-    # 14 execution ledger identical to the committed Day-29 figure
+    # 14 Day 30 itself introduced no live executions.
+    #
+    # Originally this asserted n_manifests == 9 and live_total == 232 against
+    # a freshly re-derived live tree. That was correct while Day 30 was the
+    # working day, but it is a CURRENT-STATE equality, and authorized later
+    # work legitimately moved both numbers (B4 +84 under DEC-016 C / DEC-017,
+    # EXP-001 +20, EXP-007 +126 under DEC-026; canonical ledger 462 of 500 per
+    # DEC-031, plus one 2026-09-16 aborted smoke directory charging zero). The
+    # old form had become SATURATED: it failed at 358 live and would fail
+    # identically at 359, so its verdict could no longer distinguish
+    # authorized growth from an unauthorized run - it detected nothing.
+    #
+    # The question this check exists to answer is the section header above:
+    # did DAY 30 spend anything? It is now scoped to Day 30's own conduct,
+    # the same way check 16 scopes run directories, and attributes runs by
+    # the manifests' own timestamps. Check 16 proves no Day-30 run DIRECTORY
+    # exists; this proves no Day-30 run CONSUMED anything - a directory can
+    # exist while charging zero, so neither check subsumes the other.
+    # 9/232 remain as the DEC-011 section 7 citation and are REPORTED beside
+    # the current totals, never compared against them.
+    day30_runs, day30_live, ledger_errors = day30_execution_evidence()
     n_manifests, live_total = ledger_from_manifests()
-    check("14 ledger unchanged by Day 30",
-          n_manifests == DAY29_MANIFEST_COUNT
-          and live_total == DAY29_LIVE_EXECUTIONS,
-          f"{n_manifests} manifests (Day-29: {DAY29_MANIFEST_COUNT}), "
-          f"{live_total} live executions (Day-29: {DAY29_LIVE_EXECUTIONS}), "
-          f"{LIVE_EXECUTION_CAP - live_total} remaining of "
-          f"{LIVE_EXECUTION_CAP} - REPORTED not enforced (COMP-EXP-11 "
-          f"deferred)")
+    check("14 Day 30 spent nothing (Day-29 figure cited)",
+          not day30_runs and day30_live == 0 and not ledger_errors,
+          f"Day-30 manifests: {len(day30_runs)}, Day-30 live executions: "
+          f"{day30_live}; Day-29 citation (DEC-011 s7): "
+          f"{DAY29_MANIFEST_COUNT} manifests / {DAY29_LIVE_EXECUTIONS} live; "
+          f"current tree: {n_manifests} manifests / {live_total} "
+          f"manifest-derived live ({LIVE_EXECUTION_CAP - live_total} of "
+          f"{LIVE_EXECUTION_CAP} unspent on that basis; this validator counts "
+          f"manifests ONLY, so it is NOT the canonical SC6 charge) - REPORTED "
+          f"not enforced (COMP-EXP-11 deferred)"
+          + (f"; Day-30 runs: {', '.join(day30_runs)}" if day30_runs else "")
+          + (f"; ledger_errors={ledger_errors[:2]}" if ledger_errors else ""))
 
     # 15 no tracked file modified - Day 30 creates NEW files only
     changed, why = git_modified_tracked()

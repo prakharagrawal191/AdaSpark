@@ -37,7 +37,7 @@ from typing import Any, Iterable, Mapping
 import yaml
 
 from sparkrl.rl.action import MODE12, MODE4_SUBSET, ActionMapper
-from sparkrl.rl.state import SCHEMA_V15, StateVector
+from sparkrl.rl.state import SCHEMA_V15, FeedbackState, StateVector
 
 PROJECT = Path(__file__).resolve().parents[3]
 DEFAULT_RL_YAML = PROJECT / "configs" / "rl.yaml"
@@ -106,12 +106,18 @@ class AgentConfig:
 
 @dataclass(frozen=True)
 class Transition:
-    """One learner-consumed transition (from SparkTuningEnv.step())."""
+    """One learner-consumed transition (from SparkTuningEnv.step()).
 
-    state: StateVector
+    ``state``/``next_state`` are a context ``StateVector`` (v1/v1.5) or, for
+    the EXP-007 A2 ablation (DEC-023 section 3), a feedback-only
+    ``FeedbackState``. Both carry a stable ``key()`` identity; the learner is
+    state-schema agnostic.
+    """
+
+    state: StateVector | FeedbackState
     action: int
     reward: float
-    next_state: StateVector | None
+    next_state: StateVector | FeedbackState | None
     terminated: bool
     info: Mapping[str, Any] = field(default_factory=dict)
 
@@ -207,8 +213,10 @@ class QLearningAgent:
         and raises ``InvalidTransition`` (COMP-RL-10 failure rule).
         """
         s, a, r = transition.state, transition.action, transition.reward
-        if not isinstance(s, StateVector):
-            raise InvalidTransition(f"state must be a StateVector, got {type(s)!r}")
+        if not isinstance(s, (StateVector, FeedbackState)):
+            raise InvalidTransition(
+                f"state must be a StateVector (v1/v1.5) or an A2 "
+                f"FeedbackState (state-v2), got {type(s)!r}")
         if isinstance(a, bool) or not isinstance(a, int) or not 0 <= a < self._n_actions:
             raise InvalidTransition(f"action {a!r} outside the frozen 12-action grid")
         if isinstance(r, bool) or not isinstance(r, (int, float)) \
@@ -217,8 +225,9 @@ class QLearningAgent:
         if not isinstance(transition.terminated, bool):
             raise InvalidTransition("terminated must be bool")
         ns = transition.next_state
-        if ns is not None and not isinstance(ns, StateVector):
-            raise InvalidTransition(f"next_state must be StateVector or None")
+        if ns is not None and not isinstance(ns, (StateVector, FeedbackState)):
+            raise InvalidTransition(
+                "next_state must be StateVector/FeedbackState or None")
 
         row = self._row(s)
         old_q = float(row[a])

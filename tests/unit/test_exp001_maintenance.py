@@ -148,9 +148,15 @@ def test_exp003_or_exp005_are_never_charged_to_sc6():
     for token in ("exp-003", "exp003", "exp-005", "exp005", "exp005b",
                   "exp-006", "exp006"):
         assert token not in fn_src  # separate register lines, never SC6
-    # REAL production function on the frozen repo tree: 336/164.
+    # REAL production function on the live repo tree: 462/38.
+    # DEC-031 (sections 3-4, 8) SUPERSEDED the pre-EXP-007 ledger 336/164:
+    # EXP-007's 126 authorized live TRAIN executions took 232 + 84 + 20 = 336
+    # to 232 + 84 + 20 + 126 = 462, leaving 500 - 462 = 38. Only the expected
+    # constants moved; the pin itself is unweakened, so an unauthorized
+    # execution still breaks it. The fixture-tree assertions above stay at 336
+    # because they are hermetic arithmetic, not a reading of this repository.
     live = _load_day31().ledger_from_manifests()[1]
-    assert live == 336 and CAP - live == 164
+    assert live == 462 and CAP - live == 38
 
 
 def test_malformed_ledger_data_fails_loudly(monkeypatch, tmp_path):

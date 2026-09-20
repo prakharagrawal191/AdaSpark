@@ -33,7 +33,8 @@ import yaml
 from sparkrl.agent.policy_store import (POLICY_SCHEMA, PolicyCorrupt,
                                         PolicyExistsError,
                                         build_policy_artifact, save_policy)
-from sparkrl.agent.q0 import build_q0_from_exp002
+from sparkrl.agent.q0 import (build_neutral_q0, build_q0_from_exp002,
+                              neutral_state_schema)
 from sparkrl.agent.q_learning import (AGENT_VERSION, DEFAULT_RL_YAML,
                                       InvalidTransition, QLearningAgent,
                                       RLConfigError, Transition, state_key_of)
@@ -43,8 +44,11 @@ from sparkrl.experiments.spec import (TEST_SEEDS, TRAIN, TRAIN_FAMILIES,
                                       split_of)
 from sparkrl.rl.env import (BudgetExhausted, EpisodeDone, SparkTuningEnv,
                             SplitViolation, TRefMissing)
+from sparkrl.rl.state import SCHEMA_V15
 from sparkrl.rl.tref import DEFAULT_GATE_PATH, TRefStore
 from sparkrl.spark.config import SparkConfig
+from sparkrl.training.ablation import (ABLATION_EPISODES_PER_SEED,
+                                       ABLATION_SEEDS, ABLATION_VARIANTS)
 
 PROJECT = Path(__file__).resolve().parents[3]
 
@@ -230,6 +234,8 @@ class TrainingPlan:
     run_dir: Path
     policy_dir: Path
     t_ref_source: str
+    variant: str | None = None     # EXP-007 A1/A2 (DEC-023); None = main study
+    state_schema: str = SCHEMA_V15  # env encoder schema for this run
 
     def to_dict(self) -> dict[str, Any]:
         """The --dry-run payload (printed verbatim; no run directory touched)."""
@@ -239,6 +245,8 @@ class TrainingPlan:
             "run_kind": self.run_kind,
             "agent_rng_seed": self.agent_rng_seed,
             "dataset_seed": self.dataset_seed,
+            "exp007_variant": self.variant,
+            "state_schema": self.state_schema,
             "seed_semantics": SEED_SEMANTICS,
             "schedule": {
                 "cells": [{"cell": c.key(), "t_ref_s": c.t_ref_s}
@@ -450,8 +458,19 @@ def build_plan(*, agent_rng_seed: int, episodes: int,
                tref_store: TRefStore | None = None,
                policy_dir: str | Path | None = None,
                run_root: str | Path | None = None,
-               now_utc: str | None = None) -> TrainingPlan:
-    """All pre-flight happens here, BEFORE any Spark session exists."""
+               now_utc: str | None = None,
+               variant: str | None = None) -> TrainingPlan:
+    """All pre-flight happens here, BEFORE any Spark session exists.
+
+    ``variant`` (EXP-007, DEC-023 as amended by DEC-025): ``"A1"`` / ``"A2"``
+    selects the frozen ablation arm. A variant plan enforces the amended
+    scope: agent seeds {0, 1} only (seed 2 is NOT used), at most 35 planned
+    episodes per seed (5 complete epochs x 7 TRAIN cells, 35 = 5 x 7), and a
+    run budget defaulting to exactly the planned episode count so a variant
+    run can never execute beyond its plan.
+    The TRAIN cell set, split guards, T_ref gating and dataset seed 0 are the
+    SAME machinery as the main study (control parity).
+    """
     cfg = config if config is not None else TrainingConfig.from_yaml()
     if run_kind not in (KIND_TRAINING, KIND_SMOKE):
         raise TrainingPlanError(
@@ -469,18 +488,41 @@ def build_plan(*, agent_rng_seed: int, episodes: int,
     if int(episodes) < 1:
         raise TrainingPlanError(f"episodes must be >= 1, got {episodes}")
 
+    # EXP-007 ablation scope (DEC-023 sections 6-8), BEFORE anything is built.
+    if variant is not None:
+        if variant not in ABLATION_VARIANTS:
+            raise TrainingPlanError(
+                f"unknown EXP-007 ablation variant {variant!r}; DEC-023 "
+                f"freezes exactly {list(ABLATION_VARIANTS)} and no third arm")
+        if int(agent_rng_seed) not in ABLATION_SEEDS:
+            raise TrainingPlanError(
+                f"EXP-007 variant {variant} accepts agent_rng_seed in "
+                f"{list(ABLATION_SEEDS)} only (DEC-023 section 7); seed "
+                f"{agent_rng_seed} is NOT used and must not leak from the "
+                f"main study into the ablation")
+        if int(episodes) > ABLATION_EPISODES_PER_SEED:
+            raise BudgetPlanError(
+                f"EXP-007 variant {variant} plans at most "
+                f"{ABLATION_EPISODES_PER_SEED} episodes per seed "
+                f"(DEC-023 section 6 as amended by DEC-025 sections 3-4: "
+                f"5 complete epochs x 7 TRAIN cells, 35 = 5 x 7); "
+                f"got {episodes}")
+
     store = tref_store if tref_store is not None else TRefStore()
     cells = trainable_cells(store, dataset_seed=int(dataset_seed),
                             cell_keys=cell_keys)
     excluded = _excluded_cells(store, int(dataset_seed), cells)
 
     cap = cfg.live_execution_cap
-    if run_kind == KIND_SMOKE:
+    if run_kind == KIND_SMOKE or variant is not None:
         # Smoke plans default their budget to exactly the planned episode
         # count, and may only LOWER it; the frozen cap binds both branches
         # (CONFIRMED fix 8 - the smoke branch used to ignore the cap and
         # the caller's budget_limit entirely, so --episodes 600 on a smoke
-        # plan authorized 600 live executions through the env).
+        # plan authorized 600 live executions through the env). An EXP-007
+        # variant plan uses the SAME discipline (DEC-023 section 8): its
+        # budget defaults to the planned episode count, so a variant run can
+        # never execute beyond its own plan (planned max 35 per seed).
         limit = int(episodes) if budget_limit is None else int(budget_limit)
     else:
         limit = cap if budget_limit is None else int(budget_limit)
@@ -515,7 +557,10 @@ def build_plan(*, agent_rng_seed: int, episodes: int,
         dataset_seed=int(dataset_seed), cells=cells, excluded=excluded,
         episodes=plan_episodes(cells, int(episodes)),
         episodes_per_epoch=len(cells), budget_limit=limit, run_dir=run_dir,
-        policy_dir=pdir, t_ref_source=store.source)
+        policy_dir=pdir, t_ref_source=store.source,
+        variant=variant,
+        state_schema=(neutral_state_schema(variant) if variant is not None
+                      else SCHEMA_V15))
 
 
 # --- greedy snapshot (side-effect free) ----------------------------------------
@@ -556,10 +601,22 @@ def _greedy_action(agent: QLearningAgent, state: Any) -> int:
 def build_env_and_agent(plan: TrainingPlan, base_config: SparkConfig, *,
                         sysmon_enabled: bool = True,
                         ) -> tuple[SparkTuningEnv, QLearningAgent, dict[str, Any]]:
-    """Offline Q0 -> agent; plan -> env. No Spark session is created here."""
-    q0 = build_q0_from_exp002()
+    """Offline Q0 -> agent; plan -> env. No Spark session is created here.
+
+    EXP-007 (DEC-023 sections 2-4): a variant plan selects its frozen state
+    encoder (A1 = state-v1, A2 = state-v2 feedback-only) and the NEUTRAL Q0
+    (q0_default = 0.5 for every valid state x action). The main-study path
+    (variant None) is UNCHANGED: full v1.5 states and the EXP-002-derived Q0.
+    The learner, epsilon schedule, reward, T_ref and budget machinery are
+    identical for all three conditions (control parity).
+    """
+    if plan.variant is not None:
+        q0 = build_neutral_q0(plan.variant)
+    else:
+        q0 = build_q0_from_exp002()
     agent = QLearningAgent(q_table=q0.q_table, rng_seed=plan.agent_rng_seed)
     env = SparkTuningEnv(base_config,
+                         state_schema=plan.state_schema,
                          result_root=plan.run_dir / "transitions",
                          budget_limit=plan.budget_limit,
                          sysmon_enabled=sysmon_enabled)
@@ -687,6 +744,8 @@ def run_training(plan: TrainingPlan, *, env: Any, agent: QLearningAgent,
             "run_id": plan.run_id, "run_kind": plan.run_kind,
             "status": status, "stop_reason": stop_reason, "exit_code": exit_code,
             "started_utc": started, "finished_utc": finished,
+            "exp007_variant": plan.variant,
+            "state_schema": plan.state_schema,
             "code_version": _code_version(),
             "agent_rng_seed": plan.agent_rng_seed,
             "dataset_seed": plan.dataset_seed,

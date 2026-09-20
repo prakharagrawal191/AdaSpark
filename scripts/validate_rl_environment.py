@@ -35,6 +35,135 @@ def check(name: str, ok: bool | None, detail: str = "") -> None:
     print(f"{name:<28} {status:<5} {detail}")
 
 
+# HEAD-authorized experiment drivers (check 12 allowlist + contracts).
+#
+# run_exp001.py: DEC-018 Decision E, TRAIN-only B0 noise calibration.
+# run_exp005.py: DEC-018 Decision B, frozen 245-TEST protocol on EXP-005's
+#     own register line (7 instances x 7 arms x 5 reps, outside the SC6
+#     TRAIN cap).
+# run_exp006.py / freeze_exp006.py / analyze_exp006.py: DEC-020 s.B/D,
+#     DEC-021 and DEC-022. These were EXECUTED (125 queue rows, 105 live
+#     Spark, 2026-09-16) while DEC-021/DEC-022 existed only in the working
+#     tree, which is exactly why this check was RED and correctly so - it
+#     was a true positive, not a stale guard. The decisions are now
+#     committed, so the allowlist may admit the drivers; the rule that
+#     uncommitted worktree decisions are NOT HEAD authorization is
+#     UNCHANGED and is now ENFORCED mechanically by _dec022_at_head()
+#     below rather than asserted in a comment.
+# Anything else matching the future-driver globs (EXP-003 / EXP-005b, or
+#     any EXP-006-shaped filename that fails its contract) stays forbidden.
+ALLOWED_EXP_DRIVERS = ("run_exp001.py", "run_exp005.py",
+                       "run_exp006.py", "freeze_exp006.py",
+                       "analyze_exp006.py")
+
+EXP001_CONTRACT_TOKENS = (
+    "assert_b0_unchanged", "b0_point", "split_of",
+    "execute_run(spec, base)",
+    "no-retry", "refusing to overwrite", "split != TRAIN",
+)
+
+# Validator-side DEC-018B contract for run_exp005.py. Each token is
+# repository evidence of one authorized property; only the conjunction
+# admits the driver, so filename alone never authorizes:
+#   purpose-scoped experiment guard / TEST-only boundary / split seal /
+#   frozen 7-instance scope / frozen 245-run scope / authorization
+#   provenance / protocol pin / explicit Spark gate / no-fallback path.
+# Every token below is present in the HEAD-authorized driver, while ten
+# of the twelve are absent from the unauthorized worktree EXP-006
+# driver, so EXP-006 content cannot satisfy this contract.
+EXP005_CONTRACT_TOKENS = (
+    "exp005_test_guard",
+    "authorize_test_cell",
+    "assert_test_execution_permitted stays sealed",
+    "exp005_instances.json",
+    "len(instances) != 7",
+    "TOTAL_RUNS = 245",
+    "DEC-018",
+    "exp005/v1",
+    "split_guard=guard",
+    "--run requires --allow-spark",
+    "refusing to overwrite",
+    "no retry, no substitution",
+)
+
+
+# Validator-side DEC-022 contract for the three EXP-006 drivers. Same rule
+# as DEC-018B: filename alone never authorizes. Each token is repository
+# evidence of one authorized property, and only the conjunction admits the
+# file - so a driver stripped of its authorization gate, its frozen scope
+# or its Spark gate fails immediately, and an EXP-006-SHAPED file that is
+# not these drivers cannot pass by being named to look like them.
+EXP006_CONTRACT_TOKENS = {
+    "run_exp006.py": (
+        "def verify_dec022",                          # independent authz gate
+        "EXP-006 execution authorization = APPROVED",  # the exact DEC-022 sentence it greps
+        'PROTOCOL_VERSION = "exp006/v1"',              # protocol pin
+        "TOTAL_RUNS = 125",                            # frozen queue scope
+        "EXECUTABLE_RUNS = 105",                       # frozen executable scope
+        "--allow-spark",                               # explicit Spark gate
+        "DEC-022",                                     # authorization provenance
+    ),
+    "freeze_exp006.py": (
+        'PROTOCOL_VERSION = "exp006/v1"',
+        "EXECUTION IS NOT AUTHORIZED BY THIS ARTIFACT",  # freeze != authorization
+        "DEC-021",
+    ),
+    "analyze_exp006.py": (
+        "DEC-019 Option A / DEC-022 scope",            # undefined-cell semantics
+        "def sha256_canonical",                        # fingerprint-verifying analyser
+    ),
+}
+
+
+def _dec022_at_head() -> bool:
+    """True iff DEC-022 exists in the COMMITTED ledger at HEAD.
+
+    This is the mechanical form of the rule the comments have always
+    stated: uncommitted worktree decisions grant no authorization. The
+    EXP-006 carve-out is bound to it, so if the decision is ever absent
+    from HEAD - rewritten history, a fresh clone, a reverted commit - the
+    drivers stop being allowlisted and check 12 FAILS again. The gate is
+    an INDEPENDENT source: it reads git's committed object store, never
+    the worktree files the carve-out is about.
+    """
+    try:
+        r = subprocess.run(["git", "show", "HEAD:DECISIONS.md"],
+                           cwd=PROJECT, capture_output=True, text=True)
+    except OSError:
+        return False
+    return r.returncode == 0 and bool(re.search(r"^##\s*DEC-022\b",
+                                                r.stdout, re.M))
+
+
+def _exp_driver_contracts(scripts_dir: Path) -> tuple[bool, bool, bool]:
+    """Positive contracts for the HEAD-authorized drivers. Source read only.
+
+    Returns (exp001_ok, exp005_ok, exp006_ok); executes nothing, starts no
+    Spark. exp006_ok additionally requires DEC-022 to be committed at HEAD.
+    """
+    try:
+        src1 = (scripts_dir / "run_exp001.py").read_text(encoding="utf-8")
+    except OSError:
+        src1 = ""
+    try:
+        src5 = (scripts_dir / "run_exp005.py").read_text(encoding="utf-8")
+    except OSError:
+        src5 = ""
+    exp001_ok = bool(src1) and all(tok in src1 for tok in EXP001_CONTRACT_TOKENS)
+    exp005_ok = bool(src5) and all(tok in src5 for tok in EXP005_CONTRACT_TOKENS)
+    exp006_ok = _dec022_at_head()
+    for name, tokens in EXP006_CONTRACT_TOKENS.items():
+        path = scripts_dir / name
+        if not path.exists():
+            continue          # absent is fine; present-but-uncontracted is not
+        try:
+            src6 = path.read_text(encoding="utf-8")
+        except OSError:
+            src6 = ""
+        exp006_ok = exp006_ok and bool(src6) and all(t in src6 for t in tokens)
+    return exp001_ok, exp005_ok, exp006_ok
+
+
 def main() -> int:
     # 1. modules import + class exists
     try:
@@ -118,42 +247,35 @@ def _part2() -> int:
                 hits.append(f"{f.name}:{i}: {line.strip()[:90]}")
     check("11 no_learning_no_cache", not hits, "; ".join(hits[:3]) or "clean")
 
-    # 12. EXP-001 driver integrity (Day 32: the authorized noise-calibration
-    #     driver). The pre-Day-32 invariant ("no *exp00[135]* script") is STALE:
-    #     EXP-001 was legitimately executed, so the driver's presence is
-    #     EXPECTED. The surviving invariant is narrower but not weaker: the
-    #     driver must be the single authorized TRAIN-only B0 driver, and no
-    #     future-experiment driver may exist - EXP-003, EXP-005, EXP-005b
-    #     or EXP-006, in either naming form (exp003 / exp-003, exp005 /
-    #     exp-005, exp005b / exp-005b, exp006 / exp-006).
-    driver = PROJECT / "scripts" / "run_exp001.py"
-    exp_files = [p.name for p in (PROJECT / "scripts").glob("*exp00[356]*")]
-    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp-00[356]*")]
-    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp_00[356]*")]
-    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp005b*")]
-    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp-005b*")]
-    exp_files += [p.name for p in (PROJECT / "scripts").glob("*exp_005b*")]
-    future_files = sorted({f for f in exp_files if f != "run_exp001.py"})
-    ok = driver.exists() and not future_files
-    if ok:
-        try:
-            src = driver.read_text(encoding="utf-8")
-            # Positive content pins (import-level, not string-literal):
-            # the driver must import the B0 drift guard, the TRAIN-only
-            # split guard (as the execute_run default), the B0 reference
-            # point, and split_of; and must carry the no-retry / no-overwrite
-            # protocol text. Import of assert_train_only is via execute_run's
-            # default split_guard (runner.py), so require the local use of
-            # split_of + the TRAIN defence plus the default-guard call site.
-            ok = all(tok in src for tok in
-                     ("assert_b0_unchanged", "b0_point", "split_of",
-                      "execute_run(spec, base)",
-                      "no-retry", "refusing to overwrite", "split != TRAIN"))
-        except OSError:
-            ok = False
+    # 12. HEAD-authorized experiment-driver allowlist + content contracts.
+    #     The pre-Day-32/33 invariant ("no *exp00[356]* script") is STALE
+    #     twice over: DEC-018 Decision E authorizes run_exp001.py (TRAIN-only
+    #     B0, 20 runs) and Decision B authorizes run_exp005.py (frozen 245
+    #     TEST runs, 7 instances x 7 arms x 5 reps, on EXP-005's own register
+    #     line outside the SC6 TRAIN cap). The surviving invariant is narrower
+    #     but not weaker: run_exp001.py must satisfy its TRAIN/B0/no-retry
+    #     contract, run_exp005.py must satisfy its DEC-018B contract below,
+    #     and no other future-experiment driver may exist - EXP-003, EXP-005b
+    #     or EXP-006 (run/analyze/freeze included), in any naming form
+    #     (exp003 / exp-003 / exp_003, exp005 / exp-005 / exp_005,
+    #     exp005b / exp-005b / exp_005b, exp006 / exp-006 / exp_006).
+    #     Filename alone authorizes nothing; each allowlisted driver must
+    #     satisfy its full content contract. Uncommitted worktree decisions
+    #     grant no authorization and transfer nothing into this allowlist.
+    _scripts_dir = PROJECT / "scripts"
+    exp_files = [p.name for p in _scripts_dir.glob("*exp00[356]*")]
+    exp_files += [p.name for p in _scripts_dir.glob("*exp-00[356]*")]
+    exp_files += [p.name for p in _scripts_dir.glob("*exp_00[356]*")]
+    exp_files += [p.name for p in _scripts_dir.glob("*exp005b*")]
+    exp_files += [p.name for p in _scripts_dir.glob("*exp-005b*")]
+    exp_files += [p.name for p in _scripts_dir.glob("*exp_005b*")]
+    future_files = sorted({f for f in exp_files if f not in ALLOWED_EXP_DRIVERS})
+    exp001_ok, exp005_ok, exp006_ok = _exp_driver_contracts(_scripts_dir)
+    ok = not future_files and exp001_ok and exp005_ok and exp006_ok
     check("12 exp001_driver_authorized", ok,
-          f"run_exp001.py present TRAIN-only B0 no-retry no-overwrite; "
-          f"no EXP-003/005/005b/006 driver={not future_files} ({future_files or 'none'})")
+          f"run_exp001.py contract={exp001_ok}; run_exp005.py DEC-018B contract={exp005_ok}; "
+          f"EXP-006 DEC-022 contract (HEAD-committed)={exp006_ok}; "
+          f"no other EXP-003/005b driver={not future_files} ({future_files or 'none'})")
 
     # 13. agent package holds the Day-26 learner and NOTHING from a future day.
     #     Day 25 asserted this package was EMPTY (COMP-RL-10 was Day 26+). Day 26

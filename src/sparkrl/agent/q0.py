@@ -31,9 +31,12 @@ from typing import Any
 from sparkrl.experiments.runner import load_records
 from sparkrl.experiments.spec import (EXPERIMENT_ID, TRAIN, ExperimentSpec,
                                       split_of)
-from sparkrl.agent.q_learning import AGENT_VERSION, state_key_of
+from sparkrl.agent.q_learning import (AGENT_VERSION, FROZEN_HYPERPARAMS,
+                                      state_key_of)
 from sparkrl.rl.reward import RewardCalculator
-from sparkrl.rl.state import SCHEMA_V15, StateEncoder
+from sparkrl.rl.state import (FEEDBACK_BINS, SCHEMA_V1, SCHEMA_V15, SCHEMA_V2,
+                              SIZE_BINS, WORKLOAD_CLASSES, FeedbackState,
+                              StateEncoder, StateVector)
 from sparkrl.rl.tref import TRefStore
 from sparkrl.workloads.resolver import resolve_dataset
 
@@ -184,4 +187,81 @@ def _assemble(rewards: dict[tuple[str, int], list[float]], n_scanned: int,
         "leakage_guard": "split_of()!=TRAIN -> hard error; none encountered",
     }
     return Q0Result(q_table=q_table_typed, provenance=provenance)
+
+
+# --- EXP-007 A1/A2 neutral Q0 (DEC-023 section 4) -------------------------------
+# Frozen rule: A1/A2 use the frozen default q0_default = 0.5 from
+# configs/rl.yaml for EVERY valid (state, action) pair. The full-state
+# EXP-002 Q0 table (q0-exp002/v1) is NOT collapsed, mapped or projected into
+# A1/A2 keys: no many-to-one mapping, no median pooling across keys, no
+# arbitrary state-to-state mapping, no custom derivation. The main-study Q0
+# behavior above is untouched.
+
+Q0_NEUTRAL_VERSION = "q0-neutral/v1"
+VARIANT_A1 = "A1"
+VARIANT_A2 = "A2"
+ABLATION_VARIANTS = (VARIANT_A1, VARIANT_A2)
+_A2_NOTE = ("DEC-023 section 4: A1/A2 use identical neutral Q0 initialization "
+            "(q0_default for every valid state x action); no EXP-002 Q0 "
+            "projection, no median pooling of Q0 rows, no prior trained "
+            "policy dependency.")
+
+
+def neutral_q0_states(variant: str) -> tuple[StateVector | FeedbackState, ...]:
+    """The exhaustive, deterministic state list for one frozen ablation arm.
+
+    A1 = the frozen 15-state ``state-v1`` space (5 classes x 3 size bins,
+    feedback absent). A2 = the frozen 2-state feedback-only space (le0, gt0).
+    Any other name is a hard error - no third variant exists.
+    """
+    if variant == VARIANT_A1:
+        return tuple(StateVector(workload_class=c, input_size_bin=b,
+                                 schema_version=SCHEMA_V1)
+                     for c in WORKLOAD_CLASSES for b in SIZE_BINS)
+    if variant == VARIANT_A2:
+        return tuple(FeedbackState(feedback_bin=fb) for fb in FEEDBACK_BINS)
+    raise ValueError(
+        f"unknown ablation variant {variant!r}; expected one of "
+        f"{list(ABLATION_VARIANTS)}")
+
+
+def neutral_state_schema(variant: str) -> str:
+    """The state-schema identifier of one frozen ablation arm."""
+    if variant == VARIANT_A1:
+        return SCHEMA_V1
+    if variant == VARIANT_A2:
+        return SCHEMA_V2
+    raise ValueError(
+        f"unknown ablation variant {variant!r}; expected one of "
+        f"{list(ABLATION_VARIANTS)}")
+
+
+def build_neutral_q0(variant: str) -> Q0Result:
+    """Neutral Q0 for EXP-007 A1/A2: q0_default for EVERY (state, action).
+
+    Reads NOTHING from the EXP-002 record store, no EXP-002 gate artifact and
+    no prior trained policy; the value is the frozen ``q0_default`` constant
+    of ``configs/rl.yaml`` / PLAN section 16. Deterministic and reproducible:
+    repeated calls return identical tables.
+    """
+    states = neutral_q0_states(variant)          # validates the variant name
+    value = float(FROZEN_HYPERPARAMS["q0_default"])
+    n_actions = 12                                # frozen action grid
+    q_table: dict[str, list[float]] = {
+        state_key_of(s): [value] * n_actions for s in states}
+    provenance: dict[str, Any] = {
+        "q0_version": Q0_NEUTRAL_VERSION,
+        "learner_version": AGENT_VERSION,
+        "source": "neutral_default",
+        "variant": variant,
+        "state_schema": neutral_state_schema(variant),
+        "q0_default": value,
+        "n_states": len(states),
+        "actions_per_state": n_actions,
+        "pairs_initialized": len(q_table) * n_actions,
+        "aggregation": None,
+        "projection_from_exp002": False,
+        "note": _A2_NOTE,
+    }
+    return Q0Result(q_table=q_table, provenance=provenance)
 

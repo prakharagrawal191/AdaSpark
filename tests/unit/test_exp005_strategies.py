@@ -135,6 +135,24 @@ def test_b2_requires_a_family():
         resolve("B2")
 
 
+def test_b2_is_undefined_on_the_unseen_family_f4_ski_dec019():
+    """PIN the XP-005 specification gap (DEC-019): B2 has no F4_ski config.
+
+    Validation contains only {F1_agg, F2_join, F3_rdd, F5_mixed} and F4_ski is
+    the deliberately unseen TEST family, so the frozen per-family map cannot
+    cover it. The driver must record INCOMPLETE, never fall back or tune.
+    """
+    import json
+    from sparkrl.evaluation.strategies import SELECTION_ARTIFACT
+    art = json.loads(SELECTION_ARTIFACT.read_text(encoding="utf-8"))
+    assert set(art["B2"]["selected_config_by_family"]) == {
+        "F1_agg", "F2_join", "F3_rdd", "F5_mixed"}
+    with pytest.raises(StrategyResolutionError) as exc:
+        resolve("B2", family="F4_ski")
+    assert "no frozen configuration" in str(exc.value)
+    assert "F4_ski" in str(exc.value)
+
+
 def test_b1_b2_are_aqe_off_like_the_main_study():
     assert resolve("B1").config.aqe_enabled is False
     assert resolve("B2", family="F1_agg").config.aqe_enabled is False

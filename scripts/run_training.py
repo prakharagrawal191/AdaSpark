@@ -72,6 +72,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--cells", default=None,
                     help="comma list, e.g. 'F1_agg|small,F2_join|small' "
                          "(default: every calibrated TRAIN cell)")
+    ap.add_argument("--variant", default=None, choices=["A1", "A2"],
+                    help="EXP-007 ablation arm (DEC-023): A1 = state-v1 "
+                         "context-only (15 states), A2 = state-v2 "
+                         "feedback-only (2 states); both use neutral Q0 0.5, "
+                         "agent seeds {0,1} only and at most 35 planned "
+                         "episodes per seed (DEC-023 as amended by "
+                         "DEC-025). Default: main study "
+                         "(full v1.5 states, EXP-002 Q0)")
     ap.add_argument("--budget", type=int, default=None,
                     help="may only LOWER the frozen 500 cap")
     ap.add_argument("--smoke", action="store_true",
@@ -113,13 +121,15 @@ def main(argv: list[str] | None = None) -> int:
         plan = build_plan(agent_rng_seed=args.agent_seed, episodes=episodes,
                           run_kind=run_kind, dataset_seed=args.dataset_seed,
                           cell_keys=cells, budget_limit=budget, config=cfg,
-                          policy_dir=args.policy_dir, run_root=args.run_root)
+                          policy_dir=args.policy_dir, run_root=args.run_root,
+                          variant=args.variant)
     except (TrainingPlanError, RunDirExistsError) as exc:
         print(f"PLAN REFUSED: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
 
     print(f"run kind               : {plan.run_kind}")
     print(f"run id                 : {plan.run_id}")
+    print(f"exp007 variant         : {plan.variant or 'main study (full v1.5 states, EXP-002 Q0)'}")
     print(f"agent_rng_seed         : {plan.agent_rng_seed}  "
           f"(PLAN-16 training seed = EXPLORATION replicate)")
     print(f"dataset_seed           : {plan.dataset_seed}  "

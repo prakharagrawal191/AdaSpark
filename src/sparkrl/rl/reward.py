@@ -26,6 +26,30 @@ number. Behaviour on missing facts is explicit, never fabricated:
   listed in ``missing``.
 
 This module computes; it does NOT optimize, adapt, or store anything.
+
+ADDITIVE EXP-008 SUPPORT (DEC-030 section 3; default-preserving)
+---------------------------------------------------------------
+DEC-030 froze the A3 reward variants. This module now also registers:
+
+* ``R3``              - the frozen primary formula above. UNCHANGED: the
+                        default constructor and the default compute path are
+                        byte/behaviour equivalent to the pre-EXP-008 code.
+* ``A3-time-only``    - ``R = 1.0 * clip((T_ref - T) / T_ref, -1, +1)`` with
+                        failure ``R = -1.0`` exactly. This is a MULTI-TERM
+                        REMOVAL from R3: BOTH the task-imbalance term and the
+                        spill-waste term are removed simultaneously. It is NOT
+                        a one-factor ablation.
+* ``A3-R4-log-ratio`` - REGISTERED ONLY. DEC-030 section 3.3 / section 12
+                        field 15 leaves the complete R4 specification
+                        unresolved (failure rule, coefficients, clipping,
+                        T<=0, T_ref<=0, missing timing, timeout semantics).
+                        R4 therefore CANNOT execute: constructing a
+                        calculator for it raises ``IncompleteFormulaError``
+                        before any computation. R3 behaviour is never
+                        substituted and no clipping is ever applied silently.
+
+Being REGISTERED is deliberately distinct from being IMPLEMENTED: the enum
+existing does not make R4 executable.
 """
 from __future__ import annotations
 
@@ -54,9 +78,59 @@ FROZEN_WEIGHTS: dict[str, float] = {
     "clip_high": 1.0,
 }
 
+# --- EXP-008 A3 variant registry (DEC-030 section 3; additive) ---------------
+# DEC-030 section 3.1 registers exactly three A3 reward variants. No other
+# reward variant exists in registered PLAN intent, and DEC-030 introduces none.
+FORMULA_A3_TIME_ONLY = "A3-time-only"
+FORMULA_A3_R4_LOG_RATIO = "A3-R4-log-ratio"
+
+# Every variant DEC-030 names. Registration is a naming fact only.
+REGISTERED_FORMULAS: tuple[str, ...] = (
+    FORMULA_ID, FORMULA_A3_TIME_ONLY, FORMULA_A3_R4_LOG_RATIO)
+
+# Variants whose complete semantics DEC-030 froze, and which are therefore
+# implemented here. R4 is deliberately absent.
+IMPLEMENTED_FORMULAS: tuple[str, ...] = (FORMULA_ID, FORMULA_A3_TIME_ONLY)
+
+# DEC-030 section 3.2 (table row "Coefficients"): time-only = R3 with the
+# task-imbalance term AND the spill-waste term removed simultaneously.
+# Frozen values, never read from configs/reward.yaml (that file freezes the
+# primary R3 formula only).
+TIME_ONLY_WEIGHTS: dict[str, float] = {
+    "w_time_improvement": 1.0,
+    "w_task_imbalance": 0.0,
+    "w_spill_waste": 0.0,
+    "w_failure": 1.0,
+    "clip_low": -1.0,
+    "clip_high": 1.0,
+}
+
+# DEC-030 section 3.3 / section 12 field 15: the complete R4 specification is
+# UNRESOLVED. Every one of these must be frozen by a separate decision before
+# R4 may compute anything. This module invents none of them.
+R4_UNRESOLVED_SEMANTICS: tuple[str, ...] = (
+    "failure_rule",
+    "coefficients",
+    "clipping",
+    "edge_T_le_0",
+    "edge_T_ref_le_0",
+    "edge_failures_timeouts",
+    "edge_missing_execution_time",
+    "term_structure_vs_time_only",
+)
+
 
 class TRefMissing(RuntimeError):
     """No T_ref for this workload instance (COMP-RL-08: hard error)."""
+
+
+class IncompleteFormulaError(RuntimeError):
+    """A REGISTERED-but-incomplete reward variant was asked to execute.
+
+    DEC-030 left this variant's semantics unresolved, so no computation may
+    occur and no default (R3 behaviour, clipping, failure transformation) may
+    be silently substituted. Raised BEFORE any Spark execution.
+    """
 
 
 @dataclass(frozen=True)
@@ -105,19 +179,49 @@ def load_reward_config(path: str | Path = DEFAULT_REWARD_YAML) -> dict[str, floa
 
 
 class RewardCalculator:
-    """Computes the frozen R3 reward from stored metrics. Stateless."""
+    """Computes one registered reward variant from stored metrics. Stateless.
 
-    def __init__(self, config_path: str | Path = DEFAULT_REWARD_YAML) -> None:
-        self.weights = load_reward_config(config_path)
-        self.formula_id = FORMULA_ID
+    ``formula`` defaults to the frozen primary ``R3``, so every existing
+    caller (environment, training loop, EXP-002 Q0 builder, validators) is
+    behaviourally unchanged. ``A3-time-only`` (DEC-030) selects the frozen
+    multi-term-removal variant. ``A3-R4-log-ratio`` is registered but
+    incomplete and is refused at construction.
+    """
+
+    def __init__(self, config_path: str | Path = DEFAULT_REWARD_YAML, *,
+                 formula: str = FORMULA_ID) -> None:
+        if formula not in REGISTERED_FORMULAS:
+            raise ValueError(
+                f"unknown reward formula {formula!r}; DEC-030 registers "
+                f"{list(REGISTERED_FORMULAS)} and no other variant")
+        if formula == FORMULA_A3_R4_LOG_RATIO:
+            # Fail closed BEFORE any computation or Spark execution. R4 stays
+            # non-executable until a separate decision freezes every one of
+            # these semantics; nothing is defaulted, substituted or clipped.
+            raise IncompleteFormulaError(
+                "reward variant "
+                f"{FORMULA_A3_R4_LOG_RATIO!r} (-ln(T / T_ref)) is REGISTERED "
+                "but NOT executable: DEC-030 leaves its complete specification "
+                "unresolved ("
+                + ", ".join(R4_UNRESOLVED_SEMANTICS)
+                + "). A separate decision must freeze every one of them "
+                  "before any computation; R3 behaviour is never substituted "
+                  "and no clipping is applied silently.")
+        self.formula_id = formula
+        if formula == FORMULA_A3_TIME_ONLY:
+            self.weights = dict(TIME_ONLY_WEIGHTS)
+        else:
+            self.weights = load_reward_config(config_path)
 
     def compute(self, metrics: Mapping[str, Any], t_ref: float | None,
                 input_bytes: int | None, *, failed: bool) -> Reward:
-        """Apply the frozen formula.
+        """Apply the selected frozen formula.
 
         ``metrics`` is a RunMetrics-style mapping (``RunMetrics.to_dict()`` or
         equivalent). ``failed`` covers workload failure AND timeout.
         """
+        if self.formula_id == FORMULA_A3_TIME_ONLY:
+            return self._compute_time_only(metrics, t_ref, failed=failed)
         w = self.weights
         if failed:
             return Reward(value=-1.0 * w["w_failure"], t_ref_s=t_ref, failed=True,
@@ -173,3 +277,48 @@ class RewardCalculator:
             raise ValueError(f"reward is not finite: {terms}")
         return Reward(value=value_f, t_ref_s=t_ref_f, failed=False,
                       terms=terms, missing=tuple(missing))
+
+    # -- A3-time-only (DEC-030 section 3.2) ---------------------------------
+    def _compute_time_only(self, metrics: Mapping[str, Any],
+                           t_ref: float | None, *, failed: bool) -> Reward:
+        """``R = 1.0 * clip((T_ref - T) / T_ref, -1, +1)``; failure ``-1.0``.
+
+        MULTI-TERM REMOVAL: the task-imbalance term AND the spill-waste term
+        are removed from R3 SIMULTANEOUSLY, so this is explicitly NOT a
+        one-factor ablation (DEC-030 section 3.2 classification).
+
+        Consequently ``task_duration_cv`` and ``disk_spill_bytes`` are removed
+        INPUTS, not missing facts: they are never read and therefore never
+        appear in ``Reward.missing``. Everything else is inherited verbatim
+        from frozen R3: the failure rule (including timeout -> failure), the
+        [-1, +1] clipping, the T_ref positive-check and the "a usable run must
+        carry its timing" rule.
+        """
+        w = self.weights
+        if failed:
+            return Reward(value=-1.0 * w["w_failure"],
+                          formula_id=FORMULA_A3_TIME_ONLY, t_ref_s=t_ref,
+                          failed=True, terms={"failure": -w["w_failure"]})
+        if t_ref is None or not isinstance(t_ref, (int, float)) or t_ref <= 0:
+            raise TRefMissing(
+                "T_ref missing or non-positive; reward cannot be normalized "
+                "(COMP-RL-08 hard error)")
+        t_ref_f = float(t_ref)
+        t_exec = metrics.get("execution_time_s")
+        if t_exec is None:
+            # Same rule as R3: a usable run must carry the authoritative
+            # timing; absent timing is unusable, never zero.
+            raise TRefMissing("execution_time_s missing on a run marked usable")
+        t_exec_f = float(t_exec)
+
+        delta = (t_ref_f - t_exec_f) / t_ref_f
+        delta_clipped = max(w["clip_low"], min(w["clip_high"], delta))
+        terms: dict[str, float | None] = {
+            "time_delta": delta,
+            "time_term": w["w_time_improvement"] * delta_clipped,
+        }
+        value_f = float(terms["time_term"])          # type: ignore[arg-type]
+        if not math.isfinite(value_f):
+            raise ValueError(f"reward is not finite: {terms}")
+        return Reward(value=value_f, formula_id=FORMULA_A3_TIME_ONLY,
+                      t_ref_s=t_ref_f, failed=False, terms=terms)
