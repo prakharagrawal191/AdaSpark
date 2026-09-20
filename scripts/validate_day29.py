@@ -156,29 +156,38 @@ def rl_yaml_sha256() -> str:
 
 # The sha256 the three Day-29 runs of record actually recorded, 2026-09-12.
 #
-# It matches NO version of configs/rl.yaml that exists anywhere: the runs
-# executed at code_version "2fef786-dirty", i.e. against a WORKING-TREE
-# rl.yaml that was never committed, and the file was committed in its next
-# form as 6d85481. Verified exhaustively - the recorded digest equals
-# neither 2fef786 nor 6d85481 nor HEAD, under LF or CRLF normalisation.
-# Those exact bytes are unrecoverable.
+# It is a CHECKOUT-REPRESENTATION digest of the SAME COMMITTED CONTENT the
+# file holds today - not a different configuration. Reproduced exactly:
 #
-# Byte equality against the live file therefore cannot be satisfied by any
-# honest means, and EDITING the recorded hash in a manifest would falsify
-# the execution record - the one thing this repository exists to prevent.
+#     take the committed blob (6d85481:configs/rl.yaml, i.e. HEAD's content)
+#     write its first 19 lines with CRLF and the remaining lines with LF
+#     -> 1811 bytes -> sha256 4bb71750e51c8ea6...
 #
-# What the divergence is NOT: a change to the science. The 2fef786 ->
-# 6d85481 diff is PURELY ADDITIVE (a Day-27 `training:` block; PLAN freezes
-# no episode count, so run lengths stay on the CLI). Every frozen learner
-# value is untouched, and the runs' own manifests record
-# alpha 0.2 / gamma 0.0 / epsilon_start 1.0 / epsilon_min 0.05 /
-# epsilon_decay 0.95 / q0_default 0.5 - identical to configs/rl.yaml today.
+# That is the mixed-ending state `core.autocrlf=true` plus `* text=auto`
+# (.gitattributes) leaves on Windows when 15 lines are appended by an
+# editor writing LF to a file checked out with CRLF - which is exactly what
+# the Day-27 `training:` block was. The current file is the same content in
+# the uniform-CRLF checkout representation: 1826 bytes, sha256 8ca70d6d...
 #
-# So this named constant is a CITED HISTORICAL figure in the DEC-032 sense,
-# recorded exactly as the runs left it, and the check below substitutes a
-# STRONGER assertion for the unsatisfiable one: the live config's FROZEN
-# VALUES must still equal FROZEN_HYPER. A byte hash would also have failed
-# on a comment edit; this fails only if a research constant actually moves.
+# So the CONTENT never changed and no experiment result is impeached: the
+# runs' own manifests record alpha 0.2 / gamma 0.0 / epsilon_start 1.0 /
+# epsilon_min 0.05 / epsilon_decay 0.95 / q0_default 0.5, identical to
+# configs/rl.yaml today. Only the BYTES differ, and only in line endings.
+#
+# The design flaw this exposes is that raw-byte hashing of a `text=auto`
+# file is checkout-dependent, so the digest can never be stable across
+# clones or autocrlf settings. Redesigning the provenance hash is a
+# separate decision and is NOT taken here; editing the recorded hash inside
+# a manifest is never an option, since that would falsify the execution
+# record this repository exists to protect.
+#
+# This named constant is therefore a CITED HISTORICAL figure in the
+# DEC-032 sense, recorded exactly as the runs left it. The check below
+# accepts it as the one tolerated representation and substitutes a STRONGER
+# assertion for the representation-dependent one: the live config's FROZEN
+# VALUES must still equal FROZEN_HYPER. A byte hash also failed on a
+# comment edit or a clone with different EOLs; this fails only when a
+# research constant actually moves.
 DAY29_RECORDED_RL_YAML_SHA256 = (
     "4bb71750e51c8ea605f7feaaa368a2f1dcbe4ecd2aacbed0f059f8d18cfb5a14")
 
