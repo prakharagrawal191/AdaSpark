@@ -1033,6 +1033,10 @@ def main(argv: list[str] | None = None) -> int:
         "exp008_preflight_audit.json": "DEC-030",
         "exp008_b6_implementation.json": "DEC-031",
         "exp008_budget_reconciliation.json": "DEC-031",
+        # DEC-039: the zero-charge DERIVED ablation (executed=false, 0 Spark)
+        # and the clean preflight re-run DEC-030 s15 requires of gate item 4
+        "exp008_derived_ablation.json": "DEC-039",
+        "exp008_preflight_rerun.json": "DEC-039",
     }
 
     def _authorized(name: str) -> bool:

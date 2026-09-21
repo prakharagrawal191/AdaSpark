@@ -1,0 +1,87 @@
+{
+  "artifact_id": "16779a4a4970f8dbea97c00621fbff063284954cc67df3c048fc48a2570ffed0",
+  "authorization": {
+    "a5": "DISABLED (DEC-011)",
+    "test": "NOT AUTHORIZED",
+    "trained_exp008_executions": "NOT AUTHORIZED (unchanged)",
+    "worst_case_ledger_charge": 0,
+    "worst_case_live_train_executions": 0,
+    "zero_charge_derived_ablation": "AUTHORIZED (DEC-034 section 5; DEC-039)"
+  },
+  "blocking_findings_resolution": {
+    "B1-A3-UNFROZEN": {
+      "resolution": "DEC-030 (reward-variant structure freeze); DEC-036 sections 5 and 8 (executable arm set = A3-R3-frozen + A3-time-only; A3-R4 DROPPED)",
+      "status": "RESOLVED"
+    },
+    "B2-A4-UNFROZEN": {
+      "resolution": "DEC-030 section 5 (structural compatibility of the mode4 subset); DEC-036 section 5 (mode12 action mode; A4 subset {0, 3, 6, 9})",
+      "status": "RESOLVED"
+    },
+    "B3-Q0-UNFROZEN": {
+      "resolution": "DEC-036 section 5 (Q0 = q0-exp002/v1 uniformly, rows wide 12, no projection, no invented pooling)",
+      "status": "RESOLVED"
+    },
+    "B4-CONTROLS-UNFROZEN": {
+      "resolution": "DEC-036 sections 5 and 6 (eleven INHERIT fields; seeds/horizon frozen as a rule with branches P 210 / R 140 / M 21)",
+      "status": "RESOLVED"
+    },
+    "B5-BUDGET-EXHAUSTED": {
+      "resolution": "DEC-031 sections 3, 4, 5 and 8 (B5 charging rule and headroom categories); DEC-033 and DEC-038 (canonical ledger 483 charged of 500, remaining 17)",
+      "status": "RESOLVED"
+    },
+    "B6-IMPLEMENTATION-GAP": {
+      "resolution": "DEC-035 (B6 implementation adopted; exact reward semantics registered and validator-enforced)",
+      "status": "RESOLVED"
+    }
+  },
+  "created_utc": "2026-09-21T02:02:15.321155+00:00",
+  "executed": false,
+  "experiment_id": "EXP-008",
+  "fingerprint": "16779a4a4970f8dbea97c00621fbff063284954cc67df3c048fc48a2570ffed0",
+  "ledger": {
+    "arithmetic": "232 + 84 + 20 + 126 + 6 + 15 = 483",
+    "cap": 500,
+    "charged": 483,
+    "remaining": 17,
+    "source": "DEC-038 (canonical); DEC-031 sections 3/4/8 + DEC-033 sections 4/5"
+  },
+  "non_blocking_findings_disposition": {
+    "N1-S9-DRIFT": {
+      "disposition": "non-blocking by audit classification; no resolution required for the zero-charge scope"
+    },
+    "N2-FAILURE-SEMANTICS-DRIFT": {
+      "disposition": "non-blocking by audit classification; the failure transformation is registered exactly by DEC-035"
+    },
+    "N3-TREF-SOURCE": {
+      "disposition": "resolved by DEC-036 (q0-exp002/v1; T_ref source = the EXP-002 gate artifact)"
+    },
+    "N4-EXP008-ENVELOPE": {
+      "disposition": "resolved by DEC-034 (zero-charge derived scope; SC6 cap NOT raised)"
+    },
+    "N5-SEED-COUNT": {
+      "disposition": "resolved by DEC-036 fields 6 and 8 (frozen rule with branches P/R/M)"
+    },
+    "N6-STATS-GAP": {
+      "disposition": "resolved by DEC-036 field 14 (descriptive-only, DEC-030 section 8)"
+    }
+  },
+  "original_audit": {
+    "audit_date_utc": "2026-09-17",
+    "audit_schema_version": "exp008-preflight-audit/v1",
+    "plan_fingerprint": "db5e82102833efe6bab8db1adaf1b35ad195faf385e63ab296d50562e349ee63",
+    "recommendation": "NO-GO // B1-B6 block execution authorization",
+    "repository_head": "5cf0cf850f022750fa7df734328f6807e3546ee9",
+    "rl_config_fingerprint": "8ca70d6dd7df68841c409a4441dc538616206bccea7877b28c73df20e6428b80|a52131d5a0de63ef06d3dd5b181f1bbeda326df3ffffbd2ae1c69ed96571db1b"
+  },
+  "plan_state": "docs/PLAN.md line 315 UNCHANGED (~300 trained runs remain planned and unconsumed)",
+  "provenance": {
+    "code_version": "61e3bba-dirty",
+    "produced_by": "scripts/generate_exp008_derived_ablation.py (DEC-039)",
+    "spark_executions": 0,
+    "split_authority": "sparkrl.experiments.spec.split_of"
+  },
+  "recommendation": "GO // zero-charge derived ablation only (DEC-034 section 5); trained-execution authorization remains NO",
+  "rerun_kind": "CLEAN preflight re-run for the DEC-039 authorization decision (DEC-030 section 15 gate item 4), zero Spark",
+  "reruns_artifact": "exp008_preflight_audit.json",
+  "schema": "exp008-preflight-rerun/v1"
+}
