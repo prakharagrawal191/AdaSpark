@@ -3309,3 +3309,115 @@ Until then: **`EXP-005b EXECUTION = NOT AUTHORIZED`** and **TEST remains SEALED*
 **9 — What this entry does NOT decide.** Whether the EXP-005b driver should extend `run_exp005.py` or be a separate script (an implementation decision). Whether B3's analytic treatment should be revisited. Whether EXP-005b's 35 runs should appear in `docs/PLAN.md`'s register (PLAN is unchanged). Any EXP-009 matter — DEC-040 covers it. Whether AQE complementarity warrants a thesis chapter section of its own.
 
 **Status.** **DECIDED.** EXP-005b scope is frozen at **B0' alone, 7 instances × 5 repetitions = 35 runs**, on a **separate AQE-on ledger**, **0 charged to SC6**. The **no-pooling rule and the runtime-adaptivity fairness defect are binding on any analysis**. **`EXP-005b EXECUTION = NOT AUTHORIZED`** — the authorization is **CONDITIONAL** on §6's five conditions, chief among them a driver that does not exist (`scripts/run_exp005.py:54` excludes B0' deliberately). `TEST = SEALED`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-040) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **NO SUPERVISOR HAS REVIEWED THIS ENTRY.** A future review is a new entry; this one is never rewritten. **This entry performs 0 Spark executions and trains nothing.**
+
+---
+
+## DEC-042 | 2026-09-21 | EXP-009 result — SC6 clause 2 is INCONCLUSIVE, not failed; the measurement cannot adjudicate a 5% gate at n=5 (Day 38)
+
+**Decision ID:** DEC-042
+**Date:** 2026-09-21
+**Scope:** The EXP-009 result and its consequences for SC6 clause 2. **Nothing else.**
+**Status:** DECIDED.
+**Standalone decision artifact.** On signature, the authoritative log entry is the appended DEC-042 section of `DECISIONS.md`; this document carries the same decision content, self-contained.
+**Supersedes nothing.** DEC-040 is unchanged; its authorization, protocol and acceptance criterion stand exactly as signed.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, and modifies no manifest and no prior decision entry.**
+> **EXP-008 execution authorization = NO. A5 = DISABLED. TEST = NOT AUTHORIZED. SC6 cap = 500, NOT raised. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Ledger headings run DEC-001…DEC-026 and DEC-031…DEC-041. Next free: **DEC-042**.
+
+**1 — What was executed.** EXP-009 ran under DEC-040, scope-bound to §5. **105 usable observations**: 7 cells × 3 conditions (FULL / NO-SYSMON / NEITHER) × 5 repetitions, all complete. 12 further observations are error records, retained. **Charged to SC6: 0** — every cell is validation split, seed 3, exactly as DEC-040 §2 froze. The SC6 ledger is **483 / 500, remaining 17, unmoved by this experiment**, verified by `scripts/validate_day31.py` check 22.
+
+**2 — Coverage: 7 of 8 authorized cells.** `F3_rdd|medium` is excluded under **DEC-040 §6**, which provides that acceptance is *"computed over whatever was actually run"*. It failed 9 of 9 attempts with a PySpark Python-worker exception in the RDD path. The exclusion rests on evidence predating this experiment: **EXP-002 recorded 18 FAILED / 8 COMPLETED for `F3_rdd|medium` against 25 COMPLETED / 1 FAILED for `F3_rdd|small`**, and `results/baseline/F3_rdd/` holds only `small`. The cell is **long-standing fragile, not an EXP-009 regression**. Its 9 failure records are **retained, not deleted**. Repairing the F3 RDD workload is separate work and is **not** undertaken here — debugging a workload inside an overhead experiment would confound it.
+
+**3 — THE RESULT: INCONCLUSIVE. SC6 clause 2 remains unevidenced.**
+
+The analysis first recorded **FAIL**, on one cell reading `sysmon = 6.715%` against the 5% gate. **That verdict is withdrawn as unsupportable**, on three findings from the run's own data:
+
+| Finding | Evidence |
+|---|---|
+| The gate sits inside the noise | run-to-run CV of `execution_time_s` is **2.6 – 13.6%** across the seven cells; at n = 5 the sampling error of a difference of medians is the same order as the 5% being tested |
+| Variance dominates the effect | **7 of 14** component measurements are **negative**, down to **−13.42%**. Instrumentation cannot make a job run faster; those are variance, not overhead |
+| No cell can decide | computing the **95% bootstrap CI that `docs/PLAN.md` line 180 already prescribes**, **every** cell's interval straddles both 0 and 5%. The widest is **[−22.65, +25.21]** |
+
+**FAIL was unsupportable — and PASS would have been equally unsupportable.** The honest outcome is that the measurement lacks the resolution to adjudicate the gate in either direction.
+
+**Adjudication is therefore by INTERVAL, not point estimate:** a component verdict is returned only when the whole interval lies on one side of the gate; a straddling interval is **INCONCLUSIVE in both directions**. This is neither a softened FAIL nor a rescued PASS.
+
+**Nothing is invented.** PLAN line 180 lists the 95% bootstrap CI among this project's statistics; the 5% threshold and its source (PLAN line 45) are untouched; no significance test, no correction procedure and no new threshold is introduced; DEC-030 §8's descriptive-only posture is undisturbed. Point estimates, medians and IQRs are unchanged — only the verdict logic and the reported uncertainty are added. The bootstrap is seeded (seed 0, 4000 resamples) so re-analysis reproduces byte-identically, as the Day-28/29 analysis-reproducibility norm requires.
+
+**4 — The central estimate, reported as an observation and not as a finding.** Across the seven cells the clean component — the psutil sampler, measured against an identical Spark job with no configuration difference — has a **median of 1.21% and a mean of 1.63%**. That is well inside the 5% gate. **It is recorded here as an observation, not asserted as a result**, because the intervals above do not support asserting it. The event-log component carries the additional DEC-040 §4 confound: disabling it changes Spark's own configuration, so its arm is not a clean control.
+
+**5 — What would settle it, per cell.** `reps_needed_for_2pp_halfwidth`, now recorded in the artifact:
+
+| Cell | median duration | reps needed |
+|---|---|---|
+| F5_mixed\|medium | 22.5 s | **32** |
+| F3_rdd\|small | 13.8 s | 116 |
+| F2_join\|medium | 16.1 s | 141 |
+| F2_join\|small | 2.1 s | 165 |
+| F1_agg\|medium | 39.9 s | 202 |
+| F1_agg\|small | 21.7 s | 242 |
+| F5_mixed\|small | 3.9 s | **716** |
+
+**The spread is the design signal: short jobs cannot resolve a 5% effect.** `F5_mixed|small` (3.9 s, CV 13.6%) needs 716 repetitions; `F5_mixed|medium` (22.5 s) needs 32. A future decision that wants a decisive answer should concentrate repetitions on the longer-duration cells and state the duration floor it adopts. **These are validation cells, so additional repetitions charge SC6 nothing** — the cost is wall-clock, not budget.
+
+**6 — Consequence for SC6, stated plainly.** SC6 has two clauses. **Clause 1 (`training ≤500 executions`) is SATISFIED** at 483/500. **Clause 2 (`monitoring overhead ≤5% of job time`) is NOT satisfied and NOT refuted — it is unevidenced.** Therefore **SC6 as a whole is not yet met**, and no write-up may claim it is. Equally, **no write-up may claim monitoring overhead exceeds the budget** — the data does not support that either. The honest statement is that the overhead is *not yet measured to the resolution the criterion requires*.
+
+**7 — Implementation correction adopted retrospectively.** `scripts/run_exp009.py` keyed its STOP counter on `family|scale|condition`, so it halted after two failures *within a condition*; DEC-040 §8 says *"twice on the same **cell**"*. The implementation was **laxer than the authorization** — under the written rule `F3_rdd|medium` would have halted at 2 failures, not 9. The driver is corrected to key on `family|scale`, and the correction is **adopted here retrospectively**, in the amend-and-ratify-concurrently shape of `9e83742` and DEC-018 Decision E.
+
+**8 — What this entry does NOT decide.** Whether to run the additional repetitions §5 quantifies, and at what duration floor. Whether to repair the F3 RDD workload at medium scale. Whether SC6 clause 2 should be restated, relaxed or withdrawn in `docs/PLAN.md` (PLAN is unchanged, and no decision has ever amended it). Whether a combined single-figure overhead may be quoted anywhere. Any EXP-008 or EXP-005b matter. It makes **no** claim about what a better-resolved measurement would have shown.
+
+**Status.** **DECIDED.** EXP-009 executed **105 usable observations over 7 of 8 authorized cells, 0 charged to SC6**; ledger **483 / 17, unmoved**. **SC6 clause 2 = INCONCLUSIVE** — unevidenced, neither satisfied nor refuted; **SC6 as a whole is therefore NOT met**. The prior FAIL verdict is **withdrawn as unsupportable**. `SC6 cap = 500, NOT raised`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-041) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **This entry performs 0 Spark executions and trains nothing.**
+
+---
+
+## DEC-043 | 2026-09-21 | EXP-009 repetition extension — per-cell n derived from the measured CI, staged by resolution efficiency; 0 charged to SC6 (Day 38)
+
+**Decision ID:** DEC-043
+**Date:** 2026-09-21
+**Scope:** The number of repetitions in EXP-009 only. **Nothing else** — cells, conditions, timing semantics, acceptance criterion and register line are all unchanged from DEC-040.
+**Status:** DECIDED — **extension AUTHORIZED**, scope-bound to §3.
+**Standalone decision artifact.** `docs/research/DEC_043_EXP009_REPETITION_EXTENSION.md` carries the same content.
+**Supersedes nothing.** DEC-040 stands; this amends **only** its §5 repetition count, and records the amendment rather than rewriting it. DEC-042 stands.
+
+> **This entry performs 0 Spark executions and modifies no manifest, no result artifact and no prior decision entry.**
+> **EXP-008 execution authorization = NO. A5 = DISABLED. TEST = NOT AUTHORIZED. SC6 cap = 500, NOT raised.**
+
+---
+
+**0 — Identifier resolution.** Ledger headings run DEC-001…DEC-026 and DEC-031…DEC-042. Next free: **DEC-043**.
+
+**1 — Why.** DEC-042 recorded SC6 clause 2 as **INCONCLUSIVE**: at n = 5 every cell's 95% bootstrap CI straddles both 0 and the 5% gate, so the measurement decides nothing in either direction. DEC-042 §5 quantified the remedy per cell. This entry authorizes it. **The purpose is to make the gate decidable — NOT to obtain a particular verdict.** If the additional repetitions show overhead above 5%, that is the result and it will be recorded as such.
+
+**2 — No new threshold is invented, and no duration floor is imposed.** A tempting design would exclude "short" cells by a wall-clock cut-off, but any such cut-off would be an invented parameter. It is also unnecessary: the per-cell `reps_needed_for_2pp_halfwidth` already derives from each cell's own measured dispersion and therefore **prices duration automatically**. The evidence that a floor would have been wrong: `F2_join|small` (2.1 s) needs **165** repetitions while `F1_agg|small` (21.7 s) needs **242** — the shorter job is the *cheaper* one to resolve. Cells are therefore ordered by **resolution efficiency**, lowest required n first, and nothing is excluded by duration.
+
+**3 — AUTHORIZED SCOPE.** For each cell, repetitions per condition = **that cell's own `reps_needed_for_2pp_halfwidth` (sysmon component)**, as recorded in `results/evaluation/exp009_analysis.json`, executed in this order:
+
+| Stage | Cell | n per condition | executions (×3) | cumulative | est. wall-clock |
+|---|---|---|---|---|---|
+| 1 | F5_mixed\|medium | 32 | 96 | 96 | ~36 min |
+| 2 | F3_rdd\|small | 116 | 348 | 444 | ~79 min |
+| 3 | F2_join\|medium | 141 | 423 | 867 | ~121 min |
+| 4 | F2_join\|small | 165 | 495 | 1362 | ~17 min |
+| 5 | F1_agg\|medium | 202 | 606 | 1968 | ~398 min |
+| 6 | F1_agg\|small | 242 | 726 | 2694 | ~263 min |
+| 7 | F5_mixed\|small | 716 | 2148 | 4842 | ~147 min |
+
+**Stages may be stopped after any completed stage.** Each completed stage is independently analysable and independently reportable, and the acceptance in DEC-040 §7 is computed over whatever was actually run — the same reduced-coverage provision DEC-040 §6 already carries. **Stages 1–4 (1362 executions, ≈4.2 h) are the recommended target**: they adjudicate four of the seven cells at the lowest cost per decided cell.
+
+Already-recorded observations are **retained and pooled** with the new ones; nothing is discarded and no prior observation is re-run or overwritten.
+
+**4 — Ledger: 0 charged to SC6.** Unchanged from DEC-040 §2 and unchanged by volume: every cell is **validation split, seed 3**, and SC6 caps **training**. The SC6 ledger stays **483 / 500, remaining 17**. Executions are recorded on EXP-009's own register line (`docs/PLAN.md` line 316, a planning estimate, not a cap — DEC-040 §6). **At the full seven stages the register-line estimate is exceeded roughly 240-fold; that is disclosed here, not hidden.** The cost of this decision is **wall-clock, not budget**.
+
+**5 — Everything else is unchanged.** Cells, the three conditions (FULL / NO-SYSMON / NEITHER), interleaving within (cell, rep), AQE OFF, the authoritative Day-3 timing semantics, the per-run manifest recording `sysmon_enabled` and `event_log_enabled`, the separate reporting of the two components and the DEC-040 §4 event-log configuration caveat, the 5% acceptance from `docs/PLAN.md` line 45, and DEC-042's interval rule — a verdict only when the whole CI lies on one side of the gate. **`F3_rdd|medium` remains excluded** (DEC-040 §6, DEC-042 §2).
+
+**6 — STOP rule,** as DEC-040 §8 and corrected by DEC-042 §7 — keyed on the **cell**, not the (cell, condition). Execution halts and the partial result is recorded if a cell fails twice, any manifest shows a cell outside scope or `aqe_enabled: true`, or **the SC6 ledger moves by even one execution**.
+
+**7 — A prediction this entry records in advance, so it can be wrong.** The power model behind §3 says the CI half-width shrinks as 1/√n. At the authorized n each completed cell should reach a half-width of about **2 percentage points**. **If the observed half-widths do not shrink as predicted, the noise is not independent between repetitions** — drift, thermal or host contention — and the model is wrong. Recording the prediction now makes that falsifiable rather than something rationalised afterwards.
+
+**8 — What this entry does NOT decide.** Whether SC6 clause 2 passes or fails — that is the measurement's to answer. Whether `docs/PLAN.md`'s EXP-009 register estimate should be amended. Whether to repair `F3_rdd|medium`. Any EXP-005b, EXP-008, EXP-010 or EXP-011 matter. It authorizes **no TRAIN cell, no TEST cell and no AQE-on run**.
+
+**Status.** **DECIDED. `EXP-009 repetition extension = AUTHORIZED`**, scope-bound to §3, stoppable after any completed stage, **0 charged to SC6**. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-042) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **This entry performs 0 Spark executions and trains nothing.**
