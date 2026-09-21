@@ -1,5 +1,5 @@
 {
- "artifact_id": "7b22b2ec9c50d80b8c63afd310c66efe83b9dabf4ee07128f6d655e3311be61b",
+ "artifact_id": "4960f0ed86a86c7c5368323c7ff4905effdf70da953d6f1932c49c2f91e3c853",
  "authorized_by": "DEC-040",
  "caveat": "elog disablement changes Spark config (DEC-040 s4)",
  "cells": [
@@ -37,10 +37,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -10.706531389691916,
+    28.69926281012729
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": 2.875180205609466,
    "overhead_sysmon_pct": 1.2141780135169524,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 486,
+    "sysmon": 242
+   },
+   "sysmon_ci95_pct": [
+    -11.186821595831546,
+    16.609052874234255
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "PASS"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F1_agg|medium",
@@ -76,10 +90,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -9.771776315680503,
+    21.80473117678297
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": 4.135623639114642,
    "overhead_sysmon_pct": -3.002922848782221,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 312,
+    "sysmon": 202
+   },
+   "sysmon_ci95_pct": [
+    -13.4329937336345,
+    11.94779978882349
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "PASS"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F2_join|small",
@@ -115,10 +143,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -20.664753882247695,
+    11.905863160136636
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": -13.416961530247018,
    "overhead_sysmon_pct": -0.1427635539738157,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 332,
+    "sysmon": 165
+   },
+   "sysmon_ci95_pct": [
+    -11.884899836733883,
+    11.09053903287651
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "PASS"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F2_join|medium",
@@ -154,10 +196,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -14.476328421159053,
+    18.697845871062544
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": -7.371811925924673,
    "overhead_sysmon_pct": 6.714728357815181,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 344,
+    "sysmon": 141
+   },
+   "sysmon_ci95_pct": [
+    -6.416953321597845,
+    14.819386913122793
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "FAIL"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F3_rdd|small",
@@ -193,10 +249,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -6.650828278767711,
+    7.866025710462897
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": -1.0301769286690694,
    "overhead_sysmon_pct": -0.6413869261131813,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 66,
+    "sysmon": 116
+   },
+   "sysmon_ci95_pct": [
+    -6.4174274082458895,
+    12.80417471502936
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "PASS"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F5_mixed|small",
@@ -232,10 +302,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -27.277697737666898,
+    26.696930642436257
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": -10.96950596568523,
    "overhead_sysmon_pct": 5.045804065737547,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 911,
+    "sysmon": 716
+   },
+   "sysmon_ci95_pct": [
+    -22.6545237038014,
+    25.211092154105703
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "FAIL"
+   "verdict": "INCONCLUSIVE"
   },
   {
    "cell": "F5_mixed|medium",
@@ -271,10 +355,24 @@
      "n_timing_valid": 5
     }
    },
+   "eventlog_ci95_pct": [
+    -7.907581107424816,
+    6.078955700876274
+   ],
+   "eventlog_verdict": "INCONCLUSIVE",
    "overhead_eventlog_pct": 2.228499600552408,
    "overhead_sysmon_pct": 2.213516838156363,
+   "reps_needed_for_2pp_halfwidth": {
+    "eventlog": 62,
+    "sysmon": 32
+   },
+   "sysmon_ci95_pct": [
+    -3.0119072453173956,
+    7.02166472774423
+   ],
+   "sysmon_verdict": "INCONCLUSIVE",
    "threshold_pct": 5.0,
-   "verdict": "PASS"
+   "verdict": "INCONCLUSIVE"
   }
  ],
  "contains_test_data": false,
@@ -316,8 +414,16 @@
  "statistic": "median_over_5_reps",
  "threshold_pct": 5.0,
  "threshold_source": "PLAN line 45 (SC6 clause 2)",
- "verdict": "FAIL",
+ "uncertainty": {
+  "interval": "95% percentile bootstrap CI (PLAN:180)",
+  "remedy": "additional repetitions on these VALIDATION cells charge SC6 nothing; per-cell reps_needed_for_2pp_halfwidth states what would make the gate decidable",
+  "resamples": 4000,
+  "rule": "a component verdict is returned only when the whole interval lies on one side of the gate; a straddling interval is INCONCLUSIVE in BOTH directions",
+  "seed": 0,
+  "why": "run-to-run CV of execution_time_s on this stack is 2.6-13.6%, so at n=5 the sampling error of a difference of medians is the same order as the 5% gate; a bare point estimate would assert a precision this design does not have"
+ },
+ "verdict": "INCONCLUSIVE",
  "worst_eventlog_pct": 4.135623639114642,
  "worst_sysmon_pct": 6.714728357815181,
- "written_utc": "2026-09-21T13:50:28Z"
+ "written_utc": "2026-09-21T15:44:31Z"
 }

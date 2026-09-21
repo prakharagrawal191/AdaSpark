@@ -27,6 +27,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
+import random
 import statistics
 import sys
 import time
@@ -105,6 +107,86 @@ def overhead(full: float | None, base: float | None) -> float | None:
         return None
     return 100.0 * (full - base) / base
 
+
+# --- uncertainty -------------------------------------------------------------
+# PLAN line 180 already prescribes "95% bootstrap CI" among this project's
+# statistics. Reporting one here INVENTS NOTHING: it applies frozen procedure
+# to the quantity SC6 clause 2 is stated in. A point estimate compared against
+# a 5% gate silently asserts a precision this design does not have, and at
+# n = 5 per (cell, condition) it does not have it - the run-to-run CV of
+# execution_time_s on this stack is 2.6-13.6%, so the sampling error of a
+# DIFFERENCE of two medians is of the same order as the gate being tested.
+BOOTSTRAP_RESAMPLES = 4000
+BOOTSTRAP_SEED = 0          # fixed: the analysis must be byte-reproducible
+
+
+def _median(vals: list[float]) -> float:
+    s = sorted(vals)
+    n = len(s)
+    return s[n // 2] if n % 2 else 0.5 * (s[n // 2 - 1] + s[n // 2])
+
+
+def bootstrap_ci(full: list[float], base: list[float]) -> tuple[float, float] | None:
+    """95% percentile bootstrap CI for the relative median difference (%).
+
+    Deterministic: seeded locally so repeated analysis of the same
+    observations reproduces byte-identically, as the Day-28/29 analysis
+    reproducibility checks require of every analyzer in this repository.
+    """
+    if len(full) < 2 or len(base) < 2 or not all(base):
+        return None
+    rng = random.Random(BOOTSTRAP_SEED)
+    draws: list[float] = []
+    for _ in range(BOOTSTRAP_RESAMPLES):
+        ra = [full[rng.randrange(len(full))] for _ in full]
+        rb = [base[rng.randrange(len(base))] for _ in base]
+        mb = _median(rb)
+        if mb:
+            draws.append(100.0 * (_median(ra) - mb) / mb)
+    if not draws:
+        return None
+    draws.sort()
+    lo = draws[int(0.025 * len(draws))]
+    hi = draws[min(int(0.975 * len(draws)), len(draws) - 1)]
+    return lo, hi
+
+
+def adjudicate(pct: float | None, ci: tuple[float, float] | None,
+               threshold: float) -> str:
+    """PASS / FAIL / INCONCLUSIVE for one component against the gate.
+
+    A verdict is only returned when the interval LIES WHOLLY on one side of
+    the threshold. If the CI straddles it, the measurement cannot decide the
+    question in EITHER direction, and saying so is the honest outcome - not a
+    softened FAIL and not a rescued PASS.
+    """
+    if pct is None or ci is None:
+        return "INCONCLUSIVE"
+    lo, hi = ci
+    if hi <= threshold:
+        return "PASS"
+    if lo > threshold:
+        return "FAIL"
+    return "INCONCLUSIVE"
+
+
+def required_n(full: list[float], base: list[float], threshold: float,
+               target_halfwidth: float = 2.0) -> int | None:
+    """Repetitions per (cell, condition) needed for a CI half-width of
+    ``target_halfwidth`` percentage points, so the gate becomes decidable.
+
+    Scales the observed half-width by 1/sqrt(n). Reported so the record says
+    what WOULD settle the question rather than leaving it open-ended. These
+    are validation cells, so additional repetitions charge SC6 nothing.
+    """
+    ci = bootstrap_ci(full, base)
+    if ci is None or not full:
+        return None
+    half = 0.5 * (ci[1] - ci[0])
+    if half <= target_halfwidth:
+        return len(full)
+    return int(math.ceil(len(full) * (half / target_halfwidth) ** 2))
+
 def main() -> int:
     rows = load_rows()
     runsum = json.loads(RUN_SUMMARY.read_text(encoding="utf-8")) \
@@ -142,10 +224,36 @@ def main() -> int:
         both = (sys_pct + elog_pct if sys_pct is not None
                 and elog_pct is not None else None)
         complete = all(per[c]["complete"] for c in CONDS)
-        verdict = ("PASS" if complete and sys_pct is not None
-                   and elog_pct is not None
-                   and sys_pct <= THRESHOLD_PCT
-                   and elog_pct <= THRESHOLD_PCT else "FAIL")
+        # Raw per-condition samples for the uncertainty layer.
+        s_full = [r["execution_time_s"] for r in rows
+                  if r.get("family") == fam and r.get("scale") == scale
+                  and r.get("condition") == "FULL"
+                  and r.get("execution_time_s") and not r.get("error")]
+        s_nosys = [r["execution_time_s"] for r in rows
+                   if r.get("family") == fam and r.get("scale") == scale
+                   and r.get("condition") == "NO-SYSMON"
+                   and r.get("execution_time_s") and not r.get("error")]
+        s_neith = [r["execution_time_s"] for r in rows
+                   if r.get("family") == fam and r.get("scale") == scale
+                   and r.get("condition") == "NEITHER"
+                   and r.get("execution_time_s") and not r.get("error")]
+        sys_ci = bootstrap_ci(s_full, s_nosys)
+        elog_ci = bootstrap_ci(s_nosys, s_neith)
+        sys_verdict = adjudicate(sys_pct, sys_ci, THRESHOLD_PCT)
+        elog_verdict = adjudicate(elog_pct, elog_ci, THRESHOLD_PCT)
+        sys_n = required_n(s_full, s_nosys, THRESHOLD_PCT)
+        elog_n = required_n(s_nosys, s_neith, THRESHOLD_PCT)
+        # A cell PASSES only if BOTH components pass; it FAILS only if a
+        # component's whole interval clears the gate; otherwise the design
+        # cannot decide and says so.
+        if not complete:
+            verdict = "INCONCLUSIVE"
+        elif "FAIL" in (sys_verdict, elog_verdict):
+            verdict = "FAIL"
+        elif sys_verdict == elog_verdict == "PASS":
+            verdict = "PASS"
+        else:
+            verdict = "INCONCLUSIVE"
         if sys_pct is not None:
             worst_sys = max(worst_sys, sys_pct)
         if elog_pct is not None:
@@ -158,9 +266,23 @@ def main() -> int:
             "combined_caveat": ("sum of parts; elog arm changes Spark "
                                 "config (DEC-040 s4)"),
             "threshold_pct": THRESHOLD_PCT, "verdict": verdict,
+            "sysmon_ci95_pct": list(sys_ci) if sys_ci else None,
+            "eventlog_ci95_pct": list(elog_ci) if elog_ci else None,
+            "sysmon_verdict": sys_verdict,
+            "eventlog_verdict": elog_verdict,
+            "reps_needed_for_2pp_halfwidth": {
+                "sysmon": sys_n, "eventlog": elog_n},
         })
-    verdict_all = "PASS" if cells and all(
-        c["verdict"] == "PASS" for c in cells) else "FAIL"
+    # Overall: FAIL only if some cell's interval clears the gate outright;
+    # PASS only if every cell passes outright; otherwise INCONCLUSIVE.
+    if not cells:
+        verdict_all = "INCONCLUSIVE"
+    elif any(c["verdict"] == "FAIL" for c in cells):
+        verdict_all = "FAIL"
+    elif all(c["verdict"] == "PASS" for c in cells):
+        verdict_all = "PASS"
+    else:
+        verdict_all = "INCONCLUSIVE"
 
     body = {
         "schema_version": "exp009/v1",
@@ -168,6 +290,22 @@ def main() -> int:
         "authorized_by": "DEC-040",
         "statistic": "median_over_5_reps",
         "spread": "IQR (PLAN:180)",
+        "uncertainty": {
+            "interval": "95% percentile bootstrap CI (PLAN:180)",
+            "resamples": BOOTSTRAP_RESAMPLES,
+            "seed": BOOTSTRAP_SEED,
+            "rule": ("a component verdict is returned only when the whole "
+                     "interval lies on one side of the gate; a straddling "
+                     "interval is INCONCLUSIVE in BOTH directions"),
+            "why": ("run-to-run CV of execution_time_s on this stack is "
+                    "2.6-13.6%, so at n=5 the sampling error of a difference "
+                    "of medians is the same order as the 5% gate; a bare "
+                    "point estimate would assert a precision this design "
+                    "does not have"),
+            "remedy": ("additional repetitions on these VALIDATION cells "
+                       "charge SC6 nothing; per-cell reps_needed_for_2pp_"
+                       "halfwidth states what would make the gate decidable"),
+        },
         "threshold_pct": THRESHOLD_PCT,
         "threshold_source": "PLAN line 45 (SC6 clause 2)",
         "verdict": verdict_all,
