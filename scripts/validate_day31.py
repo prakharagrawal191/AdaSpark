@@ -1037,6 +1037,9 @@ def main(argv: list[str] | None = None) -> int:
         # and the clean preflight re-run DEC-030 s15 requires of gate item 4
         "exp008_derived_ablation.json": "DEC-039",
         "exp008_preflight_rerun.json": "DEC-039",
+        # DEC-040: EXP-009 monitoring-overhead analysis (validation split,
+        # seed 3, median±IQR per DEC-040 s7; 0 charged to SC6)
+        "exp009_analysis.json": "DEC-040",
     }
 
     def _authorized(name: str) -> bool:

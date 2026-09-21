@@ -1,0 +1,323 @@
+{
+ "artifact_id": "7b22b2ec9c50d80b8c63afd310c66efe83b9dabf4ee07128f6d655e3311be61b",
+ "authorized_by": "DEC-040",
+ "caveat": "elog disablement changes Spark config (DEC-040 s4)",
+ "cells": [
+  {
+   "cell": "F1_agg|small",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": 4.089358219126419,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 3.1243669000105,
+     "max_s": 23.54434079999919,
+     "median_s": 22.000169400009327,
+     "min_s": 19.304656799999066,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 3.878750499992748,
+     "max_s": 23.168629599997075,
+     "median_s": 21.128762600012124,
+     "min_s": 16.889181900012773,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 1.961962900008075,
+     "max_s": 22.500298500002827,
+     "median_s": 21.736252599977888,
+     "min_s": 18.86660499998834,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": 2.875180205609466,
+   "overhead_sysmon_pct": 1.2141780135169524,
+   "threshold_pct": 5.0,
+   "verdict": "PASS"
+  },
+  {
+   "cell": "F1_agg|medium",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": 1.132700790332421,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 4.709385699999984,
+     "max_s": 40.78075289999833,
+     "median_s": 38.64858199999435,
+     "min_s": 34.997887800011085,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 5.0634601499914424,
+     "max_s": 40.04440469999099,
+     "median_s": 38.26269840000896,
+     "min_s": 32.712275800004136,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 5.402857449982548,
+     "max_s": 44.64585719999741,
+     "median_s": 39.84509960000287,
+     "min_s": 34.52375310001662,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": 4.135623639114642,
+   "overhead_sysmon_pct": -3.002922848782221,
+   "threshold_pct": 5.0,
+   "verdict": "PASS"
+  },
+  {
+   "cell": "F2_join|small",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": -13.559725084220835,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 0.1898920000094222,
+     "max_s": 2.337387600011425,
+     "median_s": 2.1010345999966376,
+     "min_s": 2.010496900009457,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 0.6057962499908172,
+     "max_s": 2.652085299981991,
+     "median_s": 2.430081500002416,
+     "min_s": 1.9445351999893319,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 0.2135081500018714,
+     "max_s": 2.384420599992154,
+     "median_s": 2.104038399993442,
+     "min_s": 2.0359401000023354,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": -13.416961530247018,
+   "overhead_sysmon_pct": -0.1427635539738157,
+   "threshold_pct": 5.0,
+   "verdict": "PASS"
+  },
+  {
+   "cell": "F2_join|medium",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": -0.657083568109492,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 1.4889835999783827,
+     "max_s": 17.956024999992223,
+     "median_s": 17.163532700011274,
+     "min_s": 15.642163800017443,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 3.468915899997228,
+     "max_s": 18.805980500008445,
+     "median_s": 17.363575099996524,
+     "min_s": 13.550005800003419,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 1.8990052500012098,
+     "max_s": 18.340429500007303,
+     "median_s": 16.083565000008093,
+     "min_s": 15.502951200003736,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": -7.371811925924673,
+   "overhead_sysmon_pct": 6.714728357815181,
+   "threshold_pct": 5.0,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "F3_rdd|small",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": -1.6715638547822507,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 1.6719938500173157,
+     "max_s": 15.19354150001891,
+     "median_s": 13.66010490001645,
+     "min_s": 13.03915599998436,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 1.101410900009796,
+     "max_s": 14.428572800010443,
+     "median_s": 13.891390500008129,
+     "min_s": 13.277804299985291,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 1.1391414499958046,
+     "max_s": 14.402797899994766,
+     "median_s": 13.748284600005718,
+     "min_s": 12.977801600005478,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": -1.0301769286690694,
+   "overhead_sysmon_pct": -0.6413869261131813,
+   "threshold_pct": 5.0,
+   "verdict": "PASS"
+  },
+  {
+   "cell": "F5_mixed|small",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": -5.923701899947682,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 0.49059769998712,
+     "max_s": 4.83784469999955,
+     "median_s": 4.058708199998364,
+     "min_s": 3.86911090000649,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 1.2894597000122303,
+     "max_s": 5.313020600005984,
+     "median_s": 4.339806200005114,
+     "min_s": 3.066179599991301,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 0.818844600013108,
+     "max_s": 5.247505600011209,
+     "median_s": 3.8637508999963757,
+     "min_s": 3.715905799996108,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": -10.96950596568523,
+   "overhead_sysmon_pct": 5.045804065737547,
+   "threshold_pct": 5.0,
+   "verdict": "FAIL"
+  },
+  {
+   "cell": "F5_mixed|medium",
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": 4.442016438708771,
+   "complete": true,
+   "conditions": {
+    "FULL": {
+     "complete": true,
+     "iqr_s": 0.7547372999979416,
+     "max_s": 23.128052600019146,
+     "median_s": 23.02125960000558,
+     "min_s": 21.844352200016147,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NEITHER": {
+     "complete": true,
+     "iqr_s": 1.8710065499763004,
+     "max_s": 24.45664449999458,
+     "median_s": 22.031738299992867,
+     "min_s": 21.50429390001227,
+     "n_required": 5,
+     "n_timing_valid": 5
+    },
+    "NO-SYSMON": {
+     "complete": true,
+     "iqr_s": 1.0597074000106659,
+     "max_s": 23.27468719999888,
+     "median_s": 22.52271550000296,
+     "min_s": 21.51084049997735,
+     "n_required": 5,
+     "n_timing_valid": 5
+    }
+   },
+   "overhead_eventlog_pct": 2.228499600552408,
+   "overhead_sysmon_pct": 2.213516838156363,
+   "threshold_pct": 5.0,
+   "verdict": "PASS"
+  }
+ ],
+ "contains_test_data": false,
+ "coverage": "7-of-8 validation cells analyzed; F3_rdd|medium excluded per DEC-040 s6",
+ "excluded_cells": [
+  {
+   "authority": "DEC-040 s6 (acceptance over whatever was actually run)",
+   "cell": "F3_rdd|medium",
+   "evidence": "EXP-002: F3_rdd|medium 18 FAILED / 8 COMPLETED vs F3_rdd|small 25 COMPLETED / 1 FAILED; results/baseline/F3_rdd/ holds small only, no medium baseline",
+   "scope": "excluded from further execution and from analysis; retained on disk"
+  }
+ ],
+ "experiment_id": "EXP-009",
+ "limitations": [
+  "Coverage is 7 of the 8 authorized validation cells: F3_rdd|medium is excluded per DEC-040 s6 (long-standing fragility, not an EXP-009 regression: EXP-002 18 FAILED / 8 COMPLETED for F3_rdd|medium vs 25 COMPLETED / 1 FAILED for F3_rdd|small; results/baseline/F3_rdd/ holds small only). The exclusion is recorded, not repaired; fixing the F3 RDD workload is separate work.",
+  "The two overhead components are reported separately and are never summed as an acceptance quantity without the DEC-040 s4 caveat: disabling the event log changes Spark's own configuration.",
+  "micro (5 MB) was authorized but is unexecutable on the frozen stack (resolver admits small/medium/large only); 0 Spark executions for micro."
+ ],
+ "micro_note": "micro authorized-but-unexecutable, 0 Spark",
+ "n_excluded_retained": 12,
+ "n_observations": 117,
+ "no_inference": "descriptive only; no test (DEC-040 s7)",
+ "observation_counts": {
+  "planned": 120,
+  "planned_in_scope": 105,
+  "recorded": 117,
+  "recorded_excluded_retained": 12,
+  "recorded_in_scope": 105,
+  "remaining": 3,
+  "remaining_in_scope": 0,
+  "timing_invalid": 0,
+  "timing_valid": 117
+ },
+ "register_line": "EXP-009 (0 charged to SC6)",
+ "run_summary_artifact_id": "1cd76f9e6b60e6ae42607dadf9321a14eafbfd47eb7a262faada00644d0e99e8",
+ "schema_version": "exp009/v1",
+ "spec_artifact_id": "82a973e7a0fb41c3be1e98230a71c11f6f43d7d7b40fe8f31be364e31e6c2c81",
+ "spread": "IQR (PLAN:180)",
+ "statistic": "median_over_5_reps",
+ "threshold_pct": 5.0,
+ "threshold_source": "PLAN line 45 (SC6 clause 2)",
+ "verdict": "FAIL",
+ "worst_eventlog_pct": 4.135623639114642,
+ "worst_sysmon_pct": 6.714728357815181,
+ "written_utc": "2026-09-21T13:50:28Z"
+}
