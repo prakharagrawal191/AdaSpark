@@ -647,6 +647,39 @@ def _sha256_file(path: Path) -> str | None:
         return None
 
 
+def _sha256_file_lf(path: Path) -> str | None:
+    """sha256 of `path` with line endings normalised to LF (DEC-037 s4).
+
+    ``_sha256_file`` above hashes RAW BYTES and KEEPS THAT MEANING FOREVER -
+    it is not changed here and must not be. Its digest, however, depends on
+    checkout line endings for any file governed by ``* text=auto`` in
+    .gitattributes under ``core.autocrlf=true``, so it can never be stable
+    across clones. That is the direct cause of the Day-29 check 05/06
+    provenance failures: ``configs/rl.yaml`` produced ``4bb71750...`` when
+    the Day-29 runs recorded it and ``8ca70d6d...`` today, from the SAME
+    committed content in two checkout representations. It bears on SC8,
+    "repo reproducible from fresh clone" (PLAN line 45).
+
+    DEC-037 s4 resolves this ADDITIVELY and only for FUTURE runs: the raw
+    field keeps its meaning, no recorded manifest hash is edited, and runs
+    additionally record this normalised digest in a sibling field. Changing
+    ``_sha256_file`` in place would instead silently redefine
+    ``t_ref_gate_sha256`` as well and make every future ``rl_yaml_sha256``
+    incomparable to every recorded one. An added field is the only shape in
+    which no field ever means two things.
+
+    Normalisation collapses CRLF and lone CR to LF, so all three checkout
+    representations of one content agree. Returns None on an unreadable
+    path, exactly like the raw sibling, so a missing file is never a crash.
+    """
+    try:
+        raw = Path(path).read_bytes()
+    except OSError:
+        return None
+    normalised = raw.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(normalised).hexdigest()
+
+
 def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -761,7 +794,14 @@ def run_training(plan: TrainingPlan, *, env: Any, agent: QLearningAgent,
                 "episodes_planned": len(plan.episodes),
             },
             "t_ref_source": plan.t_ref_source,
+            # Raw-byte digest: UNCHANGED meaning, forever (DEC-037 s4).
             "t_ref_gate_sha256": _sha256_file(DEFAULT_GATE_PATH),
+            # Additive LF-normalised sibling, FUTURE runs only. DEC-037 s7
+            # left the timing of this one to the implementer ("immediately
+            # or later"); it is added now, in the same shape s4 authorized
+            # for rl_yaml_sha256, because both share _sha256_file and the
+            # identical `text=auto` exposure.
+            "t_ref_gate_sha256_lf": _sha256_file_lf(DEFAULT_GATE_PATH),
             "hyperparameters": {
                 "alpha": agent.config.alpha, "gamma": agent.config.gamma,
                 "epsilon_start": agent.config.epsilon_start,
@@ -770,7 +810,14 @@ def run_training(plan: TrainingPlan, *, env: Any, agent: QLearningAgent,
                 "q0_default": agent.config.q0_default,
                 "source": "configs/rl.yaml + PLAN section 16",
             },
+            # Raw-byte digest: UNCHANGED meaning, forever. Every recorded
+            # manifest hash stays comparable to it, and the CITED historical
+            # constant DAY29_RECORDED_RL_YAML_SHA256 is never touched.
             "rl_yaml_sha256": _sha256_file(Path(DEFAULT_RL_YAML)),
+            # Additive LF-normalised sibling, FUTURE runs only (DEC-037 s4):
+            # stable across clones and autocrlf settings, so provenance
+            # becomes assertable for new runs without redefining any field.
+            "rl_yaml_sha256_lf": _sha256_file_lf(Path(DEFAULT_RL_YAML)),
             "contract_versions": _contract_versions(env, agent),
             "q0_provenance": dict(q0_provenance),
             "budget": {
