@@ -1040,6 +1040,12 @@ def main(argv: list[str] | None = None) -> int:
         # DEC-040: EXP-009 monitoring-overhead analysis (validation split,
         # seed 3, median±IQR per DEC-040 s7; 0 charged to SC6)
         "exp009_analysis.json": "DEC-040",
+        # DEC-043: the EXP-009 repetition extension, stages 1-4 (same cells,
+        # same conditions, same validation split and seed 3; only the
+        # repetition count is amended). 1362 executions, 0 charged to SC6.
+        # The DEC-040 artifact above is NOT superseded - it is the n=5
+        # record DEC-042 adjudicated, and both remain on disk.
+        "exp009_ext_analysis.json": "DEC-043",
     }
 
     def _authorized(name: str) -> bool:

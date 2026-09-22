@@ -1,0 +1,267 @@
+# DAY 39 — DEC-043 EXP-009 repetition extension, stages 1–4: execution and analysis
+
+**Date:** 2026-09-22 (Day 39)
+**Authority:** DEC-043 §3, scope-bound. Protocol unchanged from DEC-040; interval rule from DEC-042.
+**Starting commit:** `8a89f02`
+**Executions:** 1362 Spark runs, all VALIDATION split, seed 3. **0 charged to SC6.**
+**Ledger:** SC6 **483 / 500, remaining 17 — unmoved**, probed before each stage and after every single run.
+**TEST:** not touched. **TRAIN:** not touched. **AQE:** off in every run. **`docs/PLAN.md`:** unchanged.
+
+> This document reports what was measured. It makes no claim about SC6 clause 2 as a whole,
+> and it does not restate, relax or withdraw any threshold.
+
+---
+
+## 1 — What was authorized and what was run
+
+DEC-043 §3 authorizes additional repetitions per cell, ordered by resolution efficiency
+(lowest required n first), stoppable after any completed stage. Stages 1–4 were executed;
+stages 5–7 were **not**.
+
+| Stage | Cell | n/cond authorized | Executions | Recorded | Timing-valid | Failures | SC6 | Wall-clock |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `F5_mixed\|medium` | 32 | 96 | 96 | 96 | 0 | 0 | 1.44 h |
+| 2 | `F3_rdd\|small` | 116 | 348 | 348 | 348 | 0 | 0 | 3.84 h |
+| 3 | `F2_join\|medium` | 141 | 423 | 423 | 423 | 0 | 0 | 4.55 h |
+| 4 | `F2_join\|small` | 165 | 495 | 495 | 495 | 0 | 0 | 0.80 h |
+| | **total** | | **1362** | **1362** | **1362** | **0** | **0** | **10.63 h** |
+
+Every authorized execution completed and carries a valid runner clock. There were no
+STOP-rule activations, no retries and no excluded observations.
+
+**Repetition semantics.** DEC-043 §3 fixes both `n per condition` and `executions (×3) = n×3`,
+and its wall-clock estimates are `n × 3 × median duration`; the same section also requires that
+already-recorded observations are "retained and pooled … nothing is discarded and no prior
+observation is re-run or overwritten". Both hold together only if each stage executes **n new**
+repetitions per condition and analyses **n + 5** pooled. That is what was done: new repetitions
+are numbered rep 6…n+5, so no `run_id` can collide with the DEC-040 record. The reading is
+recorded in every stage spec (`reps_per_condition_new`, `reps_pooled_per_condition`).
+
+**Derivation, not transcription.** Each stage's n is read at runtime from
+`reps_needed_for_2pp_halfwidth.sysmon` in `results/evaluation/exp009_analysis.json`, whose
+`artifact_id` is pinned in the driver, and is cross-checked against the DEC-043 §3 table. A
+disagreement is a STOP. All four agreed (32, 116, 141, 165).
+
+**Unchanged (DEC-043 §5).** Cells, the three conditions FULL / NO-SYSMON / NEITHER, interleaving
+within (cell, rep), AQE OFF, Day-3 timing semantics, the per-run `sysmon_enabled` /
+`event_log_enabled` fields, separate reporting of the two components with the DEC-040 §4
+event-log caveat, the 5% acceptance from `docs/PLAN.md` line 45, and DEC-042's interval rule.
+`F3_rdd|medium` remains excluded (DEC-040 §6, DEC-042 §2); coverage is unchanged by this work.
+
+---
+
+## 2 — Result: four cells became decided, all PASS on both components
+
+A component is **decided** when its whole 95% bootstrap CI lies on one side of the 5% gate;
+a straddling interval is INCONCLUSIVE in both directions (DEC-042 §3). A cell is decided when
+both components are.
+
+| Cell | pooled n/cond | sysmon | 95% CI | half | eventlog | 95% CI | half | verdict |
+|---|---|---|---|---|---|---|---|---|
+| `F5_mixed\|medium` | 37 | +0.161% | [−2.554, +1.454] | 2.00 pp | −0.135% | [−1.633, +2.891] | 2.26 pp | **PASS** |
+| `F3_rdd\|small` | 121 | −0.167% | [−0.648, +0.921] | 0.78 pp | +0.045% | [−1.066, +0.468] | 0.77 pp | **PASS** |
+| `F2_join\|medium` | 146 | −0.059% | [−0.591, +0.434] | 0.51 pp | +0.005% | [−0.421, +0.593] | 0.51 pp | **PASS** |
+| `F2_join\|small` | 170 | −0.093% | [−0.422, +0.535] | 0.48 pp | +0.261% | [−0.215, +0.567] | 0.39 pp | **PASS** |
+
+Before DEC-043, **0 of 7** analysed cells were decided. After stages 1–4, **4 of 7** are.
+
+### 2.1 — The withdrawn FAIL is corroborated by measurement
+
+DEC-042 withdrew a FAIL verdict that rested on `F2_join|medium` reading **sysmon = 6.715%**
+against the 5% gate, on the argument that at n = 5 the reading was not separable from noise.
+That argument is now supported by direct evidence rather than by inference:
+
+| Cell | n = 5 (DEC-040/042) | pooled (DEC-043) |
+|---|---|---|
+| `F5_mixed\|medium` | +2.214% [−3.01, +7.02] | +0.161% [−2.55, +1.45] (n=37) |
+| `F3_rdd\|small` | −0.641% [−6.42, +12.80] | −0.167% [−0.65, +0.92] (n=121) |
+| `F2_join\|medium` | **+6.715%** [−6.42, +14.82] | **−0.059%** [−0.59, +0.43] (n=146) |
+| `F2_join\|small` | −0.143% [−11.88, +11.09] | −0.093% [−0.42, +0.54] (n=170) |
+
+At n = 146 the cell that produced the withdrawn FAIL reads −0.059%, with the whole interval
+inside ±0.6 pp. **This corroborates the withdrawal. It does not convert the withdrawn FAIL into
+a PASS for SC6 clause 2**, which is addressed in §5.
+
+---
+
+## 3 — The DEC-043 §7 prediction: NOT SUPPORTED
+
+DEC-043 §7 recorded, in advance and so that it could be wrong:
+
+> "The power model behind §3 says the CI half-width shrinks as 1/√n. At the authorized n each
+> completed cell should reach a half-width of about 2 percentage points. If the observed
+> half-widths do not shrink as predicted, the noise is not independent between repetitions —
+> drift, thermal or host contention — and the model is wrong."
+
+**Test method, fixed before the data were seen.** For a grid of k values the CI is recomputed
+from the **first k repetitions in execution order** — chronological prefixes, never a selected
+subset. The grid always contains k = 5 (the DEC-040 result), k = the authorized n (the model's
+own prediction point, because `required_n` solves `half₅·√(5/n) = 2`), and k = the pooled n.
+No repetition was dropped, reordered or excluded; no goodness-of-fit threshold was invented;
+no parameter was tuned to the observations.
+
+### 3.1 — The magnitude prediction
+
+| Cell | half-width at the authorized n | predicted | observed / predicted |
+|---|---|---|---|
+| `F5_mixed\|medium` (n=32) | **14.21 pp** | 2.00 pp | **7.11×** |
+| `F3_rdd\|small` (n=116) | **0.73 pp** | 2.00 pp | **0.37×** |
+| `F2_join\|medium` (n=141) | **0.53 pp** | 2.00 pp | **0.26×** |
+| `F2_join\|small` (n=165) | **0.50 pp** | 2.00 pp | **0.25×** |
+
+**No cell reached ~2 pp at the n the model designated.** One is 7× too wide; three are
+roughly 4× too narrow.
+
+`F5_mixed|medium` does reach 2.004 pp — but at the **pooled** n = 37, not at n = 32 where the
+model predicts it. Quoting the n = 37 figure as a confirmation would be reading the model on
+terms it does not set, so it is recorded here as a coincidence of the trajectory, not as support.
+
+### 3.2 — The scaling prediction
+
+| Cell | log-log slope | predicted | monotone decreasing | max observed/predicted |
+|---|---|---|---|---|
+| `F5_mixed\|medium` | **+0.170** | −0.5 | no | 12.3 |
+| `F3_rdd\|small` | **−0.893** | −0.5 | no | 1.7 |
+| `F2_join\|medium` | **−1.012** | −0.5 | no | 2.6 |
+| `F2_join\|small` | **−0.982** | −0.5 | yes | 1.2 |
+
+No cell's slope is −0.5, and three of four trajectories are non-monotone. `F5_mixed|medium`
+climbs from 5.0 pp at n = 5 to **28.0 pp at n = 21** before collapsing to 2.0 pp at n = 37.
+
+### 3.3 — Why, measured rather than inferred
+
+DEC-043 §7 names the alternative: the noise is not independent between repetitions. It is not.
+
+| | lag-1 autocorrelation | CV, all reps | CV, settled second half | level shift |
+|---|---|---|---|---|
+| all 12 condition-series | **+0.604 … +0.871** | 4.10 – 16.11% | **1.20 – 1.73%** | −24.4% … +0.2% |
+
+- **Lag-1 autocorrelation is +0.60 to +0.87 in every one of the twelve series.** Under
+  independence it should be ≈ 0. This is uniform across all four cells and all three conditions.
+- **The settled CV is 1.20–1.73% in every series**, against pooled CVs up to 16.11%. The excess
+  dispersion is autocorrelated structure, not sampling noise.
+- `F5_mixed|medium` shows a **−23% to −24% step** in execution time around rep 12–16, present
+  in all three conditions with a spread of only 1.39 pp — host-level drift, common-mode, not a
+  condition effect. While the pooled sample straddles both levels the bootstrap median jumps
+  between them and the interval explodes; once the fast level dominates it collapses. The other
+  three cells ran entirely inside the settled regime (shifts ≈ 0) and show no such excursion.
+
+This single fact explains both directions of departure. The model anchors its extrapolation on
+`half₅`, the n = 5 half-width, and treats it as an estimate of iid sampling error. It is not:
+the n = 5 samples are drawn from an autocorrelated, drifting series. Where the anchor was
+inflated by drift the model over-predicted the required n and the CI came in far tighter than
+forecast (the three undershoots). Where the extension straddled the drift transition the
+interval blew up mid-trajectory (the one overshoot).
+
+### 3.4 — Was the prediction falsifiable, and was it falsified?
+
+Yes, and yes. The falsification path was stated in DEC-043 §7 before execution: half-widths
+that do not shrink as predicted, with non-independent noise as the named mechanism. The
+evidence that would have **supported** the prediction was available and did not occur —
+half-widths near 2 pp at the authorized n with slopes near −0.5. Instead, all four cells missed
+the magnitude prediction, all four missed the slope, and the named mechanism was confirmed by
+an independent diagnostic (lag-1 autocorrelation) that the prediction did not require.
+
+A control is recorded in `tests/unit/test_exp009_ext.py`: on synthetic data that is iid **by
+construction**, the same analysis code recovers a slope inside (−0.85, −0.2). The departure
+measured above is therefore a property of the observations, not of the estimator.
+
+**Conclusion: the pre-registered power model is NOT SUPPORTED by the measured data.**
+The repetition counts it prescribed were not the counts required — three cells were decided far
+more cheaply than forecast, and one was not decided at the n it designated.
+
+---
+
+## 4 — Figure
+
+`docs/figures/exp009_ci_halfwidth_vs_reps.svg` — CI half-width against repetitions per
+condition, log-log, one colour per cell. Solid = observed; dashed = the pre-registered
+1/√n reference from that cell's own n = 5 half-width; the ~2 pp DEC-043 §7 target is drawn as a
+horizontal reference. The `F5_mixed|medium` excursion is shown, not smoothed.
+
+---
+
+## 5 — Consequence for SC6 clause 2, stated precisely
+
+**SC6 clause 2 is NOT established by this work, and nothing here may be read as establishing it.**
+
+- **4 of 7** analysed cells are now decided, all PASS on both components.
+- **3 cells remain at n = 5 and remain INCONCLUSIVE**: `F1_agg|small`, `F1_agg|medium`,
+  `F5_mixed|small`. DEC-043 §3 stages 5–7 cover them and were not executed.
+- **`F3_rdd|medium` remains excluded** (DEC-040 §6, DEC-042 §2).
+
+DEC-042 §6's finding therefore stands as to the whole: clause 2 is neither satisfied nor
+refuted across the full cell set. What has changed is coverage — from 0 to 4 decided cells —
+not the status of the criterion. **No write-up may claim SC6 clause 2 is met**, and equally
+none may claim monitoring overhead exceeds the budget.
+
+The event-log component carries the DEC-040 §4 confound unchanged: disabling the event log
+changes Spark's own configuration, so that arm is a configuration difference, not a clean
+observer removal. The two components are never summed as an acceptance quantity without it.
+
+---
+
+## 6 — Protocol deviations
+
+**None.** No STOP rule fired. No cell outside DEC-040 §5 was touched, no `aqe_enabled: true`
+run occurred, the SC6 ledger did not move by a single execution, and no TRAIN or TEST cell was
+executed. Every DEC-040/042 artifact is byte-identical: `observations.jsonl` still hashes to
+`e58a543e…5ce2` (pinned in the driver and re-verified before every stage), and
+`exp009_analysis.json`, `analysis.json`, `spec.json` and `summary.json` carry their original
+`artifact_id`s.
+
+### 6.1 — Disclosure: the DEC-043 §3 wall-clock estimates are low by ~2.5×
+
+DEC-043 §3 estimated ~4.22 h for stages 1–4; the measured total was **10.63 h**.
+
+| Stage | §3 estimate | measured | ratio |
+|---|---|---|---|
+| 1 | ~36 min | 86.2 min | 2.39× |
+| 2 | ~79 min | 230.7 min | 2.92× |
+| 3 | ~121 min | 273.0 min | 2.26× |
+| 4 | ~17 min | 47.9 min | 2.82× |
+
+The §3 estimates are `n × 3 × median execution_time_s`. Each execution additionally costs a
+Spark session build and teardown plus the discarded warm-up run that PLAN §22 requires, so the
+per-run wall-clock is roughly `session + 2 × execution_time_s`. This is an estimate error in the
+signed table, **not** a protocol deviation: DEC-043 §4 states the cost of the decision is
+"wall-clock, not budget", and the budget was unaffected. It is disclosed here so that any future
+decision sizing stages 5–7 does not inherit it. **This document does not amend DEC-043.**
+
+---
+
+## 7 — Artifacts
+
+| Path | Contents | Tracked |
+|---|---|---|
+| `results/experiments/exp-009/ext/baseline_pre_dec043.json` | read-only pre-DEC-043 snapshot (HEAD, ledger, per-cell n/CI/half-width/point estimates) | no |
+| `results/experiments/exp-009/ext/stage{1,2,3,4}_spec.json` | frozen per-stage queues, derived n, provenance pins | no |
+| `results/experiments/exp-009/ext/stage{1,2,3,4}_summary.json` | per-stage reconciliation, SC6 before/after | no |
+| `results/experiments/exp-009/ext/observations_ext.jsonl` | 1362 raw measurement records | no |
+| `results/experiments/exp-009/ext/analysis_ext.json` | pooled analysis, trajectories, drift diagnostic | no |
+| `results/evaluation/exp009_ext_analysis.json` | evaluation copy of the above | **yes** |
+| `docs/figures/exp009_ci_halfwidth_vs_reps.svg` | CI half-width vs n | **yes** |
+| `scripts/run_exp009_ext.py` | stage driver | **yes** |
+| `scripts/analyze_exp009_ext.py` | pooled analysis + figure | **yes** |
+| `tests/unit/test_exp009_ext.py` | 19 unit checks incl. the iid control | **yes** |
+
+The pre-DEC-043 and DEC-043 evidence are in **separate files**; no pooled artifact overwrites
+a DEC-040/042 one.
+
+**Reproducibility.** The bootstrap is seeded (seed 0, 4000 resamples) and every statistic is
+imported from `scripts/analyze_exp009.py` rather than re-implemented, so re-analysis of the same
+observations reproduces byte-identically and the extension is adjudicated by exactly the
+procedure that adjudicated the n = 5 result. A unit test pins that the statistics are defined in
+the canonical file.
+
+---
+
+## 8 — What this document does NOT decide
+
+Whether to run DEC-043 stages 5–7. Whether `docs/PLAN.md`'s EXP-009 register estimate or
+DEC-043's wall-clock estimates should be amended. Whether to repair `F3_rdd|medium`. Whether
+SC6 clause 2 should be restated. Any EXP-005b, EXP-008, EXP-010 or EXP-011 matter. It authorizes
+no TRAIN cell, no TEST cell and no AQE-on run, and it amends no prior decision entry.
+
+**Validators at completion:** `scripts/validate_day31.py` OVERALL PASS (36 checks, 36 pass,
+0 fail, 0 skip), including the six prior validators. Tests: 696 passed, 18 skipped.
