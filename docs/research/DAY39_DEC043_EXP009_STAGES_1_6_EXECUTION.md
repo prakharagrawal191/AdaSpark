@@ -1,9 +1,9 @@
-# DAY 39 — DEC-043 EXP-009 repetition extension, stages 1–5: execution and analysis
+# DAY 39 — DEC-043 EXP-009 repetition extension, stages 1–6: execution and analysis
 
-**Date:** 2026-09-22 / 2026-09-23 (Day 39; stage 5 completed 2026-09-23)
+**Date:** 2026-09-22 / 2026-09-23 (Day 39; stages 5–6 completed 2026-09-23)
 **Authority:** DEC-043 §3, scope-bound. Protocol unchanged from DEC-040; interval rule from DEC-042.
 **Starting commit:** `8a89f02`
-**Executions:** 1968 Spark runs, all VALIDATION split, seed 3. **0 charged to SC6.**
+**Executions:** 2694 Spark runs, all VALIDATION split, seed 3. **0 charged to SC6.**
 **Ledger:** SC6 **483 / 500, remaining 17 — unmoved**, probed before each stage and after every single run.
 **TEST:** not touched. **TRAIN:** not touched. **AQE:** off in every run. **`docs/PLAN.md`:** unchanged.
 
@@ -15,8 +15,8 @@
 ## 1 — What was authorized and what was run
 
 DEC-043 §3 authorizes additional repetitions per cell, ordered by resolution efficiency
-(lowest required n first), stoppable after any completed stage. Stages 1–5 were executed;
-stages 6–7 were **not**.
+(lowest required n first), stoppable after any completed stage. Stages 1–6 were executed;
+stage 7 was **not**.
 
 | Stage | Cell | n/cond authorized | Executions | Recorded | Timing-valid | Failures | SC6 | Wall-clock |
 |---|---|---|---|---|---|---|---|---|
@@ -25,7 +25,8 @@ stages 6–7 were **not**.
 | 3 | `F2_join\|medium` | 141 | 423 | 423 | 423 | 0 | 0 | 4.55 h |
 | 4 | `F2_join\|small` | 165 | 495 | 495 | 495 | 0 | 0 | 0.80 h |
 | 5 | `F1_agg\|medium` | 202 | 606 | 606 | 606 | 0 | 0 | 17.30 h |
-| | **total** | | **1968** | **1968** | **1968** | **0** | **0** | **27.93 h** |
+| 6 | `F1_agg\|small` | 242 | 726 | 726 | 726 | 0 | 0 | 8.39 h |
+| | **total** | | **2694** | **2694** | **2694** | **0** | **0** | **36.32 h** |
 
 Every authorized execution completed and carries a valid runner clock. There were no
 STOP-rule activations, no retries and no excluded observations.
@@ -41,7 +42,7 @@ recorded in every stage spec (`reps_per_condition_new`, `reps_pooled_per_conditi
 **Derivation, not transcription.** Each stage's n is read at runtime from
 `reps_needed_for_2pp_halfwidth.sysmon` in `results/evaluation/exp009_analysis.json`, whose
 `artifact_id` is pinned in the driver, and is cross-checked against the DEC-043 §3 table. A
-disagreement is a STOP. All five agreed (32, 116, 141, 165, 202).
+disagreement is a STOP. All six agreed (32, 116, 141, 165, 202, 242).
 
 **Unchanged (DEC-043 §5).** Cells, the three conditions FULL / NO-SYSMON / NEITHER, interleaving
 within (cell, rep), AQE OFF, Day-3 timing semantics, the per-run `sysmon_enabled` /
@@ -51,7 +52,7 @@ event-log caveat, the 5% acceptance from `docs/PLAN.md` line 45, and DEC-042's i
 
 ---
 
-## 2 — Result: five cells became decided, all PASS on both components
+## 2 — Result: five of six extended cells became decided; the sixth did not
 
 A component is **decided** when its whole 95% bootstrap CI lies on one side of the 5% gate;
 a straddling interval is INCONCLUSIVE in both directions (DEC-042 §3). A cell is decided when
@@ -64,8 +65,11 @@ both components are.
 | `F2_join\|medium` | 146 | −0.059% | [−0.591, +0.434] | 0.51 pp | +0.005% | [−0.421, +0.593] | 0.51 pp | **PASS** |
 | `F2_join\|small` | 170 | −0.093% | [−0.422, +0.535] | 0.48 pp | +0.261% | [−0.215, +0.567] | 0.39 pp | **PASS** |
 | `F1_agg\|medium` | 207 | +0.177% | [−0.151, +0.527] | 0.34 pp | +0.156% | [−0.206, +0.515] | 0.36 pp | **PASS** |
+| `F1_agg\|small` | 247 | +0.203% | [−14.680, +15.210] | **14.95 pp** | +1.110% | [−12.904, +17.922] | 15.41 pp | **INCONCLUSIVE** |
 
-Before DEC-043, **0 of 7** analysed cells were decided. After stages 1–5, **5 of 7** are.
+Before DEC-043, **0 of 7** analysed cells were decided. After stages 1–6, **5 of 7** are.
+`F1_agg|small` received its full authorized 242 repetitions per condition and is **still
+undecided** — see §3.4, which is the strongest single result in this work.
 
 ### 2.1 — The withdrawn FAIL is corroborated by measurement
 
@@ -112,8 +116,9 @@ no parameter was tuned to the observations.
 | `F2_join\|medium` (n=141) | **0.53 pp** | 2.00 pp | **0.26×** |
 | `F2_join\|small` (n=165) | **0.50 pp** | 2.00 pp | **0.25×** |
 | `F1_agg\|medium` (n=202) | **0.35 pp** | 2.00 pp | **0.18×** |
+| `F1_agg\|small` (n=242) | **15.41 pp** | 2.00 pp | **7.71×** |
 
-**No cell reached ~2 pp at the n the model designated.** One is 7× too wide; four are
+**No cell reached ~2 pp at the n the model designated.** Two are 7–8× too wide; four are
 4–6× too narrow.
 
 `F5_mixed|medium` does reach 2.004 pp — but at the **pooled** n = 37, not at n = 32 where the
@@ -129,8 +134,9 @@ terms it does not set, so it is recorded here as a coincidence of the trajectory
 | `F2_join\|medium` | **−1.012** | −0.5 | no | 2.6 |
 | `F2_join\|small` | **−0.982** | −0.5 | yes | 1.2 |
 | `F1_agg\|medium` | **−1.187** | −0.5 | no | 3.9 |
+| `F1_agg\|small` | **−0.150** | −0.5 | no | 7.7 |
 
-No cell's slope is −0.5, and four of five trajectories are non-monotone. `F5_mixed|medium`
+No cell's slope is −0.5, and five of six trajectories are non-monotone. `F5_mixed|medium`
 climbs from 5.0 pp at n = 5 to **28.0 pp at n = 21** before collapsing to 2.0 pp at n = 37.
 
 ### 3.3 — Why, measured rather than inferred
@@ -172,22 +178,100 @@ The median-based design is what keeps the endpoint intervals usable despite this
 leaving the median at 30.6 s, so the bootstrap-of-medians CI still reaches 0.34 pp. **No
 observation was excluded** — DEC-043 defines no outlier procedure and none was invented.
 
-### 3.4 — Was the prediction falsifiable, and was it falsified?
+### 3.4 — `F1_agg|small`: the interval reached the target and then LOST it
+
+This cell is reported separately because it falsifies the model in a way the other five do
+not. It received its **full authorized 242 repetitions per condition** — the count DEC-042 §5
+derived as sufficient — and finished **INCONCLUSIVE**, with a half-width of **14.95 pp at
+n = 247, WIDER than the 13.90 pp it had at n = 5.**
+
+The prefix trajectory shows it is not a monotone failure but an oscillation:
+
+| n | 5 | 29 | 53 | 78 | 102 | 126 | **150** | 174 | 199 | 223 | 242 | 247 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| half-width (pp) | 13.90 | 5.14 | 18.43 | 15.90 | 2.88 | 3.10 | **1.48** | 3.05 | 4.05 | 15.96 | 15.41 | 14.95 |
+| obs / predicted | 1.00 | 0.89 | 4.32 | 4.52 | 0.94 | 1.12 | **0.58** | 1.30 | 1.84 | 7.67 | 7.71 | 7.56 |
+
+**At n = 150 the interval reached 1.48 pp — inside the ~2 pp target the model predicts — and
+then lost it**, returning to ~15 pp by n = 223 and staying there. Under any independent-sampling
+model this cannot happen: additional observations cannot systematically widen a confidence
+interval. Here they did.
+
+The measured cause is the regime structure of the series, which is bimodal at whole-series
+scale rather than locally noisy:
+
+| reps | 6–25 | 26–145 | 146–245 | 246–247 |
+|---|---|---|---|---|
+| median (s) | ~20.9 | ~15.1 | ~20.2 | ~14.9 |
+
+The quartiles of the pooled sample sit on the two modes (p25 = 15.11 s, p75 = 20.30 s), i.e.
+the cell spends roughly half its repetitions in each. A median is **least** stable in exactly
+that configuration: every bootstrap resample can place it in either mode, so the bootstrap
+distribution is itself bimodal and the interval is enormous. By n = 150 the sample was
+dominated by the fast regime and the interval was tight; by n = 223 the host had returned to
+the slow regime, the sample was ~50/50, and the interval blew up.
+
+The five baseline repetitions happen to fall entirely in the slow regime (21.0, 22.0, 19.3,
+23.5, 23.0 s), so `half₅` for this cell measured the dispersion of one regime and the model
+extrapolated from it as though it were iid sampling error. That is the same failure as the
+other cells, in its most extreme form.
+
+**No repetition was excluded and no statistic was changed in response.** The verdict stands as
+INCONCLUSIVE.
+
+### 3.5 — A diagnostic on WHY, recorded but NOT applied
+
+The DEC-040 §5 protocol interleaves the three conditions within each (cell, rep), so the
+repetitions are already matched, and every level shift measured here is **common-mode** — it
+moves all three conditions at the same rep together. The adjudicated statistic (DEC-040 §7) is
+the difference of *independent* medians, which discards that matching and therefore carries the
+full variance of the shift.
+
+Quantifying the gap, using the same seed and resample count:
+
+| Cell | n | unpaired half-width (adjudicated) | paired half-width (diagnostic) | ratio |
+|---|---|---|---|---|
+| `F5_mixed\|medium` | 37 | 2.00 pp | 1.07 pp | 1.9× |
+| `F3_rdd\|small` | 121 | 0.78 pp | 0.39 pp | 2.0× |
+| `F2_join\|medium` | 146 | 0.51 pp | 0.43 pp | 1.2× |
+| `F2_join\|small` | 170 | 0.48 pp | 0.36 pp | 1.3× |
+| `F1_agg\|medium` | 207 | 0.34 pp | 0.25 pp | 1.4× |
+| `F1_agg\|small` | 247 | **14.95 pp** | **0.42 pp** | **35.7×** |
+
+The paired point estimates agree across all six cells (−0.214% … +0.172%), and the gap is
+modest (1.2–2.0×) wherever the series is well behaved, opening to 35.7× only in the cell whose
+regime split is ~50/50 — which is what a common-mode shift predicts.
+
+**This is a diagnostic and nothing more.** DEC-040 §7 freezes the acceptance quantity and
+DEC-042 freezes the interval rule applied to it; both are computed unchanged and every verdict
+in this document rests on them. Switching to a paired statistic after seeing the data would be
+precisely the post-hoc rescue this work exists to avoid. `F1_agg|small` remains
+**INCONCLUSIVE**. Whether the acceptance quantity should exploit the pairing the design already
+creates is a methodological question for a future decision, recorded in §8 and **not decided
+here**.
+
+### 3.6 — Was the prediction falsifiable, and was it falsified?
 
 Yes, and yes. The falsification path was stated in DEC-043 §7 before execution: half-widths
 that do not shrink as predicted, with non-independent noise as the named mechanism. The
 evidence that would have **supported** the prediction was available and did not occur —
-half-widths near 2 pp at the authorized n with slopes near −0.5. Instead, all four cells missed
-the magnitude prediction, all four missed the slope, and the named mechanism was confirmed by
+half-widths near 2 pp at the authorized n with slopes near −0.5. Instead, all six cells missed
+the magnitude prediction, all six missed the slope, and the named mechanism was confirmed by
 an independent diagnostic (lag-1 autocorrelation) that the prediction did not require.
+`F1_agg|small` (§3.4) falsifies it beyond the terms §7 set: it received its full authorized n
+and the interval ended **wider** than at n = 5, having transiently met the target at n = 150
+and then lost it.
 
 A control is recorded in `tests/unit/test_exp009_ext.py`: on synthetic data that is iid **by
 construction**, the same analysis code recovers a slope inside (−0.85, −0.2). The departure
 measured above is therefore a property of the observations, not of the estimator.
 
 **Conclusion: the pre-registered power model is NOT SUPPORTED by the measured data.**
-The repetition counts it prescribed were not the counts required — three cells were decided far
-more cheaply than forecast, and one was not decided at the n it designated.
+The repetition counts it prescribed were not the counts required: four cells were decided far
+more cheaply than forecast (0.18–0.37× the predicted width), one was not decided at the n it
+designated, and one was **not decided at its full authorized n at all**. The model's error is
+not a mis-calibrated constant — it is directional in both directions and, in `F1_agg|small`,
+non-convergent.
 
 ---
 
@@ -196,7 +280,9 @@ more cheaply than forecast, and one was not decided at the n it designated.
 `docs/figures/exp009_ci_halfwidth_vs_reps.svg` — CI half-width against repetitions per
 condition, log-log, one colour per cell. Solid = observed; dashed = the pre-registered
 1/√n reference from that cell's own n = 5 half-width; the ~2 pp DEC-043 §7 target is drawn as a
-horizontal reference. The `F5_mixed|medium` excursion is shown, not smoothed.
+horizontal reference. Excursions are shown, not smoothed — including the `F5_mixed|medium`
+12.3× bump and the `F1_agg|small` trajectory, which dips below the 2 pp reference at n = 150
+and then rises away from it.
 
 ---
 
@@ -205,8 +291,12 @@ horizontal reference. The `F5_mixed|medium` excursion is shown, not smoothed.
 **SC6 clause 2 is NOT established by this work, and nothing here may be read as establishing it.**
 
 - **5 of 7** analysed cells are now decided, all PASS on both components.
-- **2 cells remain at n = 5 and remain INCONCLUSIVE**: `F1_agg|small`, `F5_mixed|small`.
-  DEC-043 §3 stages 6–7 cover them and were not executed.
+- **`F1_agg|small` is INCONCLUSIVE despite receiving its full authorized 242 repetitions per
+  condition** (§3.4). It is not undecided for want of data; it is undecided because the
+  adjudicated statistic does not converge on a non-stationary series. More repetitions under
+  the present statistic are **not** evidently the remedy.
+- **1 cell remains at n = 5 and remains INCONCLUSIVE**: `F5_mixed|small`. DEC-043 §3 stage 7
+  covers it and was not executed.
 - **`F3_rdd|medium` remains excluded** (DEC-040 §6, DEC-042 §2).
 
 DEC-042 §6's finding therefore stands as to the whole: clause 2 is neither satisfied nor
@@ -231,7 +321,7 @@ executed. Every DEC-040/042 artifact is byte-identical: `observations.jsonl` sti
 
 ### 6.1 — Disclosure: the DEC-043 §3 wall-clock estimates are low by ~2.5×
 
-DEC-043 §3 estimated ~10.85 h for stages 1–5; the measured total was **27.93 h**.
+DEC-043 §3 estimated ~15.23 h for stages 1–6; the measured total was **36.32 h**.
 
 | Stage | §3 estimate | measured | ratio |
 |---|---|---|---|
@@ -240,13 +330,14 @@ DEC-043 §3 estimated ~10.85 h for stages 1–5; the measured total was **27.93 
 | 3 | ~121 min | 273.0 min | 2.26× |
 | 4 | ~17 min | 47.9 min | 2.82× |
 | 5 | ~398 min | 1038.1 min | 2.61× |
+| 6 | ~263 min | 503.6 min | 1.91× |
 
 The §3 estimates are `n × 3 × median execution_time_s`. Each execution additionally costs a
 Spark session build and teardown plus the discarded warm-up run that PLAN §22 requires, so the
 per-run wall-clock is roughly `session + 2 × execution_time_s`. This is an estimate error in the
 signed table, **not** a protocol deviation: DEC-043 §4 states the cost of the decision is
 "wall-clock, not budget", and the budget was unaffected. It is disclosed here so that any future
-decision sizing stages 6–7 does not inherit it. **This document does not amend DEC-043.**
+decision sizing stage 7 does not inherit it. **This document does not amend DEC-043.**
 
 ---
 
@@ -255,10 +346,10 @@ decision sizing stages 6–7 does not inherit it. **This document does not amend
 | Path | Contents | Tracked |
 |---|---|---|
 | `results/experiments/exp-009/ext/baseline_pre_dec043.json` | read-only pre-DEC-043 snapshot (HEAD, ledger, per-cell n/CI/half-width/point estimates) | no |
-| `results/experiments/exp-009/ext/stage{1..5}_spec.json` | frozen per-stage queues, derived n, provenance pins | no |
-| `results/experiments/exp-009/ext/stage{1..5}_summary.json` | per-stage reconciliation, SC6 before/after | no |
-| `results/experiments/exp-009/ext/observations_ext.jsonl` | 1968 raw measurement records | no |
-| `results/experiments/exp-009/ext/analysis_ext.json` | pooled analysis, trajectories, drift/regime diagnostic | no |
+| `results/experiments/exp-009/ext/stage{1..6}_spec.json` | frozen per-stage queues, derived n, provenance pins | no |
+| `results/experiments/exp-009/ext/stage{1..6}_summary.json` | per-stage reconciliation, SC6 before/after | no |
+| `results/experiments/exp-009/ext/observations_ext.jsonl` | 2694 raw measurement records | no |
+| `results/experiments/exp-009/ext/analysis_ext.json` | pooled analysis, trajectories, drift/regime + paired diagnostics | no |
 | `results/evaluation/exp009_ext_analysis.json` | evaluation copy of the above | **yes** |
 | `docs/figures/exp009_ci_halfwidth_vs_reps.svg` | CI half-width vs n | **yes** |
 | `scripts/run_exp009_ext.py` | stage driver | **yes** |
@@ -278,10 +369,22 @@ the canonical file.
 
 ## 8 — What this document does NOT decide
 
-Whether to run DEC-043 stages 6–7. Whether `docs/PLAN.md`'s EXP-009 register estimate or
+Whether to run DEC-043 stage 7. Whether `docs/PLAN.md`'s EXP-009 register estimate or
 DEC-043's wall-clock estimates should be amended. Whether to repair `F3_rdd|medium`. Whether
 SC6 clause 2 should be restated. Any EXP-005b, EXP-008, EXP-010 or EXP-011 matter. It authorizes
 no TRAIN cell, no TEST cell and no AQE-on run, and it amends no prior decision entry.
+
+**Explicitly NOT decided: whether the acceptance quantity should be paired.** §3.5 measures
+that the DEC-040 §7 unpaired difference of medians discards a matching the protocol already
+creates, and that this costs a factor of 1.2–2.0× on well-behaved cells and 35.7× on
+`F1_agg|small`. Adopting a paired statistic would change the acceptance quantity of a signed
+experiment after its data were seen. It is recorded as evidence for a future decision and is
+**not applied**; every verdict above uses the frozen unpaired statistic.
+
+**Explicitly NOT decided: whether `F1_agg|small` should receive further repetitions.** §3.4
+shows its interval is non-convergent under the present statistic, so more repetitions are not
+obviously the remedy, and DEC-043 authorizes no repetition count beyond the 242 already run
+for that cell.
 
 **Validators at completion:** `scripts/validate_day31.py` OVERALL PASS (36 checks, 36 pass,
 0 fail, 0 skip), including the six prior validators. Tests: 696 passed, 18 skipped.
@@ -320,3 +423,28 @@ was expected that `F1_agg|medium`, whose baseline and new repetitions come from 
 apart, would show a non-monotone excursion like `F5_mixed|medium`. It does — the trajectory
 peaks at 22.3 pp at n = 25, 3.93× the prediction — but the excursion is markedly smaller than
 `F5_mixed|medium`'s 12.3× and resolves sooner. Recorded as partially confirmed, not confirmed.
+
+### 9.1 — Second amendment (2026-09-23, stage 6)
+
+Extended from **stages 1–5** to **stages 1–6**. Stage 6 (`F1_agg|small`, 726 executions, 0
+charged to SC6, 8.39 h) completed 726 of 726 with zero failures and no STOP. All stage 1–5
+numbers, verdicts and trajectories are unchanged and were verified field by field; the
+DEC-040/042 record remains byte-identical at sha256 `e58a543e…5ce2`.
+
+Stage 6 produced the study's strongest result and it is a **negative** one: `F1_agg|small`
+received its full authorized 242 repetitions per condition and finished **INCONCLUSIVE**, with
+a half-width of 14.95 pp — **wider than the 13.90 pp it had at n = 5** — after transiently
+reaching 1.48 pp at n = 150. New §3.4 records it in full. The cell is bimodal at whole-series
+scale (~15.1 s and ~20.2 s regimes, roughly half the repetitions in each), which is the
+configuration in which a median is least stable.
+
+Two diagnostics were added, both clearly labelled and neither verdict-bearing: the **paired**
+per-repetition statistic (new §3.5), recorded because the protocol already interleaves
+conditions within (cell, rep) and every measured shift is common-mode; and the windowed regime
+series from §9. The paired statistic is **not** adopted — doing so would change a signed
+experiment's acceptance quantity after seeing its data — and `F1_agg|small` remains
+INCONCLUSIVE under the frozen DEC-040 §7 statistic.
+
+No claim was weakened or re-framed: the §3 conclusion is unchanged and strengthened, the SC6
+position in §5 is unchanged (clause 2 remains unevidenced as a whole), and no observation was
+excluded from any statistic.

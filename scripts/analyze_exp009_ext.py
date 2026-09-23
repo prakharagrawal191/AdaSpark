@@ -54,6 +54,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import random
 import statistics
 import sys
 import time
@@ -128,6 +129,25 @@ def samples(rows: list[dict], fam: str, scale: str, cond: str) -> list[float]:
 
 def halfwidth(ci: tuple[float, float] | None) -> float | None:
     return None if ci is None else 0.5 * (ci[1] - ci[0])
+
+
+def _by_rep(base_rows: list[dict], ext_rows: list[dict], fam: str,
+            scale: str, cond: str) -> dict[int, float]:
+    """{rep: execution_time_s} pooled over baseline and extension rows.
+
+    Same row filter as ``samples``; keyed by rep so the three conditions can
+    be matched within a repetition for the paired diagnostic.
+    """
+    out: dict[int, float] = {}
+    for rows in (base_rows, ext_rows):
+        for r in rows:
+            if (r.get("family") == fam and r.get("scale") == scale
+                    and r.get("condition") == cond and r.get("timing_valid")
+                    and r.get("execution_time_s") is not None
+                    and r.get("execution_time_source") == "runner"
+                    and not r.get("error")):
+                out[r["rep"]] = r["execution_time_s"]
+    return out
 
 
 def prefix_grid(n_pooled: int, n_authorized: int) -> list[int]:
@@ -235,6 +255,52 @@ def drift_diagnostic(vals: list[float]) -> dict[str, Any] | None:
                  / statistics.median(vals[i:i + WINDOW])
                  if statistics.median(vals[i:i + WINDOW]) else None)}
             for i in range(0, n - WINDOW + 1, WINDOW)],
+    }
+
+
+def paired_diagnostic(a: dict[int, float], b: dict[int, float],
+                      label: str) -> dict[str, Any] | None:
+    """Per-repetition paired relative difference. DIAGNOSTIC ONLY.
+
+    THIS IS NOT THE ADJUDICATED STATISTIC AND CHANGES NO VERDICT. DEC-040 s7
+    freezes the acceptance quantity as the difference of independent medians,
+    and DEC-042 freezes the interval rule applied to it; both are computed
+    unchanged elsewhere in this file and are what every verdict here rests on.
+
+    It is recorded because the DEC-040 s5 protocol interleaves the three
+    conditions WITHIN each (cell, rep), so the repetitions are already
+    matched, and because the drift this experiment measured is common-mode -
+    a level shift moves all three conditions at the same rep together. A
+    paired statistic would therefore difference the shift out, while the
+    unpaired one carries its full variance. Quantifying that gap is evidence
+    about WHY the unpaired intervals behave as they do; acting on it would
+    require its own decision and is NOT done here.
+
+    Uses the same seed and resample count as the frozen procedure so the
+    diagnostic is reproducible on the same terms.
+    """
+    reps = sorted(set(a) & set(b))
+    if len(reps) < 2:
+        return None
+    paired = [100.0 * (a[r] - b[r]) / b[r] for r in reps if b[r]]
+    if len(paired) < 2:
+        return None
+    rng = random.Random(BOOTSTRAP_SEED)
+    draws = []
+    for _ in range(BOOTSTRAP_RESAMPLES):
+        draws.append(AN._median(
+            [paired[rng.randrange(len(paired))] for _ in paired]))
+    draws.sort()
+    lo = draws[int(0.025 * len(draws))]
+    hi = draws[min(int(0.975 * len(draws)), len(draws) - 1)]
+    return {
+        "component": label,
+        "n_paired_repetitions": len(paired),
+        "paired_median_pct": AN._median(paired),
+        "paired_ci95_pct": [lo, hi],
+        "paired_ci_halfwidth_pp": 0.5 * (hi - lo),
+        "status": ("DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance "
+                   "quantity; no verdict is derived from it"),
     }
 
 
@@ -354,6 +420,24 @@ def analyse_cell(stage: dict[str, Any], base_rows: list[dict],
             "sysmon_max_observed_over_predicted": _max_ratio(traj_sys),
             "eventlog_trajectory_monotone_decreasing": _monotone(traj_elog),
             "eventlog_max_observed_over_predicted": _max_ratio(traj_elog),
+        },
+        "paired_diagnostic": {
+            "note": ("DIAGNOSTIC ONLY. The adjudicated quantity remains the "
+                     "DEC-040 s7 difference of independent medians reported "
+                     "above; no verdict here is derived from these numbers. "
+                     "Recorded because the protocol already interleaves the "
+                     "three conditions within each (cell, rep), so the "
+                     "repetitions are matched, and the measured drift is "
+                     "common-mode. Acting on this would require its own "
+                     "decision and is NOT done here."),
+            "sysmon": paired_diagnostic(
+                _by_rep(base_rows, ext_rows, fam, scale, "FULL"),
+                _by_rep(base_rows, ext_rows, fam, scale, "NO-SYSMON"),
+                "sysmon"),
+            "eventlog": paired_diagnostic(
+                _by_rep(base_rows, ext_rows, fam, scale, "NO-SYSMON"),
+                _by_rep(base_rows, ext_rows, fam, scale, "NEITHER"),
+                "eventlog"),
         },
         "drift_diagnostic": {
             "note": ("POST-HOC, prompted by the DEC-043 s7 falsification "

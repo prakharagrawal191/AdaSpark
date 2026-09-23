@@ -1,5 +1,5 @@
 {
- "artifact_id": "cad7ff2ac79f3b7662612e567e88eb113d25a21f4c7fb0ccee95ab4916c049a3",
+ "artifact_id": "7a585d21d4045f13ba78fb50f20e6a0fedbc6ed569f180f569ebf6bc7caa86a2",
  "authorized_by": "DEC-043",
  "baseline_analysis_artifact_id": "4960f0ed86a86c7c5368323c7ff4905effdf70da953d6f1932c49c2f91e3c853",
  "baseline_observations_sha256": "e58a543e5ab42f5ab7bf592e368fb1863bb365906df851e190fadec40bff5ce2",
@@ -129,6 +129,31 @@
    "n_per_condition_pooled_min": 37,
    "overhead_eventlog_pct": -0.1347116265274747,
    "overhead_sysmon_pct": 0.16106129456617743,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 37,
+     "paired_ci95_pct": [
+      -0.6560547550309224,
+      0.6140376670398124
+     ],
+     "paired_ci_halfwidth_pp": 0.6350462110353674,
+     "paired_median_pct": -0.13029199036235115,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 37,
+     "paired_ci95_pct": [
+      -1.1557510697881987,
+      0.9867626626204151
+     ],
+     "paired_ci_halfwidth_pp": 1.071256866204307,
+     "paired_median_pct": 0.1096257849768436,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
    "power_model": {
     "eventlog_loglog_slope": 0.12775975710440163,
     "eventlog_max_observed_over_predicted": 9.012251499527867,
@@ -713,6 +738,31 @@
    "n_per_condition_pooled_min": 121,
    "overhead_eventlog_pct": 0.04545685922245169,
    "overhead_sysmon_pct": -0.16681163872395854,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 121,
+     "paired_ci95_pct": [
+      -0.3853432782122899,
+      0.4341571185615792
+     ],
+     "paired_ci_halfwidth_pp": 0.40975019838693455,
+     "paired_median_pct": -0.08924571635453334,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 121,
+     "paired_ci95_pct": [
+      -0.38071194990660273,
+      0.39642713434430915
+     ],
+     "paired_ci_halfwidth_pp": 0.3885695421254559,
+     "paired_median_pct": -0.21415777088492727,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
    "power_model": {
     "eventlog_loglog_slope": -0.8738206270178008,
     "eventlog_max_observed_over_predicted": 2.2122107782295655,
@@ -1312,6 +1362,31 @@
    "n_per_condition_pooled_min": 146,
    "overhead_eventlog_pct": 0.004696573434176107,
    "overhead_sysmon_pct": -0.0591791914235644,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 146,
+     "paired_ci95_pct": [
+      -0.38857888886038905,
+      0.3787341571439583
+     ],
+     "paired_ci_halfwidth_pp": 0.3836565230021737,
+     "paired_median_pct": 0.017007190757831112,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 146,
+     "paired_ci95_pct": [
+      -0.4006025882101597,
+      0.45391621220485956
+     ],
+     "paired_ci_halfwidth_pp": 0.42725940020750963,
+     "paired_median_pct": -0.07739345300593231,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
    "power_model": {
     "eventlog_loglog_slope": -1.0750808287098323,
     "eventlog_max_observed_over_predicted": 1.3833067469208733,
@@ -1926,6 +2001,31 @@
    "n_per_condition_pooled_min": 170,
    "overhead_eventlog_pct": 0.26143504370624265,
    "overhead_sysmon_pct": -0.09270330613778625,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 170,
+     "paired_ci95_pct": [
+      -0.4248029973963533,
+      0.62619318280131
+     ],
+     "paired_ci_halfwidth_pp": 0.5254980900988316,
+     "paired_median_pct": 0.1092181317938588,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 170,
+     "paired_ci95_pct": [
+      -0.1427635539738157,
+      0.5850790311480957
+     ],
+     "paired_ci_halfwidth_pp": 0.3639212925609557,
+     "paired_median_pct": 0.13309882142743276,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
    "power_model": {
     "eventlog_loglog_slope": -1.1385693555637832,
     "eventlog_max_observed_over_predicted": 1.0,
@@ -2570,6 +2670,31 @@
    "n_per_condition_pooled_min": 207,
    "overhead_eventlog_pct": 0.156447581748872,
    "overhead_sysmon_pct": 0.17691356972396152,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 207,
+     "paired_ci95_pct": [
+      -0.15843654638340715,
+      0.2217383989812505
+     ],
+     "paired_ci_halfwidth_pp": 0.19008747268232884,
+     "paired_median_pct": 0.019975492260455138,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 207,
+     "paired_ci95_pct": [
+      -0.20562980216715582,
+      0.28721583508933374
+     ],
+     "paired_ci_halfwidth_pp": 0.24642281862824478,
+     "paired_median_pct": 0.05993831982003663,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
    "power_model": {
     "eventlog_loglog_slope": -1.2405246473668854,
     "eventlog_max_observed_over_predicted": 3.3285541395946354,
@@ -2953,6 +3078,705 @@
    "sysmon_verdict": "PASS",
    "threshold_pct": 5.0,
    "verdict": "PASS"
+  },
+  {
+   "cell": "F1_agg|small",
+   "cell_decided": false,
+   "combined_caveat": "sum of parts; elog arm changes Spark config (DEC-040 s4)",
+   "combined_sum_pct": 1.3122980722075128,
+   "conditions": {
+    "FULL": {
+     "iqr_s": 5.184796900022775,
+     "max_s": 57.08324929996161,
+     "median_s": 16.270208700036164,
+     "min_s": 14.647508799971547,
+     "n": 247
+    },
+    "NEITHER": {
+     "iqr_s": 5.21830259996932,
+     "max_s": 56.86334950005403,
+     "median_s": 16.059104199986905,
+     "min_s": 14.59031480003614,
+     "n": 247
+    },
+    "NO-SYSMON": {
+     "iqr_s": 5.172289500012994,
+     "max_s": 32.72942950000288,
+     "median_s": 16.23729670001194,
+     "min_s": 14.630128899996635,
+     "n": 247
+    }
+   },
+   "drift_diagnostic": {
+    "common_mode_level_shift": {
+     "all_same_sign": true,
+     "common_mode": true,
+     "max_pct": 26.387424797476996,
+     "min_pct": 25.067909307715052,
+     "shifts_pct": {
+      "FULL": 25.067909307715052,
+      "NEITHER": 25.447532476163843,
+      "NO-SYSMON": 26.387424797476996
+     },
+     "spread_pct": 1.3195154897619439
+    },
+    "note": "POST-HOC, prompted by the DEC-043 s7 falsification clause; changes no verdict and no pre-registered statistic",
+    "per_condition": {
+     "FULL": {
+      "cv_all_pct": 21.26412763513888,
+      "cv_second_half_pct": 14.405483804803914,
+      "lag1_autocorrelation": 0.58372516886443,
+      "level_shift_pct": 25.067909307715052,
+      "median_first_half_s": 15.479505499999505,
+      "median_second_half_s": 19.359893900022143,
+      "n": 247,
+      "robust_dispersion_all_pct": 31.866812501374064,
+      "robust_dispersion_second_half_pct": 26.968658129091025,
+      "window_size": 20,
+      "windowed": [
+       {
+        "median_s": 20.84331349999411,
+        "robust_dispersion_pct": 13.479083591949491,
+        "start_index": 0
+       },
+       {
+        "median_s": 18.46988675004104,
+        "robust_dispersion_pct": 28.971750733724843,
+        "start_index": 20
+       },
+       {
+        "median_s": 16.06816850003088,
+        "robust_dispersion_pct": 9.772499274060008,
+        "start_index": 40
+       },
+       {
+        "median_s": 15.144827750016702,
+        "robust_dispersion_pct": 1.1583839238807634,
+        "start_index": 60
+       },
+       {
+        "median_s": 15.067236699978821,
+        "robust_dispersion_pct": 1.2255239874283306,
+        "start_index": 80
+       },
+       {
+        "median_s": 15.085717500012834,
+        "robust_dispersion_pct": 1.1861315182021481,
+        "start_index": 100
+       },
+       {
+        "median_s": 14.967951200000243,
+        "robust_dispersion_pct": 1.4336414324562226,
+        "start_index": 120
+       },
+       {
+        "median_s": 15.260331750003388,
+        "robust_dispersion_pct": 32.439838668660016,
+        "start_index": 140
+       },
+       {
+        "median_s": 20.181196249992354,
+        "robust_dispersion_pct": 5.931248252893513,
+        "start_index": 160
+       },
+       {
+        "median_s": 20.438424250023672,
+        "robust_dispersion_pct": 5.558116839612876,
+        "start_index": 180
+       },
+       {
+        "median_s": 20.044780999975046,
+        "robust_dispersion_pct": 8.748636365850349,
+        "start_index": 200
+       },
+       {
+        "median_s": 18.93649144997471,
+        "robust_dispersion_pct": 8.768342881044763,
+        "start_index": 220
+       }
+      ]
+     },
+     "NEITHER": {
+      "cv_all_pct": 21.798564548301847,
+      "cv_second_half_pct": 14.852239533442072,
+      "lag1_autocorrelation": 0.6237970054743176,
+      "level_shift_pct": 25.447532476163843,
+      "median_first_half_s": 15.625743100012187,
+      "median_second_half_s": 19.60210915002972,
+      "n": 247,
+      "robust_dispersion_all_pct": 32.49435669004237,
+      "robust_dispersion_second_half_pct": 27.466032398852047,
+      "window_size": 20,
+      "windowed": [
+       {
+        "median_s": 20.733259900007397,
+        "robust_dispersion_pct": 16.58024481713106,
+        "start_index": 0
+       },
+       {
+        "median_s": 19.112073500000406,
+        "robust_dispersion_pct": 29.808224104975082,
+        "start_index": 20
+       },
+       {
+        "median_s": 15.894939099991461,
+        "robust_dispersion_pct": 14.244678043601962,
+        "start_index": 40
+       },
+       {
+        "median_s": 15.116117700003088,
+        "robust_dispersion_pct": 1.4893784532726342,
+        "start_index": 60
+       },
+       {
+        "median_s": 15.070502499991562,
+        "robust_dispersion_pct": 2.199761421352619,
+        "start_index": 80
+       },
+       {
+        "median_s": 14.999679200001992,
+        "robust_dispersion_pct": 1.371141324145417,
+        "start_index": 100
+       },
+       {
+        "median_s": 14.966800650028745,
+        "robust_dispersion_pct": 1.6365084010669317,
+        "start_index": 120
+       },
+       {
+        "median_s": 15.033059799985494,
+        "robust_dispersion_pct": 36.35901621312579,
+        "start_index": 140
+       },
+       {
+        "median_s": 20.603695950005203,
+        "robust_dispersion_pct": 5.164175168192254,
+        "start_index": 160
+       },
+       {
+        "median_s": 20.086657450039638,
+        "robust_dispersion_pct": 6.439417325667308,
+        "start_index": 180
+       },
+       {
+        "median_s": 20.432588599971496,
+        "robust_dispersion_pct": 6.51696599033906,
+        "start_index": 200
+       },
+       {
+        "median_s": 19.198714350000955,
+        "robust_dispersion_pct": 7.91794425564954,
+        "start_index": 220
+       }
+      ]
+     },
+     "NO-SYSMON": {
+      "cv_all_pct": 17.822508847872356,
+      "cv_second_half_pct": 15.333282863619297,
+      "lag1_autocorrelation": 0.8610691791874462,
+      "level_shift_pct": 26.387424797476996,
+      "median_first_half_s": 15.496148000005633,
+      "median_second_half_s": 19.585182400012854,
+      "n": 247,
+      "robust_dispersion_all_pct": 31.854375734904142,
+      "robust_dispersion_second_half_pct": 27.14288481673219,
+      "window_size": 20,
+      "windowed": [
+       {
+        "median_s": 21.415999550008564,
+        "robust_dispersion_pct": 12.010728212759613,
+        "start_index": 0
+       },
+       {
+        "median_s": 19.992626999970526,
+        "robust_dispersion_pct": 27.998806009821816,
+        "start_index": 20
+       },
+       {
+        "median_s": 16.03638730000239,
+        "robust_dispersion_pct": 8.638589066645629,
+        "start_index": 40
+       },
+       {
+        "median_s": 15.125889349990757,
+        "robust_dispersion_pct": 2.287828781630779,
+        "start_index": 60
+       },
+       {
+        "median_s": 15.027600950008491,
+        "robust_dispersion_pct": 1.7530406274202377,
+        "start_index": 80
+       },
+       {
+        "median_s": 14.930915000004461,
+        "robust_dispersion_pct": 1.70107994033177,
+        "start_index": 100
+       },
+       {
+        "median_s": 14.960129799990682,
+        "robust_dispersion_pct": 1.972022662712209,
+        "start_index": 120
+       },
+       {
+        "median_s": 15.271229500009213,
+        "robust_dispersion_pct": 36.3840694687447,
+        "start_index": 140
+       },
+       {
+        "median_s": 20.37400169999455,
+        "robust_dispersion_pct": 7.726177081869311,
+        "start_index": 160
+       },
+       {
+        "median_s": 20.483305100002326,
+        "robust_dispersion_pct": 3.749489138758142,
+        "start_index": 180
+       },
+       {
+        "median_s": 20.022007399995346,
+        "robust_dispersion_pct": 8.423565710983723,
+        "start_index": 200
+       },
+       {
+        "median_s": 19.744290700007696,
+        "robust_dispersion_pct": 12.362120964890401,
+        "start_index": 220
+       }
+      ]
+     }
+    }
+   },
+   "eventlog_ci95_pct": [
+    -12.904072310833778,
+    17.921728496638206
+   ],
+   "eventlog_ci_halfwidth_pp": 15.412900403735993,
+   "eventlog_decided": false,
+   "eventlog_verdict": "INCONCLUSIVE",
+   "n_authorized_new_per_condition": 242,
+   "n_authorized_pooled_per_condition": 247,
+   "n_per_condition_baseline": 5,
+   "n_per_condition_new": {
+    "FULL": 242,
+    "NEITHER": 242,
+    "NO-SYSMON": 242
+   },
+   "n_per_condition_pooled": {
+    "FULL": 247,
+    "NEITHER": 247,
+    "NO-SYSMON": 247
+   },
+   "n_per_condition_pooled_min": 247,
+   "overhead_eventlog_pct": 1.1096042332496932,
+   "overhead_sysmon_pct": 0.20269383895781964,
+   "paired_diagnostic": {
+    "eventlog": {
+     "component": "eventlog",
+     "n_paired_repetitions": 247,
+     "paired_ci95_pct": [
+      -0.29749620498542095,
+      0.632870956051915
+     ],
+     "paired_ci_halfwidth_pp": 0.465183580518668,
+     "paired_median_pct": 0.1748131493363036,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    },
+    "note": "DIAGNOSTIC ONLY. The adjudicated quantity remains the DEC-040 s7 difference of independent medians reported above; no verdict here is derived from these numbers. Recorded because the protocol already interleaves the three conditions within each (cell, rep), so the repetitions are matched, and the measured drift is common-mode. Acting on this would require its own decision and is NOT done here.",
+    "sysmon": {
+     "component": "sysmon",
+     "n_paired_repetitions": 247,
+     "paired_ci95_pct": [
+      -0.18289499812268004,
+      0.6540956037099483
+     ],
+     "paired_ci_halfwidth_pp": 0.4184953009163142,
+     "paired_median_pct": 0.17188241154650655,
+     "status": "DIAGNOSTIC ONLY - not the DEC-040 s7 acceptance quantity; no verdict is derived from it"
+    }
+   },
+   "power_model": {
+    "eventlog_loglog_slope": -0.2288394600688497,
+    "eventlog_max_observed_over_predicted": 5.563422153341227,
+    "eventlog_trajectory": [
+     {
+      "ci95_pct": [
+       -10.706531389691916,
+       28.69926281012729
+      ],
+      "ci_halfwidth_pp": 19.702897099909602,
+      "component": "eventlog",
+      "n_per_condition": 5,
+      "normalised_halfwidth_times_sqrt_n": 44.05701726908134,
+      "observed_over_predicted": 1.0,
+      "point_estimate_pct": 2.875180205609466,
+      "predicted_halfwidth_pp": 19.702897099909602,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -3.897067308661849,
+       8.451695043494245
+      ],
+      "ci_halfwidth_pp": 6.174381176078047,
+      "component": "eventlog",
+      "n_per_condition": 29,
+      "normalised_halfwidth_times_sqrt_n": 33.25006021524924,
+      "observed_over_predicted": 0.7547052042168939,
+      "point_estimate_pct": 3.173256398218731,
+      "predicted_halfwidth_pp": 8.181182720854272,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -11.888492102840317,
+       21.193802442267998
+      ],
+      "ci_halfwidth_pp": 16.541147272554156,
+      "component": "eventlog",
+      "n_per_condition": 53,
+      "normalised_halfwidth_times_sqrt_n": 120.42136983896698,
+      "observed_over_predicted": 2.7333073663041003,
+      "point_estimate_pct": 5.439577984858821,
+      "predicted_halfwidth_pp": 6.051696737978144,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -11.892443943357843,
+       19.038037037824687
+      ],
+      "ci_halfwidth_pp": 15.465240490591265,
+      "component": "eventlog",
+      "n_per_condition": 78,
+      "normalised_halfwidth_times_sqrt_n": 136.58530575315282,
+      "observed_over_predicted": 3.1001941170676273,
+      "point_estimate_pct": 0.9891266047060892,
+      "predicted_halfwidth_pp": 4.988474884669265,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -2.472595844896897,
+       2.821470352975102
+      ],
+      "ci_halfwidth_pp": 2.6470330989359994,
+      "component": "eventlog",
+      "n_per_condition": 102,
+      "normalised_halfwidth_times_sqrt_n": 26.733723854712,
+      "observed_over_predicted": 0.6067983152702758,
+      "point_estimate_pct": 0.0680663600426784,
+      "predicted_halfwidth_pp": 4.362294739986179,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -3.0314270369687657,
+       2.9339430573551675
+      ],
+      "ci_halfwidth_pp": 2.982685047161967,
+      "component": "eventlog",
+      "n_per_condition": 126,
+      "normalised_halfwidth_times_sqrt_n": 33.48055661740126,
+      "observed_over_predicted": 0.7599369792311724,
+      "point_estimate_pct": -0.5018444253763906,
+      "predicted_halfwidth_pp": 3.9249110500972684,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -1.8582363840208431,
+       1.3525146214607755
+      ],
+      "ci_halfwidth_pp": 1.6053755027408094,
+      "component": "eventlog",
+      "n_per_condition": 150,
+      "normalised_halfwidth_times_sqrt_n": 19.661754136395004,
+      "observed_over_predicted": 0.4462797382834488,
+      "point_estimate_pct": -0.3050124760749179,
+      "predicted_halfwidth_pp": 3.597240396607869,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -2.950802102262285,
+       3.0736107250391522
+      ],
+      "ci_halfwidth_pp": 3.0122064136507185,
+      "component": "eventlog",
+      "n_per_condition": 174,
+      "normalised_halfwidth_times_sqrt_n": 39.733731529373166,
+      "observed_over_predicted": 0.9018706665205363,
+      "point_estimate_pct": -0.6204393065995168,
+      "predicted_halfwidth_pp": 3.3399538597612524,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -3.620394035480145,
+       4.19075351405377
+      ],
+      "ci_halfwidth_pp": 3.9055737747669577,
+      "component": "eventlog",
+      "n_per_condition": 199,
+      "normalised_halfwidth_times_sqrt_n": 55.09489808974455,
+      "observed_over_predicted": 1.250536271060943,
+      "point_estimate_pct": 0.27560798443722817,
+      "predicted_halfwidth_pp": 3.123119149077944,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -13.411198929368197,
+       19.250948690232985
+      ],
+      "ci_halfwidth_pp": 16.331073809800593,
+      "component": "eventlog",
+      "n_per_condition": 223,
+      "normalised_halfwidth_times_sqrt_n": 243.87493866159664,
+      "observed_over_predicted": 5.535439159943881,
+      "point_estimate_pct": 1.2824198646087173,
+      "predicted_halfwidth_pp": 2.9502760915479307,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -12.955929443371536,
+       18.556321014967434
+      ],
+      "ci_halfwidth_pp": 15.756125229169484,
+      "component": "eventlog",
+      "n_per_condition": 242,
+      "normalised_halfwidth_times_sqrt_n": 245.10778588494412,
+      "observed_over_predicted": 5.563422153341227,
+      "point_estimate_pct": -1.4101198007173679,
+      "predicted_halfwidth_pp": 2.832092333620022,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -12.904072310833778,
+       17.921728496638206
+      ],
+      "ci_halfwidth_pp": 15.412900403735993,
+      "component": "eventlog",
+      "n_per_condition": 247,
+      "normalised_halfwidth_times_sqrt_n": 242.23274389996251,
+      "observed_over_predicted": 5.49816485352399,
+      "point_estimate_pct": 1.1096042332496932,
+      "predicted_halfwidth_pp": 2.803280879047717,
+      "verdict": "INCONCLUSIVE"
+     }
+    ],
+    "eventlog_trajectory_monotone_decreasing": false,
+    "predicted_loglog_slope": -0.5,
+    "prediction": "CI half-width proportional to 1/sqrt(n); ~2.0 pp at the authorized n (DEC-043 s7)",
+    "prefix_grid_n": [
+     5,
+     29,
+     53,
+     78,
+     102,
+     126,
+     150,
+     174,
+     199,
+     223,
+     242,
+     247
+    ],
+    "sysmon_halfwidth_at_authorized_n_pp": 15.407637980448834,
+    "sysmon_halfwidth_at_pooled_n_pp": 14.945211444672506,
+    "sysmon_loglog_slope": -0.14976690344837248,
+    "sysmon_max_observed_over_predicted": 7.712734834431253,
+    "sysmon_observed_over_predicted_at_authorized_n": 7.712734834431253,
+    "sysmon_observed_over_predicted_at_pooled_n": 7.558144527171763,
+    "sysmon_trajectory": [
+     {
+      "ci95_pct": [
+       -11.186821595831546,
+       16.609052874234255
+      ],
+      "ci_halfwidth_pp": 13.8979372350329,
+      "component": "sysmon",
+      "n_per_condition": 5,
+      "normalised_halfwidth_times_sqrt_n": 31.07673240455904,
+      "observed_over_predicted": 1.0,
+      "point_estimate_pct": 1.2141780135169524,
+      "predicted_halfwidth_pp": 13.8979372350329,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -5.722770172370077,
+       4.556287444083072
+      ],
+      "ci_halfwidth_pp": 5.139528808226574,
+      "component": "sysmon",
+      "n_per_condition": 29,
+      "normalised_halfwidth_times_sqrt_n": 27.677209663315683,
+      "observed_over_predicted": 0.8906087455724712,
+      "point_estimate_pct": -2.603710476119937,
+      "predicted_halfwidth_pp": 5.770804333302336,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -18.133194755863876,
+       18.717882315425495
+      ],
+      "ci_halfwidth_pp": 18.425538535644684,
+      "component": "sysmon",
+      "n_per_condition": 53,
+      "normalised_halfwidth_times_sqrt_n": 134.13994530866614,
+      "observed_over_predicted": 4.316410862069509,
+      "point_estimate_pct": -0.6478354915829868,
+      "predicted_halfwidth_pp": 4.268717488772729,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -15.524291069607207,
+       16.278834649070983
+      ],
+      "ci_halfwidth_pp": 15.901562859339094,
+      "component": "sysmon",
+      "n_per_condition": 78,
+      "normalised_halfwidth_times_sqrt_n": 140.43880057456337,
+      "observed_over_predicted": 4.519098042429989,
+      "point_estimate_pct": 0.1750886261925147,
+      "predicted_halfwidth_pp": 3.518747039793936,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -2.7248159954271616,
+       3.0333938629676966
+      ],
+      "ci_halfwidth_pp": 2.879104929197429,
+      "component": "sysmon",
+      "n_per_condition": 102,
+      "normalised_halfwidth_times_sqrt_n": 29.077534450492035,
+      "observed_over_predicted": 0.9356689780623875,
+      "point_estimate_pct": 0.12596354528791862,
+      "predicted_halfwidth_pp": 3.0770550234117726,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -2.953250194343454,
+       3.2478688705381926
+      ],
+      "ci_halfwidth_pp": 3.1005595324408235,
+      "component": "sysmon",
+      "n_per_condition": 126,
+      "normalised_halfwidth_times_sqrt_n": 34.8036944330687,
+      "observed_over_predicted": 1.119927731783117,
+      "point_estimate_pct": 0.034067459669095565,
+      "predicted_halfwidth_pp": 2.7685353656741767,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -1.2638323640119578,
+       1.7014592877990282
+      ],
+      "ci_halfwidth_pp": 1.482645825905493,
+      "component": "sysmon",
+      "n_per_condition": 150,
+      "normalised_halfwidth_times_sqrt_n": 18.158628713678993,
+      "observed_over_predicted": 0.5843158951619727,
+      "point_estimate_pct": 0.07912521792959357,
+      "predicted_halfwidth_pp": 2.537404575472832,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -3.061974293036676,
+       3.0411546099726494
+      ],
+      "ci_halfwidth_pp": 3.051564451504663,
+      "component": "sysmon",
+      "n_per_condition": 174,
+      "normalised_halfwidth_times_sqrt_n": 40.25289970540669,
+      "observed_over_predicted": 1.2952745218316932,
+      "point_estimate_pct": 0.4523397209137652,
+      "predicted_halfwidth_pp": 2.3559210036721314,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -4.103941392416583,
+       3.9888748833786574
+      ],
+      "ci_halfwidth_pp": 4.04640813789762,
+      "component": "sysmon",
+      "n_per_condition": 199,
+      "normalised_halfwidth_times_sqrt_n": 57.08161126729319,
+      "observed_over_predicted": 1.836795790632067,
+      "point_estimate_pct": 0.07228365792780755,
+      "predicted_halfwidth_pp": 2.202971151466541,
+      "verdict": "PASS"
+     },
+     {
+      "ci95_pct": [
+       -15.81255557089192,
+       16.107316636834483
+      ],
+      "ci_halfwidth_pp": 15.959936103863201,
+      "component": "sysmon",
+      "n_per_condition": 223,
+      "normalised_halfwidth_times_sqrt_n": 238.33267081536542,
+      "observed_over_predicted": 7.66916764969799,
+      "point_estimate_pct": -0.6372451555377086,
+      "predicted_halfwidth_pp": 2.0810519254317903,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -15.21286816207254,
+       15.602407798825128
+      ],
+      "ci_halfwidth_pp": 15.407637980448834,
+      "component": "sysmon",
+      "n_per_condition": 242,
+      "normalised_halfwidth_times_sqrt_n": 239.686596556941,
+      "observed_over_predicted": 7.712734834431253,
+      "point_estimate_pct": 0.2731002286534208,
+      "predicted_halfwidth_pp": 1.9976880200348561,
+      "verdict": "INCONCLUSIVE"
+     },
+     {
+      "ci95_pct": [
+       -14.680222914588295,
+       15.210199974756716
+      ],
+      "ci_halfwidth_pp": 14.945211444672506,
+      "component": "sysmon",
+      "n_per_condition": 247,
+      "normalised_halfwidth_times_sqrt_n": 234.88243494589926,
+      "observed_over_predicted": 7.558144527171763,
+      "point_estimate_pct": 0.20269383895781964,
+      "predicted_halfwidth_pp": 1.977365131209652,
+      "verdict": "INCONCLUSIVE"
+     }
+    ],
+    "sysmon_trajectory_monotone_decreasing": false,
+    "target_halfwidth_pp": 2.0
+   },
+   "reps_needed_for_2pp_halfwidth_recomputed": {
+    "eventlog": 14670,
+    "sysmon": 13793
+   },
+   "stage": 6,
+   "sysmon_ci95_pct": [
+    -14.680222914588295,
+    15.210199974756716
+   ],
+   "sysmon_ci_halfwidth_pp": 14.945211444672506,
+   "sysmon_decided": false,
+   "sysmon_verdict": "INCONCLUSIVE",
+   "threshold_pct": 5.0,
+   "verdict": "INCONCLUSIVE"
   }
  ],
  "cells_decided": [
@@ -2980,7 +3804,7 @@
   "The prefix trajectory shares observations between its k points, so successive points are not independent of one another; it shows how the interval evolved as data arrived, not a set of independent experiments."
  ],
  "n_baseline_observations": 117,
- "n_new_observations": 1968,
+ "n_new_observations": 2694,
  "no_inference": "descriptive only; no significance test (DEC-040 s7)",
  "power_model_note": "prefix trajectory in execution order; k grid fixed before the data were seen; no repetition dropped, reordered or excluded; no goodness-of-fit threshold invented and no parameter tuned to the observations",
  "register_line": "EXP-009 (0 charged to SC6)",
@@ -3053,6 +3877,19 @@
    "stage": 5,
    "stage_status": "complete (606 of 606)",
    "wall_clock_seconds": 62287.534
+  },
+  {
+   "artifact_id": "3c9394d3dcf68c848be0c1b1474c8e5b9175b5cb8bafb00f84be684583920e02",
+   "cell": "F1_agg|small|s3",
+   "executions_authorized": 726,
+   "executions_recorded": 726,
+   "executions_timing_valid": 726,
+   "sc6_charged": 0,
+   "sc6_live_after": 483,
+   "sc6_live_before": 483,
+   "stage": 6,
+   "stage_status": "complete (726 of 726)",
+   "wall_clock_seconds": 30214.203
   }
  ],
  "stages_executed": [
@@ -3060,7 +3897,8 @@
   2,
   3,
   4,
-  5
+  5,
+  6
  ],
  "statistic": "median over pooled repetitions",
  "threshold_pct": 5.0,
@@ -3072,5 +3910,5 @@
   "rule": "a component verdict is returned only when the whole interval lies on one side of the gate; a straddling interval is INCONCLUSIVE in BOTH directions (DEC-042)",
   "seed": 0
  },
- "written_utc": "2026-09-23T00:09:30Z"
+ "written_utc": "2026-09-23T17:35:23Z"
 }
