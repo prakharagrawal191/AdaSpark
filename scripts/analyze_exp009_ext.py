@@ -96,6 +96,7 @@ EVAL_OUT = PROJECT / "results" / "evaluation" / "exp009_ext_analysis.json"
 FIGURE = PROJECT / "docs" / "figures" / "exp009_ci_halfwidth_vs_reps.svg"
 
 TRAJECTORY_POINTS = 10          # size of the prefix grid, fixed in advance
+WINDOW = 20                     # presentation window for the regime series
 
 
 def load_rows() -> tuple[list[dict], list[dict]]:
@@ -206,6 +207,34 @@ def drift_diagnostic(vals: list[float]) -> dict[str, Any] | None:
         "cv_second_half_pct": (100.0 * statistics.pstdev(second)
                                / statistics.fmean(second)
                                if statistics.fmean(second) else None),
+        # Robust counterparts. The CVs above are standard-deviation based and
+        # a handful of transient host-contention runs can dominate them while
+        # leaving the median untouched (F1_agg|medium: 3 runs of 111/107/62 s
+        # against a stable 30.6 s median). The analysis itself is median-based
+        # (PLAN:180), so a median-based dispersion is the like-for-like
+        # summary. Both are reported; neither is a verdict and no observation
+        # is excluded from either.
+        "robust_dispersion_all_pct": (100.0 * iqr(vals)
+                                      / statistics.median(vals)
+                                      if statistics.median(vals) else None),
+        "robust_dispersion_second_half_pct": (
+            100.0 * iqr(second) / statistics.median(second)
+            if statistics.median(second) else None),
+        # Regime structure, in execution order. The series are not uniformly
+        # noisy: they sit at a very stable level (windowed IQR/median ~1%)
+        # punctuated by episodes of host contention that persist for tens of
+        # CONSECUTIVE runs, which is what the lag-1 figure above is detecting.
+        # The window is a fixed presentation size, not a threshold, and no
+        # observation is excluded or reweighted by it.
+        "window_size": WINDOW,
+        "windowed": [
+            {"start_index": i,
+             "median_s": statistics.median(vals[i:i + WINDOW]),
+             "robust_dispersion_pct": (
+                 100.0 * iqr(vals[i:i + WINDOW])
+                 / statistics.median(vals[i:i + WINDOW])
+                 if statistics.median(vals[i:i + WINDOW]) else None)}
+            for i in range(0, n - WINDOW + 1, WINDOW)],
     }
 
 
