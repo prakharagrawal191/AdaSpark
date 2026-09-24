@@ -40,6 +40,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 FIGDIR = PROJECT / "docs" / "figures"
 EXP002 = PROJECT / "results" / "experiments" / "exp-002" / "analysis" / "gate.json"
 EXP005 = PROJECT / "results" / "evaluation" / "exp005_analysis.json"
+EXP007 = PROJECT / "results" / "evaluation" / "exp007_analysis.json"
 
 # Arm roles, so the figure distinguishes "what kind of thing is this" rather
 # than presenting seven equivalent bars.
@@ -188,9 +189,153 @@ def fig_exp005_arms() -> Path:
     return p
 
 
+def fig_exp007_ablation() -> Path:
+    """EXP-007 A1/A2 state ablation: per-run TRAIN episode reward (descriptive).
+
+    Reads ONLY the frozen results/evaluation/exp007_analysis.json; every
+    number drawn is that artifact rounded and nothing else. The hypothesis
+    status, the Q0 confound, the seed limitation and the TRAIN-only scope
+    are printed on the figure itself, so it cannot be read as an
+    inferential, causal or TEST result when separated from the report.
+
+    Frozen values drawn (run mean of T_ref-normalized episode reward):
+    A1-s0 0.7407, A1-s1 0.6275, A2-s0 0.7622, A2-s1 0.6724,
+    FULL-s0 0.7365, FULL-s1 0.6681, FULL-s2 0.7716.
+    """
+    d = json.loads(EXP007.read_text(encoding="utf-8"))
+    runs = d["run_results"]            # dict keyed by label (A1-s0 ... A2-s1)
+    ref = d["full_state_reference"]["runs"]
+    cov = d["state_coverage"]
+    groups = (
+        ("A1: context only (state-v1)", "#1f4e79",
+         [(k, runs[k]) for k in ("A1-s0", "A1-s1")], "A1"),
+        ("A2: feedback only (state-v2)", "#148f77",
+         [(k, runs[k]) for k in ("A2-s0", "A2-s1")], "A2"),
+        ("full state reference (state-v1.5)", "#7f8c8d",
+         [(r["label"], r) for r in ref], "full_state"),
+    )
+    W, H, L, T, PH = 980, 620, 110, 104, 296
+    bottom = T + PH
+    vmax = 1.0
+    # Horizontal layout (left of the dashed divider; verified against the
+    # frozen artifact): 2 A1 bars + 2 A2 bars; the 3 full-state reference
+    # bars sit right of the divider. bw/gap sizes keep all 7 bars in-bounds.
+    bw, gap_in, gap_ab, gap_div = 62, 30, 70, 100
+
+    def py(v: float) -> float:
+        return T + PH * (1.0 - v / vmax)
+
+    o = _open(W, H,
+              "EXP-007 state ablation: per-run TRAIN episode reward "
+              "(DESCRIPTIVE - no inferential test)",
+              "Bar = run mean of T_ref-normalized episode reward "
+              "(dimensionless); whisker = +/- 1 sample SD (ddof=1) = "
+              "descriptive spread, NOT a CI.\n"
+              "TRAIN episodes only: 0 TEST executions. Hypothesis "
+              "'context+feedback > context-only' = OBSERVED PATTERN, NOT "
+              "ESTABLISHED (DAY36 s11).\n"
+              "Q0 CONFOUND (DAY36 s9): A1/A2 neutral q0 0.5 vs reference "
+              "EXP-002-derived Q0 + longer horizons - NOT a pure state "
+              "effect.\n"
+              "2 seeds per ablation (main study: 3; DAY36 s10). No causal "
+              "claim, no best-variant ranking, no TEST claim (DAY36 s12).",
+              L)
+    v = 0.0
+    while v <= vmax + 1e-9:
+        y = py(v)
+        o.append('<line x1="%d" y1="%s" x2="%d" y2="%s" stroke="#eeeeee"/>'
+                 % (L, _f(y), W - 30, _f(y)))
+        o.append('<text x="%d" y="%s" font-size="11" fill="#444" '
+                 'text-anchor="end">%.1f</text>' % (L - 8, _f(y + 4), v))
+        v = round(v + 0.2, 10)
+    o.append('<text x="20" y="%d" font-size="12" fill="#222" '
+             'text-anchor="middle" transform="rotate(-90 20 %d)">mean '
+             'episode reward (T_ref-normalized, dimensionless)</text>'
+             % (T + PH // 2, T + PH // 2))
+
+
+    x = L + 60
+    divider_x = None
+    for gi, (gname, gcol, members, cov_key) in enumerate(groups):
+        g0 = x
+        for label, r in members:
+            mean = float(r["mean_reward"])
+            sd = float(r["reward_stdev_sample"])
+            eps = int(r["episodes_completed"])
+            cx = x + bw / 2.0
+            bh = PH * mean / vmax
+            o.append('<rect x="%s" y="%s" width="%s" height="%s" '
+                     'fill="%s" opacity="0.88"/>'
+                     % (_f(x), _f(py(mean)), _f(bw), _f(bh), gcol))
+            # value sits above the whisker top so label and bar never overlap
+            yhi = py(min(mean + sd, vmax))
+            ylo = py(max(mean - sd, 0.0))
+            o.append('<text x="%s" y="%s" font-size="11" fill="#111" '
+                     'text-anchor="middle">%.4f</text>'
+                     % (_f(cx), _f(yhi - 8), mean))
+            # whisker: +/- 1 sample SD (ddof=1), descriptive spread only
+            o.append('<line x1="%s" y1="%s" x2="%s" y2="%s" stroke="#333" '
+                     'stroke-width="1.4"/>'
+                     % (_f(cx), _f(yhi), _f(cx), _f(ylo)))
+            for ycap in (yhi, ylo):
+                o.append('<line x1="%s" y1="%s" x2="%s" y2="%s" '
+                         'stroke="#333" stroke-width="1.4"/>'
+                         % (_f(cx - 8), _f(ycap), _f(cx + 8), _f(ycap)))
+            o.append('<text x="%s" y="%d" font-size="10" fill="#222" '
+                     'text-anchor="middle">%s</text>'
+                     % (_f(cx), bottom + 16, label))
+            o.append('<text x="%s" y="%d" font-size="9" fill="#666" '
+                     'text-anchor="middle">%d eps | sd %.4f</text>'
+                     % (_f(cx), bottom + 28, eps, sd))
+            if r.get("early_stop_triggered"):
+                o.append('<text x="%s" y="%d" font-size="9" fill="#a06000" '
+                         'text-anchor="middle">&#8224; early stop</text>'
+                         % (_f(cx), bottom + 38))
+            x += bw + gap_in
+        g1 = x - gap_in
+        c = (g0 + g1) / 2.0
+        cinfo = cov[cov_key]
+        if cov_key == "full_state":
+            n_exec = sum(int(r.get("live_executions", 0)) for r in ref)
+            tail = "%d/%d states observed | %d exec | 3 seeds (main study)" % (
+                cinfo["n_observed_union"], cinfo["possible"], n_exec)
+        else:
+            vs = d["variant_summaries"][cov_key]
+            tail = ("%d/%d states observed | %d exec | "
+                    "mean of run-means %.4f" % (
+                        cinfo["n_observed_union"], cinfo["possible"],
+                        int(vs["total_executions"]),
+                        float(vs["mean_of_run_means"])))
+        o.append('<text x="%s" y="%d" font-size="11" font-weight="bold" '
+                 'fill="#111" text-anchor="middle">%s</text>'
+                 % (_f(c), bottom + 58, gname))
+        o.append('<text x="%s" y="%d" font-size="9" fill="#666" '
+                 'text-anchor="middle">%s</text>' % (_f(c), bottom + 70, tail))
+        x += gap_ab if gi == 0 else gap_div
+        if gi == 1:
+            divider_x = x - gap_div / 2.0
+    base = bottom + 88
+    if divider_x is not None:
+        o.append('<line x1="%s" y1="%d" x2="%s" y2="%d" stroke="#999" '
+                 'stroke-dasharray="5,4"/>' % (_f(divider_x), T, _f(divider_x),
+                                              base))
+    o.append('<text x="%d" y="%d" font-size="9" fill="#666">dashed line '
+             'separates frozen ablations (left) from the full-state reference '
+             '(right); A1/A2 vs reference is NOT a pure state effect '
+             '(Q0 + horizon differ).</text>' % (L, base + 28))
+    o.append('<text x="%d" y="%d" font-size="9" fill="#888">'
+             'source: results/evaluation/exp007_analysis.json | frozen '
+             'analysis SHA256 e010072f..0043b68 | 0 Spark, '
+             '0 SC6</text>' % (L, base + 42))
+    o.append("</svg>")
+    p = FIGDIR / "exp007_ablation.svg"
+    p.write_text("\n".join(o), encoding="utf-8")
+    return p
+
+
 def main() -> int:
     FIGDIR.mkdir(parents=True, exist_ok=True)
-    for fn in (fig_exp002_sensitivity, fig_exp005_arms):
+    for fn in (fig_exp002_sensitivity, fig_exp005_arms, fig_exp007_ablation):
         print("wrote %s" % fn().relative_to(PROJECT))
     print("0 Spark executions, 0 charged to SC6, no result artifact written.")
     return 0

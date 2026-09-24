@@ -825,6 +825,15 @@ def main() -> int:
         "n_new_observations": len(ext_rows),
         "n_baseline_observations": len(base_rows),
         "baseline_observations_sha256": EXT.BASELINE_OBS_SHA256,
+        # Digest of the DEC-043 extension record this analysis was derived
+        # from. The n=5 baseline above has been pinned since DEC-040, but the
+        # 4842 extension rows - the primary evidence of this experiment - had
+        # no declared digest anywhere, so nothing could detect them being
+        # altered: scripts/verify_reproducibility.py could only hash them and
+        # report SKIP. Declaring it here, from the file actually read, closes
+        # that gap and makes the extension record verifiable on the same
+        # footing as every other frozen input.
+        "ext_observations_sha256": EXT.sha256_file(EXT.OBS_PATH),
         "baseline_analysis_artifact_id": EXT.SOURCE_ANALYSIS_ARTIFACT_ID,
         "power_model_note": (
             "prefix trajectory in execution order; k grid fixed before the "

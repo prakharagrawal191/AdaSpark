@@ -1,5 +1,5 @@
 {
- "artifact_id": "7c32b4f30863ebb5b64523fb7952735a343533969a5d01534ce02799cf1077e1",
+ "artifact_id": "a34f19d0c4307f26d9afad8feb25f5ff885156c666ba4d945bf3e1fa4b558e8e",
  "artifact_id_excludes": [
   "written_utc",
   "artifact_id"
@@ -4882,6 +4882,7 @@
  "contains_test_data": false,
  "decided_definition": "a component is decided when its whole 95% CI lies on one side of the 5% gate; a cell is decided when both components are. DEC-043 s3 sizes stages from the SYSMON required n, so the event-log component is not expected to be decided by these stages",
  "experiment_id": "EXP-009",
+ "ext_observations_sha256": "26d878c2d01ad990bad9598448796b10d2ebf26ae2da9a93edf24061b06b799c",
  "extends": "DEC-040 (protocol), DEC-042 (interval rule)",
  "limitations": [
   "The event-log arm is a configuration difference, not a pure observer removal (DEC-040 s4); the two components are never summed as an acceptance quantity without that caveat.",
@@ -5010,5 +5011,5 @@
   "rule": "a component verdict is returned only when the whole interval lies on one side of the gate; a straddling interval is INCONCLUSIVE in BOTH directions (DEC-042)",
   "seed": 0
  },
- "written_utc": "2026-09-24T08:34:46Z"
+ "written_utc": "2026-09-24T16:04:40Z"
 }

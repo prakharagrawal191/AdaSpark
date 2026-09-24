@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="620" viewBox="0 0 980 620" font-family="DejaVu Sans, Arial, sans-serif">
+<rect width="980" height="620" fill="#ffffff"/>
+<text x="110" y="28" font-size="16" font-weight="bold" fill="#111">EXP-007 state ablation: per-run TRAIN episode reward (DESCRIPTIVE - no inferential test)</text>
+<text x="110" y="46" font-size="11" fill="#555">Bar = run mean of T_ref-normalized episode reward (dimensionless); whisker = +/- 1 sample SD (ddof=1) = descriptive spread, NOT a CI.</text>
+<text x="110" y="60" font-size="11" fill="#555">TRAIN episodes only: 0 TEST executions. Hypothesis 'context+feedback > context-only' = OBSERVED PATTERN, NOT ESTABLISHED (DAY36 s11).</text>
+<text x="110" y="74" font-size="11" fill="#555">Q0 CONFOUND (DAY36 s9): A1/A2 neutral q0 0.5 vs reference EXP-002-derived Q0 + longer horizons - NOT a pure state effect.</text>
+<text x="110" y="88" font-size="11" fill="#555">2 seeds per ablation (main study: 3; DAY36 s10). No causal claim, no best-variant ranking, no TEST claim (DAY36 s12).</text>
+<line x1="110" y1="400" x2="950" y2="400" stroke="#eeeeee"/>
+<text x="102" y="404" font-size="11" fill="#444" text-anchor="end">0.0</text>
+<line x1="110" y1="340.8" x2="950" y2="340.8" stroke="#eeeeee"/>
+<text x="102" y="344.8" font-size="11" fill="#444" text-anchor="end">0.2</text>
+<line x1="110" y1="281.6" x2="950" y2="281.6" stroke="#eeeeee"/>
+<text x="102" y="285.6" font-size="11" fill="#444" text-anchor="end">0.4</text>
+<line x1="110" y1="222.4" x2="950" y2="222.4" stroke="#eeeeee"/>
+<text x="102" y="226.4" font-size="11" fill="#444" text-anchor="end">0.6</text>
+<line x1="110" y1="163.2" x2="950" y2="163.2" stroke="#eeeeee"/>
+<text x="102" y="167.2" font-size="11" fill="#444" text-anchor="end">0.8</text>
+<line x1="110" y1="104" x2="950" y2="104" stroke="#eeeeee"/>
+<text x="102" y="108" font-size="11" fill="#444" text-anchor="end">1.0</text>
+<text x="20" y="252" font-size="12" fill="#222" text-anchor="middle" transform="rotate(-90 20 252)">mean episode reward (T_ref-normalized, dimensionless)</text>
+<rect x="170" y="180.77" width="62" height="219.23" fill="#1f4e79" opacity="0.88"/>
+<text x="201" y="120.22" font-size="11" fill="#111" text-anchor="middle">0.7407</text>
+<line x1="201" y1="128.22" x2="201" y2="233.32" stroke="#333" stroke-width="1.4"/>
+<line x1="193" y1="128.22" x2="209" y2="128.22" stroke="#333" stroke-width="1.4"/>
+<line x1="193" y1="233.32" x2="209" y2="233.32" stroke="#333" stroke-width="1.4"/>
+<text x="201" y="416" font-size="10" fill="#222" text-anchor="middle">A1-s0</text>
+<text x="201" y="428" font-size="9" fill="#666" text-anchor="middle">35 eps | sd 0.1775</text>
+<rect x="262" y="214.26" width="62" height="185.74" fill="#1f4e79" opacity="0.88"/>
+<text x="293" y="154.04" font-size="11" fill="#111" text-anchor="middle">0.6275</text>
+<line x1="293" y1="162.04" x2="293" y2="266.48" stroke="#333" stroke-width="1.4"/>
+<line x1="285" y1="162.04" x2="301" y2="162.04" stroke="#333" stroke-width="1.4"/>
+<line x1="285" y1="266.48" x2="301" y2="266.48" stroke="#333" stroke-width="1.4"/>
+<text x="293" y="416" font-size="10" fill="#222" text-anchor="middle">A1-s1</text>
+<text x="293" y="428" font-size="9" fill="#666" text-anchor="middle">35 eps | sd 0.1764</text>
+<text x="247" y="458" font-size="11" font-weight="bold" fill="#111" text-anchor="middle">A1: context only (state-v1)</text>
+<text x="247" y="470" font-size="9" fill="#666" text-anchor="middle">4/15 states observed | 70 exec | mean of run-means 0.6841</text>
+<rect x="424" y="174.4" width="62" height="225.6" fill="#148f77" opacity="0.88"/>
+<text x="455" y="117.17" font-size="11" fill="#111" text-anchor="middle">0.7622</text>
+<line x1="455" y1="125.17" x2="455" y2="223.64" stroke="#333" stroke-width="1.4"/>
+<line x1="447" y1="125.17" x2="463" y2="125.17" stroke="#333" stroke-width="1.4"/>
+<line x1="447" y1="223.64" x2="463" y2="223.64" stroke="#333" stroke-width="1.4"/>
+<text x="455" y="416" font-size="10" fill="#222" text-anchor="middle">A2-s0</text>
+<text x="455" y="428" font-size="9" fill="#666" text-anchor="middle">35 eps | sd 0.1663</text>
+<text x="455" y="438" font-size="9" fill="#a06000" text-anchor="middle">&#8224; early stop</text>
+<rect x="516" y="200.98" width="62" height="199.02" fill="#148f77" opacity="0.88"/>
+<text x="547" y="156.39" font-size="11" fill="#111" text-anchor="middle">0.6724</text>
+<line x1="547" y1="164.39" x2="547" y2="237.57" stroke="#333" stroke-width="1.4"/>
+<line x1="539" y1="164.39" x2="555" y2="164.39" stroke="#333" stroke-width="1.4"/>
+<line x1="539" y1="237.57" x2="555" y2="237.57" stroke="#333" stroke-width="1.4"/>
+<text x="547" y="416" font-size="10" fill="#222" text-anchor="middle">A2-s1</text>
+<text x="547" y="428" font-size="9" fill="#666" text-anchor="middle">21 eps | sd 0.1236</text>
+<text x="547" y="438" font-size="9" fill="#a06000" text-anchor="middle">&#8224; early stop</text>
+<text x="501" y="458" font-size="11" font-weight="bold" fill="#111" text-anchor="middle">A2: feedback only (state-v2)</text>
+<text x="501" y="470" font-size="9" fill="#666" text-anchor="middle">2/2 states observed | 56 exec | mean of run-means 0.7173</text>
+<rect x="708" y="182.01" width="62" height="217.99" fill="#7f8c8d" opacity="0.88"/>
+<text x="739" y="119.65" font-size="11" fill="#111" text-anchor="middle">0.7365</text>
+<line x1="739" y1="127.65" x2="739" y2="236.36" stroke="#333" stroke-width="1.4"/>
+<line x1="731" y1="127.65" x2="747" y2="127.65" stroke="#333" stroke-width="1.4"/>
+<line x1="731" y1="236.36" x2="747" y2="236.36" stroke="#333" stroke-width="1.4"/>
+<text x="739" y="416" font-size="10" fill="#222" text-anchor="middle">FULL-s0</text>
+<text x="739" y="428" font-size="9" fill="#666" text-anchor="middle">84 eps | sd 0.1836</text>
+<rect x="800" y="202.25" width="62" height="197.75" fill="#7f8c8d" opacity="0.88"/>
+<text x="831" y="141.91" font-size="11" fill="#111" text-anchor="middle">0.6681</text>
+<line x1="831" y1="149.91" x2="831" y2="254.6" stroke="#333" stroke-width="1.4"/>
+<line x1="823" y1="149.91" x2="839" y2="149.91" stroke="#333" stroke-width="1.4"/>
+<line x1="823" y1="254.6" x2="839" y2="254.6" stroke="#333" stroke-width="1.4"/>
+<text x="831" y="416" font-size="10" fill="#222" text-anchor="middle">FULL-s1</text>
+<text x="831" y="428" font-size="9" fill="#666" text-anchor="middle">49 eps | sd 0.1768</text>
+<text x="831" y="438" font-size="9" fill="#a06000" text-anchor="middle">&#8224; early stop</text>
+<rect x="892" y="171.62" width="62" height="228.38" fill="#7f8c8d" opacity="0.88"/>
+<text x="923" y="119.69" font-size="11" fill="#111" text-anchor="middle">0.7716</text>
+<line x1="923" y1="127.69" x2="923" y2="215.54" stroke="#333" stroke-width="1.4"/>
+<line x1="915" y1="127.69" x2="931" y2="127.69" stroke="#333" stroke-width="1.4"/>
+<line x1="915" y1="215.54" x2="931" y2="215.54" stroke="#333" stroke-width="1.4"/>
+<text x="923" y="416" font-size="10" fill="#222" text-anchor="middle">FULL-s2</text>
+<text x="923" y="428" font-size="9" fill="#666" text-anchor="middle">42 eps | sd 0.1484</text>
+<text x="923" y="438" font-size="9" fill="#a06000" text-anchor="middle">&#8224; early stop</text>
+<text x="831" y="458" font-size="11" font-weight="bold" fill="#111" text-anchor="middle">full state reference (state-v1.5)</text>
+<text x="831" y="470" font-size="9" fill="#666" text-anchor="middle">5/30 states observed | 175 exec | 3 seeds (main study)</text>
+<line x1="658" y1="104" x2="658" y2="488" stroke="#999" stroke-dasharray="5,4"/>
+<text x="110" y="516" font-size="9" fill="#666">dashed line separates frozen ablations (left) from the full-state reference (right); A1/A2 vs reference is NOT a pure state effect (Q0 + horizon differ).</text>
+<text x="110" y="530" font-size="9" fill="#888">source: results/evaluation/exp007_analysis.json | frozen analysis SHA256 e010072f..0043b68 | 0 Spark, 0 SC6</text>
+</svg>
