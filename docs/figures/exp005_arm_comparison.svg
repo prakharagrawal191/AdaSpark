@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560" font-family="DejaVu Sans, Arial, sans-serif">
+<rect width="980" height="560" fill="#ffffff"/>
+<text x="90" y="28" font-size="16" font-weight="bold" fill="#111">EXP-005: sum of median execution_time_s by arm (DESCRIPTIVE ONLY)</text>
+<text x="90" y="46" font-size="11" fill="#555">H2, H3, SC2, SC3, SC4 are UNDECIDED - NOT failed - per DEC-020 A: the frozen protocol names the statistical</text>
+<text x="90" y="60" font-size="11" fill="#555">procedures but freezes no parameters or hypothesis-to-comparison mapping executable for this 7-arm, unequal-coverage</text>
+<text x="90" y="74" font-size="11" fill="#555">structure. NO inferential test was run and none is invented here. Lower is better.</text>
+<text x="90" y="122" font-size="12" font-weight="bold" fill="#111">6 cells common to all non-B2 arms</text>
+<rect x="90" y="132" width="380" height="300" fill="none" stroke="#333"/>
+<rect x="90" y="368.19" width="380" height="6.78" fill="#d68910" opacity="0.14"/>
+<text x="95" y="364.19" font-size="9" fill="#a06000">within 11.9% of best = not an established difference (DEC-018 F)</text>
+<rect x="101.88" y="164.14" width="39.58" height="267.86" fill="#7f8c8d" opacity="0.88"/>
+<text x="121.67" y="159.14" font-size="10" fill="#111" text-anchor="middle">142.4</text>
+<text x="121.67" y="447" font-size="10" fill="#222" text-anchor="middle">B0</text>
+<text x="121.67" y="459" font-size="8" fill="#777" text-anchor="middle">Spark default</text>
+<rect x="165.21" y="374.97" width="39.58" height="57.03" fill="#1e8449" opacity="0.88"/>
+<text x="185" y="369.97" font-size="10" fill="#111" text-anchor="middle">30.3</text>
+<text x="185" y="447" font-size="10" fill="#222" text-anchor="middle">B1</text>
+<text x="185" y="459" font-size="8" fill="#777" text-anchor="middle">static heuristic</text>
+<rect x="228.54" y="359.88" width="39.58" height="72.12" fill="#1f4e79" opacity="0.88"/>
+<text x="248.33" y="354.88" font-size="10" fill="#111" text-anchor="middle">38.3</text>
+<text x="248.33" y="447" font-size="10" fill="#222" text-anchor="middle">B4</text>
+<text x="248.33" y="459" font-size="8" fill="#777" text-anchor="middle">search-derived</text>
+<rect x="291.87" y="360.23" width="39.58" height="71.77" fill="#b03a2e" opacity="0.88"/>
+<text x="311.67" y="355.23" font-size="10" fill="#111" text-anchor="middle">38.1</text>
+<text x="311.67" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s0</text>
+<text x="311.67" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<rect x="355.21" y="358.26" width="39.58" height="73.74" fill="#c0562f" opacity="0.88"/>
+<text x="375" y="353.26" font-size="10" fill="#111" text-anchor="middle">39.2</text>
+<text x="375" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s1</text>
+<text x="375" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<rect x="418.54" y="346.47" width="39.58" height="85.53" fill="#d68910" opacity="0.88"/>
+<text x="438.33" y="341.47" font-size="10" fill="#111" text-anchor="middle">45.5</text>
+<text x="438.33" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s2</text>
+<text x="438.33" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<text x="570" y="122" font-size="12" font-weight="bold" fill="#111">3 cells where B2 is also defined</text>
+<rect x="570" y="132" width="380" height="300" fill="none" stroke="#333"/>
+<rect x="570" y="368.83" width="380" height="6.71" fill="#d68910" opacity="0.14"/>
+<text x="575" y="364.83" font-size="9" fill="#a06000">within 11.9% of best = not an established difference (DEC-018 F)</text>
+<rect x="580.18" y="164.14" width="33.93" height="267.86" fill="#7f8c8d" opacity="0.88"/>
+<text x="597.14" y="159.14" font-size="10" fill="#111" text-anchor="middle">113.0</text>
+<text x="597.14" y="447" font-size="10" fill="#222" text-anchor="middle">B0</text>
+<text x="597.14" y="459" font-size="8" fill="#777" text-anchor="middle">Spark default</text>
+<rect x="634.46" y="375.55" width="33.93" height="56.45" fill="#1e8449" opacity="0.88"/>
+<text x="651.43" y="370.55" font-size="10" fill="#111" text-anchor="middle">23.8</text>
+<text x="651.43" y="447" font-size="10" fill="#222" text-anchor="middle">B1</text>
+<text x="651.43" y="459" font-size="8" fill="#777" text-anchor="middle">static heuristic</text>
+<rect x="688.75" y="359.82" width="33.93" height="72.18" fill="#148f77" opacity="0.88"/>
+<text x="705.71" y="354.82" font-size="10" fill="#111" text-anchor="middle">30.4</text>
+<text x="705.71" y="447" font-size="10" fill="#222" text-anchor="middle">B2</text>
+<text x="705.71" y="459" font-size="8" fill="#777" text-anchor="middle">static heuristic</text>
+<rect x="743.04" y="356.34" width="33.93" height="75.66" fill="#1f4e79" opacity="0.88"/>
+<text x="760" y="351.34" font-size="10" fill="#111" text-anchor="middle">31.9</text>
+<text x="760" y="447" font-size="10" fill="#222" text-anchor="middle">B4</text>
+<text x="760" y="459" font-size="8" fill="#777" text-anchor="middle">search-derived</text>
+<rect x="797.32" y="367.5" width="33.93" height="64.5" fill="#b03a2e" opacity="0.88"/>
+<text x="814.29" y="362.5" font-size="10" fill="#111" text-anchor="middle">27.2</text>
+<text x="814.29" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s0</text>
+<text x="814.29" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<rect x="851.61" y="363.74" width="33.93" height="68.26" fill="#c0562f" opacity="0.88"/>
+<text x="868.57" y="358.74" font-size="10" fill="#111" text-anchor="middle">28.8</text>
+<text x="868.57" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s1</text>
+<text x="868.57" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<rect x="905.89" y="349.05" width="33.93" height="82.95" fill="#d68910" opacity="0.88"/>
+<text x="922.86" y="344.05" font-size="10" fill="#111" text-anchor="middle">35.0</text>
+<text x="922.86" y="447" font-size="10" fill="#222" text-anchor="middle">RL-s2</text>
+<text x="922.86" y="459" font-size="8" fill="#777" text-anchor="middle">learned policy</text>
+<text x="90" y="516" font-size="10" fill="#444">Every tuned arm beats the Spark default by 3-4.7x. No learned policy (RL-s*) beats the best static heuristic (B1).</text>
+<text x="90" y="530" font-size="10" fill="#444">Panels use DIFFERENT cell sets and are not comparable to each other: B2 is defined on 3 of the 6 cells.</text>
+<text x="90" y="548" font-size="9" fill="#888">excluded upstream: F3_rdd|large|s3 (indices 71-105, all arms 0/5, WinError 32 sort/spill) | source: results/evaluation/exp005_analysis.json</text>
+</svg>

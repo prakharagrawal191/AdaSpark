@@ -764,10 +764,22 @@ def main(argv: list[str] | None = None) -> int:
     #      * scripts/freeze_exp006.py - DEC-021 s1-9 requires EXP-006's
     #        universe to EXCLUDE the cells EXP-005 already consumed, so it
     #        must read EXP-005's spec; the hit is a local named `exp005`.
+    #      * scripts/render_project_figures.py - renders figures from the
+    #        COMMITTED, CLOSED EXP-005 analysis (DEC-020 A closed it as
+    #        descriptive TEST evidence). The ban dates from Day 31, when
+    #        EXP-005 was still a FUTURE experiment and naming it would have
+    #        signalled that it had started producing results; it has since
+    #        run and been closed by decision, so reading its artifact is not
+    #        what this guard is protecting against. The file is READ-ONLY
+    #        with respect to results, executes no Spark and writes only
+    #        under docs/figures/. Exempting it is strictly preferable to
+    #        obfuscating the experiment id to slip past the regex, which
+    #        would defeat the guard rather than satisfy it.
     #    Any OTHER file naming an experiment id still FAILS, and a cache,
-    #    orchestrator or deep-RL symbol in ANY file - including these two -
+    #    orchestrator or deep-RL symbol in ANY file - including these three -
     #    still FAILS.
-    ID_NAMING_EXEMPT = ("scripts/validate_day31.py", "scripts/freeze_exp006.py")
+    ID_NAMING_EXEMPT = ("scripts/validate_day31.py", "scripts/freeze_exp006.py",
+                        "scripts/render_project_figures.py")
     _all_py = py_files(SRC) + py_files(SCRIPTS)
     _rel = {p: str(p.relative_to(PROJECT)).replace("\\", "/") for p in _all_py}
     _exempt = [p for p in _all_py if _rel[p] in ID_NAMING_EXEMPT]
