@@ -152,15 +152,19 @@ DEC-043 §7 names the alternative: the noise is not independent between repetiti
 
 | | lag-1 autocorrelation | quiet-window dispersion | worst-window dispersion |
 |---|---|---|---|
-| all 15 condition-series | **+0.604 … +0.871** | **0.67 – 2.06%** | 5.0 – 33.4% |
+| all 21 condition-series | **+0.584 … +0.886** | **0.63 – 2.06%** | 5.03 – 75.38% |
 
-- **Lag-1 autocorrelation is +0.60 to +0.87 in every one of the fifteen series.** Under
-  independence it should be ≈ 0. This is uniform across all five cells and all three conditions,
-  and it is the single most direct refutation of the model's assumption.
+*(Dispersion columns are over the 18 of 21 series with at least six complete 20-run windows.
+`F5_mixed|medium` at n = 37 yields a single window, so no quiet/contention contrast can be drawn
+for that cell and it is excluded from those two columns only — not from any verdict.)*
+
+- **Lag-1 autocorrelation is +0.584 to +0.886 in every one of the twenty-one series.** Under
+  independence it should be ≈ 0. This is uniform across all seven cells and all three
+  conditions, and it is the single most direct refutation of the model's assumption.
 - **The series are not uniformly noisy.** Within a quiet 20-run window the windowed
-  dispersion (IQR / median) is **0.67 – 2.06%**; within a contention window in the *same*
-  series it reaches **33.4%** — a swing of up to ~40×. The measurement is extremely precise
-  when the host is quiet.
+  dispersion (IQR / median) is **0.63 – 2.06%**; within a contention window in the *same*
+  series it reaches **75.4%** — a swing of more than 100× in the most extreme series
+  (`F5_mixed|small`). The measurement is extremely precise when the host is quiet.
 - **The excess dispersion arrives in episodes that persist for tens of consecutive runs**, which
   is precisely what a high lag-1 figure detects. `F1_agg|medium` is the clearest instance: dead
   stable at 30.5 s (windowed IQR 0.3 s, ≈1%) across reps 66–105, a contention episode over reps
@@ -549,4 +553,31 @@ n = 148, so stopping at a first PASS would have been wrong.
 No verdict was changed, no statistic was switched, and no observation was excluded. The paired
 statistic of §3.5 remains a diagnostic and remains unapplied. SC6 clause 2 remains unevidenced
 as a whole (§5).
+
+### 9.3 — Fourth amendment (2026-09-24, §3.3 currency correction)
+
+§3.3's summary table was **stale as of the stage-7 commit** `7937db8`. It still carried the
+stage-6 figures — *"all 15 condition-series", "+0.604 … +0.871", "0.67 – 2.06%", "5.0 – 33.4%"* —
+although stage 7 had added six further condition-series and a substantially larger contention
+excursion. The narrative in §3.7 and §9.2 was updated at that commit but the §3.3 table was not.
+It is corrected here to:
+
+| | lag-1 autocorrelation | quiet-window dispersion | worst-window dispersion |
+|---|---|---|---|
+| all 21 condition-series | **+0.584 … +0.886** | **0.63 – 2.06%** | 5.03 – 75.38% |
+
+Two refinements accompany the correction. First, the dispersion columns are computed over the
+**18 of 21 series that have at least six complete 20-run windows**; `F5_mixed|medium` at n = 37
+yields a single window, so no quiet-versus-contention contrast exists for that cell and it is
+excluded from **those two columns only** — not from any verdict, statistic or count. Second, the
+worst-window figure rises from 33.4% to **75.38%**, in `F5_mixed|small`, so the quiet-to-
+contention swing within a single series now exceeds **100×** rather than ~40×.
+
+**No verdict, interval, point estimate, slope or trajectory changes.** The correction makes the
+summary table agree with the artifact it summarises; the underlying `analysis_ext.json` was
+already correct at `7937db8` and is unchanged by this amendment.
+
+**§9.1's figures are NOT rewritten.** They record what was true at the stage-6 amendment and are
+a time-slice, not an error — the same treatment DEC-031 §7 gives superseded cited ledger
+figures. They are superseded as to currency by the table above.
 
