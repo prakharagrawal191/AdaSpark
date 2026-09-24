@@ -304,3 +304,21 @@ def test_verifier_normalises_typographic_minus(verifier):
     """Negative numbers are written with U+2212 in the prose, not '-'."""
     assert verifier.norm("\u22120.167%") == "-0.167%"
     assert verifier.norm("7.11\u00d7") == "7.11x"
+
+
+def test_ext_artifact_id_is_a_content_hash(ana):
+    """Re-analysis of the same observations must yield the same artifact_id.
+
+    DEC-042 s3 states that re-analysis "reproduces byte-identically". That was
+    not checkable while a wall-clock timestamp sat inside the hashed body:
+    artifact_id changed on every run although no measured value did, so it
+    signalled changes that had not happened. The id now hashes content only.
+    """
+    import hashlib as _h
+    import json as _j
+    doc = _j.loads(ana.OUT_JSON.read_text(encoding="utf-8"))
+    assert doc["artifact_id_excludes"] == ["written_utc", "artifact_id"]
+    body = {k: v for k, v in doc.items()
+            if k not in ("artifact_id", "artifact_id_excludes", "written_utc")}
+    canon = _j.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+    assert _h.sha256(canon).hexdigest() == doc["artifact_id"]

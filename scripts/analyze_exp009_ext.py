@@ -856,10 +856,20 @@ def main() -> int:
              "another; it shows how the interval evolved as data arrived, "
              "not a set of independent experiments."),
         ],
-        "written_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+    # artifact_id is a CONTENT hash and deliberately excludes written_utc.
+    #
+    # DEC-042 §3 states that re-analysis of the same observations "reproduces
+    # byte-identically". With a wall-clock timestamp inside the hashed body
+    # that is not checkable: re-running this analysis changed artifact_id
+    # while every measured value stayed identical, so the id signalled a
+    # change that had not happened and could not signal one that had. Hashing
+    # the content alone makes the claim verifiable and makes a differing id
+    # mean something. written_utc is retained as provenance beside the hash.
     canon = json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
     body["artifact_id"] = hashlib.sha256(canon).hexdigest()
+    body["artifact_id_excludes"] = ["written_utc", "artifact_id"]
+    body["written_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     EXT_DIR.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(body, indent=1, sort_keys=True),
                         encoding="utf-8")

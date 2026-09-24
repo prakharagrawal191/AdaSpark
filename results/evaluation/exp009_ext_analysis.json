@@ -1,5 +1,9 @@
 {
- "artifact_id": "b4bc4ec322affa88c84a18234b774be28cac4d3f5b5f334a4e3b76724ffe2c43",
+ "artifact_id": "7c32b4f30863ebb5b64523fb7952735a343533969a5d01534ce02799cf1077e1",
+ "artifact_id_excludes": [
+  "written_utc",
+  "artifact_id"
+ ],
  "authorized_by": "DEC-043",
  "baseline_analysis_artifact_id": "4960f0ed86a86c7c5368323c7ff4905effdf70da953d6f1932c49c2f91e3c853",
  "baseline_observations_sha256": "e58a543e5ab42f5ab7bf592e368fb1863bb365906df851e190fadec40bff5ce2",
@@ -5006,5 +5010,5 @@
   "rule": "a component verdict is returned only when the whole interval lies on one side of the gate; a straddling interval is INCONCLUSIVE in BOTH directions (DEC-042)",
   "seed": 0
  },
- "written_utc": "2026-09-24T08:18:22Z"
+ "written_utc": "2026-09-24T08:34:46Z"
 }
