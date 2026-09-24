@@ -4,141 +4,159 @@
 <text x="85" y="46" font-size="11" fill="#555">log-log; observed = pooled DEC-040 reps 1-5 + DEC-043 stage reps; dashed = pre-registered 1/sqrt(n) from each cell's own n=5 half-width</text>
 <line x1="85" y1="60" x2="85" y2="490" stroke="#e8e8e8"/>
 <text x="85" y="508" font-size="11" fill="#444" text-anchor="middle">5</text>
-<line x1="185.419" y1="60" x2="185.419" y2="490" stroke="#e8e8e8"/>
-<text x="185.419" y="508" font-size="11" fill="#444" text-anchor="middle">10</text>
-<line x1="285.838" y1="60" x2="285.838" y2="490" stroke="#e8e8e8"/>
-<text x="285.838" y="508" font-size="11" fill="#444" text-anchor="middle">20</text>
-<line x1="418.584" y1="60" x2="418.584" y2="490" stroke="#e8e8e8"/>
-<text x="418.584" y="508" font-size="11" fill="#444" text-anchor="middle">50</text>
-<line x1="519.003" y1="60" x2="519.003" y2="490" stroke="#e8e8e8"/>
-<text x="519.003" y="508" font-size="11" fill="#444" text-anchor="middle">100</text>
-<line x1="619.421" y1="60" x2="619.421" y2="490" stroke="#e8e8e8"/>
-<text x="619.421" y="508" font-size="11" fill="#444" text-anchor="middle">200</text>
-<line x1="85" y1="372.548" x2="650" y2="372.548" stroke="#e8e8e8"/>
-<text x="77" y="376.548" font-size="11" fill="#444" text-anchor="end">1</text>
-<line x1="85" y1="310.171" x2="650" y2="310.171" stroke="#e8e8e8"/>
-<text x="77" y="314.171" font-size="11" fill="#444" text-anchor="end">2</text>
-<line x1="85" y1="227.713" x2="650" y2="227.713" stroke="#e8e8e8"/>
-<text x="77" y="231.713" font-size="11" fill="#444" text-anchor="end">5</text>
-<line x1="85" y1="165.336" x2="650" y2="165.336" stroke="#e8e8e8"/>
-<text x="77" y="169.336" font-size="11" fill="#444" text-anchor="end">10</text>
-<line x1="85" y1="102.959" x2="650" y2="102.959" stroke="#e8e8e8"/>
-<text x="77" y="106.959" font-size="11" fill="#444" text-anchor="end">20</text>
+<line x1="163.779" y1="60" x2="163.779" y2="490" stroke="#e8e8e8"/>
+<text x="163.779" y="508" font-size="11" fill="#444" text-anchor="middle">10</text>
+<line x1="242.559" y1="60" x2="242.559" y2="490" stroke="#e8e8e8"/>
+<text x="242.559" y="508" font-size="11" fill="#444" text-anchor="middle">20</text>
+<line x1="346.699" y1="60" x2="346.699" y2="490" stroke="#e8e8e8"/>
+<text x="346.699" y="508" font-size="11" fill="#444" text-anchor="middle">50</text>
+<line x1="425.479" y1="60" x2="425.479" y2="490" stroke="#e8e8e8"/>
+<text x="425.479" y="508" font-size="11" fill="#444" text-anchor="middle">100</text>
+<line x1="504.258" y1="60" x2="504.258" y2="490" stroke="#e8e8e8"/>
+<text x="504.258" y="508" font-size="11" fill="#444" text-anchor="middle">200</text>
+<line x1="85" y1="362.153" x2="650" y2="362.153" stroke="#e8e8e8"/>
+<text x="77" y="366.153" font-size="11" fill="#444" text-anchor="end">1</text>
+<line x1="85" y1="301.851" x2="650" y2="301.851" stroke="#e8e8e8"/>
+<text x="77" y="305.851" font-size="11" fill="#444" text-anchor="end">2</text>
+<line x1="85" y1="222.135" x2="650" y2="222.135" stroke="#e8e8e8"/>
+<text x="77" y="226.135" font-size="11" fill="#444" text-anchor="end">5</text>
+<line x1="85" y1="161.833" x2="650" y2="161.833" stroke="#e8e8e8"/>
+<text x="77" y="165.833" font-size="11" fill="#444" text-anchor="end">10</text>
+<line x1="85" y1="101.53" x2="650" y2="101.53" stroke="#e8e8e8"/>
+<text x="77" y="105.53" font-size="11" fill="#444" text-anchor="end">20</text>
 <rect x="85" y="60" width="565" height="430" fill="none" stroke="#333"/>
 <text x="367" y="538" font-size="12" fill="#222" text-anchor="middle">repetitions per condition, n</text>
 <text x="18" y="275" font-size="12" fill="#222" text-anchor="middle" transform="rotate(-90 18 275)">CI half-width (percentage points)</text>
-<line x1="85" y1="310.171" x2="650" y2="310.171" stroke="#d68910" stroke-width="2" stroke-dasharray="2,3"/>
-<text x="658" y="314.171" font-size="11" fill="#d68910">~2 pp target (DEC-043 s7)</text>
-<polyline points="85,227.412 153.091,208.032 199.227,203.083 244.16,82.943 270.574,74.367 292.906,72.577 312.251,75.451 329.315,77.625 349.329,87.219 353.929,133.691 362.712,285.294 374.962,309.996" fill="none" stroke="#1f4e79" stroke-width="2.2"/>
-<polyline points="85,227.412 153.091,248.56 199.227,262.889 244.16,276.844 270.574,285.048 292.906,291.984 312.251,297.992 329.315,303.292 349.329,309.508 353.929,310.937 362.712,313.665 374.962,317.469" fill="none" stroke="#1f4e79" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="227.412" r="3.1" fill="#1f4e79"/>
-<circle cx="153.091" cy="208.032" r="3.1" fill="#1f4e79"/>
-<circle cx="199.227" cy="203.083" r="3.1" fill="#1f4e79"/>
-<circle cx="244.16" cy="82.943" r="3.1" fill="#1f4e79"/>
-<circle cx="270.574" cy="74.367" r="3.1" fill="#1f4e79"/>
-<circle cx="292.906" cy="72.577" r="3.1" fill="#1f4e79"/>
-<circle cx="312.251" cy="75.451" r="3.1" fill="#1f4e79"/>
-<circle cx="329.315" cy="77.625" r="3.1" fill="#1f4e79"/>
-<circle cx="349.329" cy="87.219" r="3.1" fill="#1f4e79"/>
-<circle cx="353.929" cy="133.691" r="3.1" fill="#1f4e79"/>
-<circle cx="362.712" cy="285.294" r="3.1" fill="#1f4e79"/>
-<circle cx="374.962" cy="309.996" r="3.1" fill="#1f4e79"/>
+<line x1="85" y1="301.851" x2="650" y2="301.851" stroke="#d68910" stroke-width="2" stroke-dasharray="2,3"/>
+<text x="658" y="305.851" font-size="11" fill="#d68910">~2 pp target (DEC-043 s7)</text>
+<polyline points="85,221.844 138.418,203.109 174.612,198.324 209.862,82.18 230.584,73.889 248.104,72.159 263.28,74.937 276.667,77.039 292.368,86.314 295.977,131.24 302.867,277.801 312.477,301.682" fill="none" stroke="#1f4e79" stroke-width="2.2"/>
+<polyline points="85,221.844 138.418,242.288 174.612,256.141 209.862,269.632 230.584,277.563 248.104,284.269 263.28,290.077 276.667,295.201 292.368,301.21 295.977,302.591 302.867,305.228 312.477,308.906" fill="none" stroke="#1f4e79" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="221.844" r="3.1" fill="#1f4e79"/>
+<circle cx="138.418" cy="203.109" r="3.1" fill="#1f4e79"/>
+<circle cx="174.612" cy="198.324" r="3.1" fill="#1f4e79"/>
+<circle cx="209.862" cy="82.18" r="3.1" fill="#1f4e79"/>
+<circle cx="230.584" cy="73.889" r="3.1" fill="#1f4e79"/>
+<circle cx="248.104" cy="72.159" r="3.1" fill="#1f4e79"/>
+<circle cx="263.28" cy="74.937" r="3.1" fill="#1f4e79"/>
+<circle cx="276.667" cy="77.039" r="3.1" fill="#1f4e79"/>
+<circle cx="292.368" cy="86.314" r="3.1" fill="#1f4e79"/>
+<circle cx="295.977" cy="131.24" r="3.1" fill="#1f4e79"/>
+<circle cx="302.867" cy="277.801" r="3.1" fill="#1f4e79"/>
+<circle cx="312.477" cy="301.682" r="3.1" fill="#1f4e79"/>
 <rect x="662" y="66" width="12" height="3" fill="#1f4e79"/>
 <text x="680" y="71" font-size="11" fill="#222">F5_mixed|medium</text>
 <text x="680" y="85" font-size="10" fill="#666">stage 1, n=37, slope 0.17</text>
 <text x="680" y="98" font-size="10" fill="#666">sysmon PASS</text>
-<polyline points="85,168.908 262.293,295.895 334.583,203.855 386.256,215.448 421.453,231.064 452.066,353.864 477.325,383.603 497.152,396.552 516.076,405.744 531.488,406.116 540.505,400.511 546.618,394.4" fill="none" stroke="#b03a2e" stroke-width="2.2"/>
-<polyline points="85,168.908 262.293,223.973 334.583,246.425 386.256,262.474 421.453,273.406 452.066,282.914 477.325,290.759 497.152,296.917 516.076,302.794 531.488,307.581 540.505,310.381 546.618,312.28" fill="none" stroke="#b03a2e" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="168.908" r="3.1" fill="#b03a2e"/>
-<circle cx="262.293" cy="295.895" r="3.1" fill="#b03a2e"/>
-<circle cx="334.583" cy="203.855" r="3.1" fill="#b03a2e"/>
-<circle cx="386.256" cy="215.448" r="3.1" fill="#b03a2e"/>
-<circle cx="421.453" cy="231.064" r="3.1" fill="#b03a2e"/>
-<circle cx="452.066" cy="353.864" r="3.1" fill="#b03a2e"/>
-<circle cx="477.325" cy="383.603" r="3.1" fill="#b03a2e"/>
-<circle cx="497.152" cy="396.552" r="3.1" fill="#b03a2e"/>
-<circle cx="516.076" cy="405.744" r="3.1" fill="#b03a2e"/>
-<circle cx="531.488" cy="406.116" r="3.1" fill="#b03a2e"/>
-<circle cx="540.505" cy="400.511" r="3.1" fill="#b03a2e"/>
-<circle cx="546.618" cy="394.4" r="3.1" fill="#b03a2e"/>
+<polyline points="85,165.286 224.088,288.049 280.8,199.071 321.338,210.278 348.95,225.375 372.966,344.09 392.782,372.841 408.337,385.359 423.183,394.245 435.273,394.605 442.347,389.186 447.144,383.278" fill="none" stroke="#b03a2e" stroke-width="2.2"/>
+<polyline points="85,165.286 224.088,218.519 280.8,240.225 321.338,255.74 348.95,266.308 372.966,275.5 392.782,283.084 408.337,289.037 423.183,294.719 435.273,299.347 442.347,302.054 447.144,303.89" fill="none" stroke="#b03a2e" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="165.286" r="3.1" fill="#b03a2e"/>
+<circle cx="224.088" cy="288.049" r="3.1" fill="#b03a2e"/>
+<circle cx="280.8" cy="199.071" r="3.1" fill="#b03a2e"/>
+<circle cx="321.338" cy="210.278" r="3.1" fill="#b03a2e"/>
+<circle cx="348.95" cy="225.375" r="3.1" fill="#b03a2e"/>
+<circle cx="372.966" cy="344.09" r="3.1" fill="#b03a2e"/>
+<circle cx="392.782" cy="372.841" r="3.1" fill="#b03a2e"/>
+<circle cx="408.337" cy="385.359" r="3.1" fill="#b03a2e"/>
+<circle cx="423.183" cy="394.245" r="3.1" fill="#b03a2e"/>
+<circle cx="435.273" cy="394.605" r="3.1" fill="#b03a2e"/>
+<circle cx="442.347" cy="389.186" r="3.1" fill="#b03a2e"/>
+<circle cx="447.144" cy="383.278" r="3.1" fill="#b03a2e"/>
 <rect x="662" y="116" width="12" height="3" fill="#b03a2e"/>
 <text x="680" y="121" font-size="11" fill="#222">F3_rdd|small</text>
 <text x="680" y="135" font-size="10" fill="#666">stage 2, n=121, slope -0.89</text>
 <text x="680" y="148" font-size="10" fill="#666">sysmon PASS</text>
-<polyline points="85,159.938 278.406,134.871 358.387,367.131 409.62,411.786 447.392,379.34 479.244,381.55 503.739,402.993 524.685,411.177 542.981,419.395 559.224,423.198 568.78,430.261 573.828,432.725" fill="none" stroke="#1e8449" stroke-width="2.2"/>
-<polyline points="85,159.938 278.406,220.007 358.387,244.848 409.62,260.76 447.392,272.492 479.244,282.384 503.739,289.992 524.685,296.498 542.981,302.18 559.224,307.225 568.78,310.193 573.828,311.761" fill="none" stroke="#1e8449" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="159.938" r="3.1" fill="#1e8449"/>
-<circle cx="278.406" cy="134.871" r="3.1" fill="#1e8449"/>
-<circle cx="358.387" cy="367.131" r="3.1" fill="#1e8449"/>
-<circle cx="409.62" cy="411.786" r="3.1" fill="#1e8449"/>
-<circle cx="447.392" cy="379.34" r="3.1" fill="#1e8449"/>
-<circle cx="479.244" cy="381.55" r="3.1" fill="#1e8449"/>
-<circle cx="503.739" cy="402.993" r="3.1" fill="#1e8449"/>
-<circle cx="524.685" cy="411.177" r="3.1" fill="#1e8449"/>
-<circle cx="542.981" cy="419.395" r="3.1" fill="#1e8449"/>
-<circle cx="559.224" cy="423.198" r="3.1" fill="#1e8449"/>
-<circle cx="568.78" cy="430.261" r="3.1" fill="#1e8449"/>
-<circle cx="573.828" cy="432.725" r="3.1" fill="#1e8449"/>
+<polyline points="85,156.614 236.729,132.381 299.474,356.916 339.667,400.086 369.3,368.72 394.288,370.856 413.504,391.586 429.936,399.497 444.29,407.442 457.033,411.119 464.529,417.946 468.49,420.328" fill="none" stroke="#1e8449" stroke-width="2.2"/>
+<polyline points="85,156.614 236.729,214.686 299.474,238.7 339.667,254.083 369.3,265.425 394.288,274.988 413.504,282.343 429.936,288.632 444.29,294.126 457.033,299.003 464.529,301.872 468.49,303.388" fill="none" stroke="#1e8449" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="156.614" r="3.1" fill="#1e8449"/>
+<circle cx="236.729" cy="132.381" r="3.1" fill="#1e8449"/>
+<circle cx="299.474" cy="356.916" r="3.1" fill="#1e8449"/>
+<circle cx="339.667" cy="400.086" r="3.1" fill="#1e8449"/>
+<circle cx="369.3" cy="368.72" r="3.1" fill="#1e8449"/>
+<circle cx="394.288" cy="370.856" r="3.1" fill="#1e8449"/>
+<circle cx="413.504" cy="391.586" r="3.1" fill="#1e8449"/>
+<circle cx="429.936" cy="399.497" r="3.1" fill="#1e8449"/>
+<circle cx="444.29" cy="407.442" r="3.1" fill="#1e8449"/>
+<circle cx="457.033" cy="411.119" r="3.1" fill="#1e8449"/>
+<circle cx="464.529" cy="417.946" r="3.1" fill="#1e8449"/>
+<circle cx="468.49" cy="420.328" r="3.1" fill="#1e8449"/>
 <rect x="662" y="166" width="12" height="3" fill="#1e8449"/>
 <text x="680" y="171" font-size="11" fill="#222">F2_join|medium</text>
 <text x="680" y="185" font-size="10" fill="#666">stage 3, n=146, slope -1.01</text>
 <text x="680" y="198" font-size="10" fill="#666">sysmon PASS</text>
-<polyline points="85,152.855 299.645,200.65 378.825,289.098 429.734,351.048 469.385,351.75 500.483,380.175 524.685,394.085 545.416,401.595 564.61,422.086 581.557,429.855 591.552,434.269 595.877,438.881" fill="none" stroke="#7d3c98" stroke-width="2.2"/>
-<polyline points="85,152.855 299.645,219.52 378.825,244.113 429.734,259.924 469.385,272.239 500.483,281.898 524.685,289.414 545.416,295.853 564.61,301.815 581.557,307.078 591.552,310.182 595.877,311.525" fill="none" stroke="#7d3c98" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="152.855" r="3.1" fill="#7d3c98"/>
-<circle cx="299.645" cy="200.65" r="3.1" fill="#7d3c98"/>
-<circle cx="378.825" cy="289.098" r="3.1" fill="#7d3c98"/>
-<circle cx="429.734" cy="351.048" r="3.1" fill="#7d3c98"/>
-<circle cx="469.385" cy="351.75" r="3.1" fill="#7d3c98"/>
-<circle cx="500.483" cy="380.175" r="3.1" fill="#7d3c98"/>
-<circle cx="524.685" cy="394.085" r="3.1" fill="#7d3c98"/>
-<circle cx="545.416" cy="401.595" r="3.1" fill="#7d3c98"/>
-<circle cx="564.61" cy="422.086" r="3.1" fill="#7d3c98"/>
-<circle cx="581.557" cy="429.855" r="3.1" fill="#7d3c98"/>
-<circle cx="591.552" cy="434.269" r="3.1" fill="#7d3c98"/>
-<circle cx="595.877" cy="438.881" r="3.1" fill="#7d3c98"/>
+<polyline points="85,149.767 253.391,195.972 315.508,281.479 355.446,341.368 386.553,342.046 410.95,369.527 429.936,382.974 446.201,390.234 461.259,410.043 474.553,417.554 482.394,421.821 485.787,426.28" fill="none" stroke="#7d3c98" stroke-width="2.2"/>
+<polyline points="85,149.767 253.391,214.215 315.508,237.989 355.446,253.275 386.553,265.18 410.95,274.518 429.936,281.784 446.201,288.009 461.259,293.772 474.553,298.86 482.394,301.862 485.787,303.16" fill="none" stroke="#7d3c98" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="149.767" r="3.1" fill="#7d3c98"/>
+<circle cx="253.391" cy="195.972" r="3.1" fill="#7d3c98"/>
+<circle cx="315.508" cy="281.479" r="3.1" fill="#7d3c98"/>
+<circle cx="355.446" cy="341.368" r="3.1" fill="#7d3c98"/>
+<circle cx="386.553" cy="342.046" r="3.1" fill="#7d3c98"/>
+<circle cx="410.95" cy="369.527" r="3.1" fill="#7d3c98"/>
+<circle cx="429.936" cy="382.974" r="3.1" fill="#7d3c98"/>
+<circle cx="446.201" cy="390.234" r="3.1" fill="#7d3c98"/>
+<circle cx="461.259" cy="410.043" r="3.1" fill="#7d3c98"/>
+<circle cx="474.553" cy="417.554" r="3.1" fill="#7d3c98"/>
+<circle cx="482.394" cy="421.821" r="3.1" fill="#7d3c98"/>
+<circle cx="485.787" cy="426.28" r="3.1" fill="#7d3c98"/>
 <rect x="662" y="216" width="12" height="3" fill="#7d3c98"/>
 <text x="680" y="221" font-size="11" fill="#222">F2_join|small</text>
 <text x="680" y="235" font-size="10" fill="#666">stage 4, n=170, slope -0.98</text>
 <text x="680" y="248" font-size="10" fill="#666">sysmon PASS</text>
-<polyline points="85,143.895 318.165,93.145 403.32,236.478 458.805,340.313 497.152,397.924 527.444,425.681 552.485,441.358 573.828,398.291 593.297,429.285 609.685,450.341 620.863,466.905 624.405,469.919" fill="none" stroke="#1f4e79" stroke-width="2.2"/>
-<polyline points="85,143.895 318.165,216.312 403.32,242.76 458.805,259.993 497.152,271.903 527.444,281.311 552.485,289.088 573.828,295.717 593.297,301.764 609.685,306.854 620.863,310.326 624.405,311.426" fill="none" stroke="#1f4e79" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="143.895" r="3.1" fill="#1f4e79"/>
-<circle cx="318.165" cy="93.145" r="3.1" fill="#1f4e79"/>
-<circle cx="403.32" cy="236.478" r="3.1" fill="#1f4e79"/>
-<circle cx="458.805" cy="340.313" r="3.1" fill="#1f4e79"/>
-<circle cx="497.152" cy="397.924" r="3.1" fill="#1f4e79"/>
-<circle cx="527.444" cy="425.681" r="3.1" fill="#1f4e79"/>
-<circle cx="552.485" cy="441.358" r="3.1" fill="#1f4e79"/>
-<circle cx="573.828" cy="398.291" r="3.1" fill="#1f4e79"/>
-<circle cx="593.297" cy="429.285" r="3.1" fill="#1f4e79"/>
-<circle cx="609.685" cy="450.341" r="3.1" fill="#1f4e79"/>
-<circle cx="620.863" cy="466.905" r="3.1" fill="#1f4e79"/>
-<circle cx="624.405" cy="469.919" r="3.1" fill="#1f4e79"/>
+<polyline points="85,141.104 267.92,92.042 334.725,230.609 378.254,330.99 408.337,386.685 432.101,413.519 451.746,428.675 468.49,387.04 483.764,417.004 496.62,437.359 505.389,453.371 508.168,456.286" fill="none" stroke="#1f4e79" stroke-width="2.2"/>
+<polyline points="85,141.104 267.92,211.114 334.725,236.682 378.254,253.342 408.337,264.855 432.101,273.951 451.746,281.469 468.49,287.878 483.764,293.723 496.62,298.644 505.389,302 508.168,303.064" fill="none" stroke="#1f4e79" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="141.104" r="3.1" fill="#1f4e79"/>
+<circle cx="267.92" cy="92.042" r="3.1" fill="#1f4e79"/>
+<circle cx="334.725" cy="230.609" r="3.1" fill="#1f4e79"/>
+<circle cx="378.254" cy="330.99" r="3.1" fill="#1f4e79"/>
+<circle cx="408.337" cy="386.685" r="3.1" fill="#1f4e79"/>
+<circle cx="432.101" cy="413.519" r="3.1" fill="#1f4e79"/>
+<circle cx="451.746" cy="428.675" r="3.1" fill="#1f4e79"/>
+<circle cx="468.49" cy="387.04" r="3.1" fill="#1f4e79"/>
+<circle cx="483.764" cy="417.004" r="3.1" fill="#1f4e79"/>
+<circle cx="496.62" cy="437.359" r="3.1" fill="#1f4e79"/>
+<circle cx="505.389" cy="453.371" r="3.1" fill="#1f4e79"/>
+<circle cx="508.168" cy="456.286" r="3.1" fill="#1f4e79"/>
 <rect x="662" y="266" width="12" height="3" fill="#1f4e79"/>
 <text x="680" y="271" font-size="11" fill="#222">F1_agg|medium</text>
 <text x="680" y="285" font-size="10" fill="#666">stage 5, n=207, slope -1.19</text>
 <text x="680" y="298" font-size="10" fill="#666">sysmon PASS</text>
-<polyline points="85,135.715 339.667,225.236 427.026,110.338 483.007,123.595 521.872,277.385 552.485,270.716 577.744,337.107 599.246,272.149 618.695,246.756 635.192,123.265 647.037,126.435 650,129.177" fill="none" stroke="#b03a2e" stroke-width="2.2"/>
-<polyline points="85,135.715 339.667,214.811 427.026,241.943 483.007,259.33 521.872,271.401 552.485,280.909 577.744,288.754 599.246,295.432 618.695,301.473 635.192,306.596 647.037,310.275 650,311.196" fill="none" stroke="#b03a2e" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
-<circle cx="85" cy="135.715" r="3.1" fill="#b03a2e"/>
-<circle cx="339.667" cy="225.236" r="3.1" fill="#b03a2e"/>
-<circle cx="427.026" cy="110.338" r="3.1" fill="#b03a2e"/>
-<circle cx="483.007" cy="123.595" r="3.1" fill="#b03a2e"/>
-<circle cx="521.872" cy="277.385" r="3.1" fill="#b03a2e"/>
-<circle cx="552.485" cy="270.716" r="3.1" fill="#b03a2e"/>
-<circle cx="577.744" cy="337.107" r="3.1" fill="#b03a2e"/>
-<circle cx="599.246" cy="272.149" r="3.1" fill="#b03a2e"/>
-<circle cx="618.695" cy="246.756" r="3.1" fill="#b03a2e"/>
-<circle cx="635.192" cy="123.265" r="3.1" fill="#b03a2e"/>
-<circle cx="647.037" cy="126.435" r="3.1" fill="#b03a2e"/>
-<circle cx="650" cy="129.177" r="3.1" fill="#b03a2e"/>
+<polyline points="85,133.197 284.789,219.741 353.322,108.663 397.24,121.48 427.729,270.155 451.746,263.708 471.562,327.891 488.43,265.094 503.689,240.545 516.63,121.161 525.923,124.225 528.247,126.876" fill="none" stroke="#b03a2e" stroke-width="2.2"/>
+<polyline points="85,133.197 284.789,209.662 353.322,235.892 397.24,252.701 427.729,264.37 451.746,273.562 471.562,281.146 488.43,287.602 503.689,293.442 516.63,298.395 525.923,301.952 528.247,302.841" fill="none" stroke="#b03a2e" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="133.197" r="3.1" fill="#b03a2e"/>
+<circle cx="284.789" cy="219.741" r="3.1" fill="#b03a2e"/>
+<circle cx="353.322" cy="108.663" r="3.1" fill="#b03a2e"/>
+<circle cx="397.24" cy="121.48" r="3.1" fill="#b03a2e"/>
+<circle cx="427.729" cy="270.155" r="3.1" fill="#b03a2e"/>
+<circle cx="451.746" cy="263.708" r="3.1" fill="#b03a2e"/>
+<circle cx="471.562" cy="327.891" r="3.1" fill="#b03a2e"/>
+<circle cx="488.43" cy="265.094" r="3.1" fill="#b03a2e"/>
+<circle cx="503.689" cy="240.545" r="3.1" fill="#b03a2e"/>
+<circle cx="516.63" cy="121.161" r="3.1" fill="#b03a2e"/>
+<circle cx="525.923" cy="124.225" r="3.1" fill="#b03a2e"/>
+<circle cx="528.247" cy="126.876" r="3.1" fill="#b03a2e"/>
 <rect x="662" y="316" width="12" height="3" fill="#b03a2e"/>
 <text x="680" y="321" font-size="11" fill="#222">F1_agg|small</text>
 <text x="680" y="335" font-size="10" fill="#666">stage 6, n=247, slope -0.15</text>
 <text x="680" y="348" font-size="10" fill="#666">sysmon INCONCLUSIVE</text>
-<text x="662" y="374" font-size="10" fill="#222">solid = observed</text>
-<text x="662" y="388" font-size="10" fill="#222">dashed = model 1/sqrt(n)</text>
-<text x="662" y="406" font-size="10" fill="#666">bootstrap: 4000 resamples, seed 0</text>
-<text x="85" y="554" font-size="9" fill="#888">source: results/experiments/exp-009/ext/analysis_ext.json | artifact 7a585d21d4045f13</text>
+<polyline points="85,85.912 395.774,318.078 470.036,213.158 515.091,308.734 546.879,394.96 572.006,433.886 592.571,448.744 609.755,470.587 624.875,433.559 638.043,414.058 649.209,374.297 650,375.504" fill="none" stroke="#1e8449" stroke-width="2.2"/>
+<polyline points="85,85.912 395.774,204.855 470.036,233.278 515.091,250.521 546.879,262.688 572.006,272.305 592.571,280.175 609.755,286.752 624.875,292.539 638.043,297.579 649.209,301.852 650,302.155" fill="none" stroke="#1e8449" stroke-width="1.6" stroke-dasharray="6,4" opacity="0.75"/>
+<circle cx="85" cy="85.912" r="3.1" fill="#1e8449"/>
+<circle cx="395.774" cy="318.078" r="3.1" fill="#1e8449"/>
+<circle cx="470.036" cy="213.158" r="3.1" fill="#1e8449"/>
+<circle cx="515.091" cy="308.734" r="3.1" fill="#1e8449"/>
+<circle cx="546.879" cy="394.96" r="3.1" fill="#1e8449"/>
+<circle cx="572.006" cy="433.886" r="3.1" fill="#1e8449"/>
+<circle cx="592.571" cy="448.744" r="3.1" fill="#1e8449"/>
+<circle cx="609.755" cy="470.587" r="3.1" fill="#1e8449"/>
+<circle cx="624.875" cy="433.559" r="3.1" fill="#1e8449"/>
+<circle cx="638.043" cy="414.058" r="3.1" fill="#1e8449"/>
+<circle cx="649.209" cy="374.297" r="3.1" fill="#1e8449"/>
+<circle cx="650" cy="375.504" r="3.1" fill="#1e8449"/>
+<rect x="662" y="366" width="12" height="3" fill="#1e8449"/>
+<text x="680" y="371" font-size="11" fill="#222">F5_mixed|small</text>
+<text x="680" y="385" font-size="10" fill="#666">stage 7, n=721, slope -0.80</text>
+<text x="680" y="398" font-size="10" fill="#666">sysmon PASS</text>
+<text x="662" y="424" font-size="10" fill="#222">solid = observed</text>
+<text x="662" y="438" font-size="10" fill="#222">dashed = model 1/sqrt(n)</text>
+<text x="662" y="456" font-size="10" fill="#666">bootstrap: 4000 resamples, seed 0</text>
+<text x="85" y="554" font-size="9" fill="#888">source: results/experiments/exp-009/ext/analysis_ext.json | artifact f37da9b3424a0161</text>
 </svg>

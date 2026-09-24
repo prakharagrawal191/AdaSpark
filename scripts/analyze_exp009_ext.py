@@ -304,6 +304,24 @@ def paired_diagnostic(a: dict[int, float], b: dict[int, float],
     }
 
 
+def earliest_stable_pass(traj: list[dict[str, Any]]) -> int | None:
+    """Smallest grid n whose verdict is PASS and stays PASS to the end.
+
+    RETROSPECTIVE. It is knowable only after running to the authorized n, so
+    it is NOT a prospective stopping rule and must not be read as one: the
+    same trajectories show a verdict can be reached and then LOST
+    (F5_mixed|small is PASS at n=77, INCONCLUSIVE again at n=148; see also
+    F1_agg|small). It is reported to quantify how far the DEC-042 s5
+    required-n figures departed from what the measurement actually needed,
+    at the resolution of the prefix grid - the true crossing lies between
+    this point and the previous grid point.
+    """
+    for i, p in enumerate(traj):
+        if all(q["verdict"] == "PASS" for q in traj[i:]):
+            return p["n_per_condition"]
+    return None
+
+
 def loglog_slope(points: list[dict[str, Any]]) -> float | None:
     """Least-squares slope of log(half-width) on log(n). Model predicts -0.5."""
     xs, ys = [], []
@@ -416,6 +434,14 @@ def analyse_cell(stage: dict[str, Any], base_rows: list[dict],
                 at_full["observed_over_predicted"] if at_full else None),
             "target_halfwidth_pp": TARGET_HALFWIDTH_PP,
             # Descriptive facts about the trajectory shape, not new thresholds.
+            "sysmon_earliest_stable_pass_n": earliest_stable_pass(traj_sys),
+            "sysmon_required_n_overstatement": (
+                stage["n"] / earliest_stable_pass(traj_sys)
+                if earliest_stable_pass(traj_sys) else None),
+            "earliest_stable_pass_caveat": (
+                "RETROSPECTIVE, not a prospective stopping rule; knowable "
+                "only after running to the authorized n, and a verdict can "
+                "be reached and then lost"),
             "sysmon_trajectory_monotone_decreasing": _monotone(traj_sys),
             "sysmon_max_observed_over_predicted": _max_ratio(traj_sys),
             "eventlog_trajectory_monotone_decreasing": _monotone(traj_elog),
