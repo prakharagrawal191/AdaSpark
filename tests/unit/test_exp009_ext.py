@@ -259,3 +259,48 @@ def test_figure_is_written_as_self_contained_svg(ana, ext, tmp_path,
     assert "target (DEC-043 s7)" in svg          # the reference threshold
     assert "1/sqrt(n)" in svg                    # the model reference
     assert "http://" not in svg.replace("http://www.w3.org/2000/svg", "")
+
+
+# --- the write-up claim verifier -------------------------------------------
+
+@pytest.fixture(scope="module")
+def verifier():
+    return _load("t_verify_paper_claims", "verify_paper_claims.py")
+
+
+def test_verifier_passes_on_the_real_write_ups(verifier):
+    """The committed documents must agree with the committed artifact."""
+    assert verifier.main.__call__ is not None
+    import sys as _sys
+    argv = _sys.argv
+    _sys.argv = ["verify_paper_claims.py"]
+    try:
+        assert verifier.main() == 0
+    finally:
+        _sys.argv = argv
+
+
+def test_verifier_actually_fails_on_a_wrong_document(verifier, tmp_path,
+                                                     monkeypatch):
+    """A checker that cannot fail is worse than no checker.
+
+    Feed it a document that contradicts the artifact and require a non-zero
+    exit, so a future vacuous pass cannot go unnoticed.
+    """
+    bad = tmp_path / "wrong.md"
+    bad.write_text("The overhead was 99.999% and nothing else.",
+                   encoding="utf-8")
+    monkeypatch.setattr(verifier, "DOCS", (bad,))
+    import sys as _sys
+    argv = _sys.argv
+    _sys.argv = ["verify_paper_claims.py"]
+    try:
+        assert verifier.main() == 1
+    finally:
+        _sys.argv = argv
+
+
+def test_verifier_normalises_typographic_minus(verifier):
+    """Negative numbers are written with U+2212 in the prose, not '-'."""
+    assert verifier.norm("\u22120.167%") == "-0.167%"
+    assert verifier.norm("7.11\u00d7") == "7.11x"
