@@ -311,6 +311,38 @@ not decided at the n it designated, and one was **not decided at its full author
 all**. The model's error is not a mis-calibrated constant — it is directional in both
 directions and, in `F1_agg|small`, non-convergent.
 
+### 3.8 — Relation to existing work (recorded so novelty is not overstated)
+
+The mechanism measured here is **not a new discovery in benchmarking methodology**, and this
+record should not be read as claiming it is. Two established results cover the same ground:
+
+- **Kalibera & Jones, *Rigorous Benchmarking in Reasonable Time*, ISMM 2013**
+  (`doi:10.1145/2464157.2464160`). Gives a statistically rigorous methodology for choosing
+  repetition counts to reach a target precision, explicitly treats **independence between
+  repetitions**, and reports effect-size confidence intervals. The DEC-042 §5 `required_n`
+  construction — scale the observed half-width by 1/√n — is the naive form of exactly the
+  problem that work addresses, and the independence violation measured in §3.3 is the failure
+  mode it warns about.
+- **Barrett, Bolz-Tereick, Killick, Mount & Tratt, *Virtual Machine Warmup Blows Hot and
+  Cold*, OOPSLA 2017** (`doi:10.1145/3133876`). Uses changepoint analysis to show that
+  benchmarks frequently do **not** reach a steady state of peak performance. The regime
+  structure in §3.3 and the non-convergence of `F1_agg|small` in §3.4 are instances of that
+  phenomenon in a different runtime (Spark/JVM under a Python driver, rather than a JIT VM
+  benchmark loop).
+
+**What this work adds, stated narrowly.** (a) A controlled, interval-adjudicated measurement of
+**Spark monitoring overhead specifically** — psutil sampling and event-log writing, separated,
+against a 5% budget — for which no comparable public study was found. (b) The power model was
+**pre-registered as a falsifiable prediction (DEC-043 §7) before execution**, and the
+falsification is reported against that record rather than reconstructed afterwards, together
+with the withdrawn-FAIL audit trail (DEC-042). (c) A quantified cost of the naive model on a
+real system: required-n overstated 2.9–4.5× on five of six decided cells, one cell
+non-convergent, ~3,000 of 4,842 executions unnecessary.
+
+**What it does not add.** It does not propose a corrected power model, does not apply
+changepoint detection, and does not claim priority for the observation that benchmark
+repetitions are non-independent.
+
 ---
 
 ## 4 — Figure
