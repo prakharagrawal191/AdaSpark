@@ -358,13 +358,28 @@ repetitions shaded.
 
 ## 9. Artifact
 
-All raw observations (4,842 records), per-stage specifications and reconciliations, the
-analysis, and the figure are committed. The bootstrap is seeded and every statistic is imported
-from the original n = 5 analysis code rather than reimplemented, so the extension is adjudicated
-by exactly the procedure that adjudicated the initial result — a property enforced by a unit
-test. The pre-registered prediction, the withdrawn FAIL, and the authorization for the
-additional repetitions are all timestamped in the project's decision log, committed before the
-data they govern.
+**In the source repository.** The analysis code, both figures, the derived analysis artifact
+(`exp009_ext_analysis.json`, carrying every per-cell interval, prefix trajectory and
+diagnostic), the decision log, and the test suite — including the i.i.d. estimator control of
+§5 and a checker that re-derives all 73 headline figures in this paper from the analysis
+artifact and fails if any is not traceable to it.
+
+**Not in the source repository.** The 4,842 **raw** observation records
+(`observations_ext.jsonl`, 4.8 MB) and the per-stage specifications and reconciliations. The
+project deliberately keeps bulk measurement data outside version control, so these are retained
+in the experiment tree and **will be deposited in an archival repository with a DOI at
+submission**. Every number reported here is verifiable today against the committed derived
+artifact; re-deriving that artifact from raw records requires the deposit.
+
+*[PRE-SUBMISSION ACTION: make the deposit and replace this paragraph with the DOI. The
+reproduction claim is incomplete until then.]*
+
+**Reproducibility properties.** The bootstrap is seeded (4,000 resamples, seed 0) and every
+statistic is imported from the original n = 5 analysis code rather than reimplemented, so the
+extension is adjudicated by exactly the procedure that adjudicated the initial result — a
+property enforced by a unit test that inspects the defining source file. The pre-registered
+prediction, the withdrawn FAIL, and the authorization for the additional repetitions are all
+timestamped in the project's decision log, committed before the data they govern.
 
 ---
 
