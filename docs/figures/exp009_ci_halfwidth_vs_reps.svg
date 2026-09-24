@@ -158,5 +158,5 @@
 <text x="662" y="424" font-size="10" fill="#222">solid = observed</text>
 <text x="662" y="438" font-size="10" fill="#222">dashed = model 1/sqrt(n)</text>
 <text x="662" y="456" font-size="10" fill="#666">bootstrap: 4000 resamples, seed 0</text>
-<text x="85" y="554" font-size="9" fill="#888">source: results/experiments/exp-009/ext/analysis_ext.json | artifact f37da9b3424a0161</text>
+<text x="85" y="554" font-size="9" fill="#888">source: results/experiments/exp-009/ext/analysis_ext.json | artifact b4bc4ec322affa88</text>
 </svg>

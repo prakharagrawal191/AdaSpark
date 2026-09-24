@@ -95,6 +95,14 @@ EXT_DIR = EXT.EXT_DIR
 OUT_JSON = EXT_DIR / "analysis_ext.json"
 EVAL_OUT = PROJECT / "results" / "evaluation" / "exp009_ext_analysis.json"
 FIGURE = PROJECT / "docs" / "figures" / "exp009_ci_halfwidth_vs_reps.svg"
+FIGURE_REGIME = PROJECT / "docs" / "figures" / "exp009_regime_structure.svg"
+
+# Cells shown in the regime figure, chosen to span the observed behaviours:
+# a within-stage warm-up step, a stable series punctuated by one contention
+# episode, a ~50/50 bimodal series, and the longest series. Every cell's full
+# data is in the artifact; this selection is presentational only.
+REGIME_PANELS = ("F5_mixed|medium", "F1_agg|medium", "F1_agg|small",
+                 "F5_mixed|small")
 
 TRAJECTORY_POINTS = 10          # size of the prefix grid, fixed in advance
 WINDOW = 20                     # presentation window for the regime series
@@ -521,6 +529,116 @@ def _fmt(x: float) -> str:
     return ("%.3f" % x).rstrip("0").rstrip(".")
 
 
+COND_STYLE = {"FULL": ("#1f4e79", 1.0), "NO-SYSMON": ("#b03a2e", 1.0),
+              "NEITHER": ("#1e8449", 1.0)}
+
+
+def write_regime_figure(base_rows: list[dict], ext_rows: list[dict],
+                        meta: dict[str, Any]) -> None:
+    """Execution time against repetition index, all three conditions overlaid.
+
+    This is the evidence for the mechanism claim in a way the CI-vs-n figure
+    cannot show: the level shifts and contention episodes are visible, and
+    because the three conditions are drawn together it is apparent that they
+    move TOGETHER (common-mode) rather than the instrumentation under test
+    causing them. Panels are autoscaled per cell because the cells differ by
+    an order of magnitude in duration.
+    """
+    if not any(_by_rep(base_rows, ext_rows, *c.split("|"), "FULL")
+               for c in REGIME_PANELS):
+        return
+    PW, PH = 860, 122               # panel plot area
+    L, R, T, GAP, B = 92, 150, 54, 30, 56
+    H = T + len(REGIME_PANELS) * (PH + GAP) + B
+    W = L + PW + R
+    o: list[str] = []
+    o.append('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" '
+             'viewBox="0 0 %d %d" font-family="DejaVu Sans, Arial, sans-serif">'
+             % (W, H, W, H))
+    o.append('<rect width="%d" height="%d" fill="#ffffff"/>' % (W, H))
+    o.append('<text x="%d" y="26" font-size="16" font-weight="bold" '
+             'fill="#111">EXP-009: execution time by repetition — regime '
+             'structure, not noise</text>' % L)
+    o.append('<text x="%d" y="44" font-size="11" fill="#555">all three '
+             'conditions overlaid; shifts move them TOGETHER (common-mode), '
+             'so they are host behaviour, not the instrumentation under '
+             'test</text>' % L)
+
+    for idx, cell in enumerate(REGIME_PANELS):
+        fam, scale = cell.split("|")
+        top = T + idx * (PH + GAP)
+        series = {cond: _by_rep(base_rows, ext_rows, fam, scale, cond)
+                  for cond in COND_STYLE}
+        allv = [v for s in series.values() for v in s.values()]
+        if not allv:
+            continue
+        reps = sorted({r for s in series.values() for r in s})
+        x0, x1 = min(reps), max(reps)
+        y0, y1 = min(allv) * 0.94, max(allv) * 1.06
+
+        def px(r: float, _x0=x0, _x1=x1) -> float:
+            return L + PW * (r - _x0) / ((_x1 - _x0) or 1)
+
+        def py(v: float, _y0=y0, _y1=y1, _t=top) -> float:
+            return _t + PH * (1.0 - (v - _y0) / ((_y1 - _y0) or 1.0))
+
+        o.append('<rect x="%d" y="%d" width="%d" height="%d" fill="#fbfbfb" '
+                 'stroke="#333"/>' % (L, top, PW, PH))
+        for frac in (0.0, 0.5, 1.0):
+            v = y0 + (y1 - y0) * frac
+            o.append('<text x="%d" y="%s" font-size="10" fill="#444" '
+                     'text-anchor="end">%.0f s</text>'
+                     % (L - 7, _fmt(py(v) + 3), v))
+        o.append('<text x="%d" y="%s" font-size="12" font-weight="bold" '
+                 'fill="#111">%s</text>' % (L + 6, _fmt(top - 6), cell))
+        o.append('<text x="%d" y="%s" font-size="10" fill="#666">n = %d per '
+                 'condition</text>'
+                 % (L + PW - 116, _fmt(top - 6), len(series["FULL"])))
+        for r in (5, x1):
+            if x0 <= r <= x1:
+                o.append('<text x="%s" y="%d" font-size="10" fill="#444" '
+                         'text-anchor="middle">%d</text>'
+                         % (_fmt(px(r)), top + PH + 14, r))
+        # the five DEC-040 baseline repetitions, marked so the reader can see
+        # which part of each series the power model was anchored on
+        if x0 <= 5 <= x1:
+            o.append('<rect x="%s" y="%d" width="%s" height="%d" '
+                     'fill="#d68910" opacity="0.13"/>'
+                     % (_fmt(px(x0)), top, _fmt(max(px(5) - px(x0), 1.2)), PH))
+        for cond, (col, wd) in COND_STYLE.items():
+            pts = sorted(series[cond].items())
+            if not pts:
+                continue
+            o.append('<polyline points="%s" fill="none" stroke="%s" '
+                     'stroke-width="%.1f" opacity="0.82"/>'
+                     % (" ".join("%s,%s" % (_fmt(px(r)), _fmt(py(v)))
+                                 for r, v in pts), col, wd))
+    legend_y = T + 4
+    for cond, (col, _w) in COND_STYLE.items():
+        o.append('<rect x="%d" y="%d" width="14" height="3" fill="%s"/>'
+                 % (L + PW + 14, legend_y, col))
+        o.append('<text x="%d" y="%d" font-size="11" fill="#222">%s</text>'
+                 % (L + PW + 34, legend_y + 5, cond))
+        legend_y += 20
+    o.append('<rect x="%d" y="%d" width="14" height="10" fill="#d68910" '
+             'opacity="0.25"/>' % (L + PW + 14, legend_y + 4))
+    o.append('<text x="%d" y="%d" font-size="10" fill="#666">reps 1–5:</text>'
+             % (L + PW + 34, legend_y + 9))
+    o.append('<text x="%d" y="%d" font-size="10" fill="#666">the power '
+             'model\'s</text>' % (L + PW + 34, legend_y + 22))
+    o.append('<text x="%d" y="%d" font-size="10" fill="#666">anchor</text>'
+             % (L + PW + 34, legend_y + 34))
+    o.append('<text x="%d" y="%d" font-size="12" fill="#222" '
+             'text-anchor="middle">repetition index</text>'
+             % (L + PW // 2, H - 24))
+    o.append('<text x="%d" y="%d" font-size="9" fill="#888">source: '
+             'results/experiments/exp-009/ext/analysis_ext.json | artifact '
+             '%s</text>' % (L, H - 6, meta.get("artifact_id", "")[:16]))
+    o.append("</svg>")
+    FIGURE_REGIME.parent.mkdir(parents=True, exist_ok=True)
+    FIGURE_REGIME.write_text("\n".join(o), encoding="utf-8")
+
+
 def write_figure(cells: list[dict[str, Any]], meta: dict[str, Any]) -> None:
     """CI half-width against repetition count, observed vs 1/sqrt(n) model."""
     W, H = 900, 560
@@ -749,6 +867,7 @@ def main() -> int:
     EVAL_OUT.write_text(json.dumps(body, indent=1, sort_keys=True),
                         encoding="utf-8")
     write_figure(cells, body)
+    write_regime_figure(base_rows, ext_rows, body)
 
     print("EXP-009 DEC-043 extension: stages %s, %d new observations"
           % (body["stages_executed"], len(ext_rows)))
@@ -772,6 +891,7 @@ def main() -> int:
     print("  sysmon component decided: %s" % (sys_decided or "none"))
     print("  artifact %s" % body["artifact_id"][:16])
     print("  figure   %s" % FIGURE)
+    print("  figure   %s" % FIGURE_REGIME)
     return 0
 
 

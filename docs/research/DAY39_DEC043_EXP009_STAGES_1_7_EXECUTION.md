@@ -358,6 +358,13 @@ horizontal reference. Excursions are shown, not smoothed — including the `F5_m
 12.3× bump and the `F1_agg|small` trajectory, which dips below the 2 pp reference at n = 150
 and then rises away from it.
 
+`docs/figures/exp009_regime_structure.svg` — execution time against repetition index for four
+representative cells (`F5_mixed|medium`, `F1_agg|medium`, `F1_agg|small`, `F5_mixed|small`),
+**all three conditions overlaid** so that the common-mode character of the shifts is visible
+rather than asserted, with the five DEC-040 anchor repetitions shaded. Panels are autoscaled per
+cell because durations differ by an order of magnitude. Cell selection is presentational only;
+every cell's full series is in `analysis_ext.json`.
+
 ---
 
 ## 5 — Consequence for SC6 clause 2, stated precisely
@@ -429,6 +436,7 @@ future decision sizing repetition work does not inherit it. **This document does
 | `results/experiments/exp-009/ext/analysis_ext.json` | pooled analysis, trajectories, drift/regime + paired diagnostics | no |
 | `results/evaluation/exp009_ext_analysis.json` | evaluation copy of the above | **yes** |
 | `docs/figures/exp009_ci_halfwidth_vs_reps.svg` | CI half-width vs n | **yes** |
+| `docs/figures/exp009_regime_structure.svg` | execution time vs repetition, 3 conditions overlaid | **yes** |
 | `scripts/run_exp009_ext.py` | stage driver | **yes** |
 | `scripts/analyze_exp009_ext.py` | pooled analysis + figure | **yes** |
 | `tests/unit/test_exp009_ext.py` | 19 unit checks incl. the iid control | **yes** |

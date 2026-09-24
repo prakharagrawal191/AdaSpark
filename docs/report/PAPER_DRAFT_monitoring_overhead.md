@@ -239,6 +239,12 @@ runs*. `F1_agg|medium` illustrates it: dead stable at 30.5 s with a windowed IQR
 runs 66–105, a contention episode over runs 106–151 peaking at 111 s, then dead stable again
 through run 207.
 
+**Figure 2** (`exp009_regime_structure.svg`) plots execution time against repetition index for
+four representative cells with all three conditions overlaid. The overlay is the point: the
+shifts move the three arms *together*, so they are host behaviour rather than an effect of the
+instrumentation under test. The five original repetitions — the interval the power model is
+anchored on — are shaded, which makes visible how little of each series that anchor saw.
+
 Two distinct violations are present. **Level shifts**, both within a session (one cell steps
 −23% at runs 12–16) and *between* sessions (another ran ~22% faster than during the original
 n = 5 measurement, months of wall-clock apart). And **episodic contention bursts**. Both are
@@ -334,6 +340,19 @@ For practitioners sizing a measurement campaign, the actionable implication is n
 constant. It is that a repetition count derived from a handful of pilot runs carries no
 guarantee, and that reporting *whether the interval stabilised* matters more than reporting how
 many repetitions were performed.
+
+---
+
+## 8b. Figures
+
+**Figure 1** — `docs/figures/exp009_ci_halfwidth_vs_reps.svg`. CI half-width against
+repetitions per condition, log–log, one colour per cell. Solid = observed; dashed = the
+pre-registered 1/√n reference from that cell's own n = 5 half-width; the ~2 pp target is a
+horizontal reference. Excursions are drawn, not smoothed.
+
+**Figure 2** — `docs/figures/exp009_regime_structure.svg`. Execution time against repetition
+index for four representative cells, all three conditions overlaid, with the five anchor
+repetitions shaded.
 
 ---
 
