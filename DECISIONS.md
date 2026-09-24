@@ -3421,3 +3421,33 @@ Already-recorded observations are **retained and pooled** with the new ones; not
 **8 — What this entry does NOT decide.** Whether SC6 clause 2 passes or fails — that is the measurement's to answer. Whether `docs/PLAN.md`'s EXP-009 register estimate should be amended. Whether to repair `F3_rdd|medium`. Any EXP-005b, EXP-008, EXP-010 or EXP-011 matter. It authorizes **no TRAIN cell, no TEST cell and no AQE-on run**.
 
 **Status.** **DECIDED. `EXP-009 repetition extension = AUTHORIZED`**, scope-bound to §3, stoppable after any completed stage, **0 charged to SC6**. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-042) = **UNCHANGED**. Supervisor counter-signature: **PENDING** (conventional expectation only; never simulated; not a prerequisite under DEC-018 Decision A). **This entry performs 0 Spark executions and trains nothing.**
+
+---
+
+## DEC-044 | 2026-09-24 | EXP-009 overhead statistic — the paired analysis is reportable only as a labelled secondary result; paired statistic pre-registered for FUTURE work; 0 charged to SC6 (Day 41)
+
+**Decision ID:** DEC-044
+**Date:** 2026-09-24
+**Scope:** The reporting status of the EXP-009 paired diagnostic, and the pre-registration of a statistic for *future* overhead measurement. **Nothing else.**
+**Status:** DECIDED — operator **APPROVED**, scope-bound to §2.
+**Standalone decision artifact.** `docs/research/DEC_044_PAIRED_STATISTIC_AND_REPORTING.md` carries the same content, self-contained.
+**Supersedes nothing.** DEC-040, DEC-042 and DEC-043 all stand unchanged.
+
+**Authorization provenance, recorded exactly.** The operator authorized this entry **by name** on 2026-09-24 — *"i am giving you authorizations for DEC-044"* — having been given the §2 clause summary (D1–D6) but while away from the system and without confirming a reading of the full standalone artifact. An earlier, broader instruction to sign decisions on assumed consent was **declined** and is not the basis for this entry. **Supervisor counter-signature: ABSENT — never simulated.** No signature in this repository has been simulated.
+
+> **This entry performs 0 Spark executions, trains nothing, executes no TEST, and modifies no manifest, no result artifact and no prior decision entry.**
+> **SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17. TEST = NOT AUTHORIZED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Ledger headings run DEC-001…DEC-026 and DEC-031…DEC-043. Next free: **DEC-044**.
+
+**1 — The finding at issue.** DEC-043 §3 is fully discharged: seven stages, **4842 executions, 0 charged to SC6**, six of seven analysed cells decided (all PASS). `F1_agg|small` is **INCONCLUSIVE at its full authorized n**, ending *wider* (14.95 pp) than at n = 5 (13.90 pp). The DEC-040 §5 protocol interleaves the three conditions **within each (cell, rep)**, so repetitions are matched, and every measured level shift is **common-mode**. The DEC-040 §7 acceptance quantity — the difference of *independent* medians — discards that matching. Measured gap: **1.2–4.8×** on the six well-behaved cells and **35.7×** on `F1_agg|small` (14.95 pp unpaired vs 0.42 pp paired), with paired point estimates agreeing across all seven cells (−0.214% … +0.172%).
+
+**2 — DECISIONS.** **D1** The EXP-009 acceptance quantity is **NOT reopened**; DEC-040 §7 and DEC-042 §3 stand; `F1_agg|small` remains **INCONCLUSIVE**; SC6 clause 2 remains **unevidenced as a whole**. **D2** The paired analysis **MAY be reported as a clearly-labelled exploratory / secondary analysis**, alongside and never instead of the registered unpaired result, and never as deciding `F1_agg|small` or as satisfying SC6 clause 2. **D3** For any **FUTURE** monitoring-overhead measurement the **paired statistic is pre-registered as primary**, fixed before any such data exist, with the same 95% percentile bootstrap (4000 resamples, seed 0), the same DEC-042 interval rule and the unchanged 5% gate (`docs/PLAN.md` line 45). **D4** A **steady-state screen is pre-registered for future work** (changepoint approach, Barrett et al. OOPSLA 2017) and is **NOT applied retroactively**; no observation is excluded from any existing statistic. **D5** Any write-up must cite **Kalibera & Jones, ISMM 2013** (`10.1145/2464157.2464160`) and **Barrett et al., OOPSLA 2017** (`10.1145/3133876`) and must **not** claim priority for the observation that benchmark repetitions are non-independent. **D6** `F1_agg|small` receives **no further repetitions** on this authorization.
+
+**3 — Why the paired statistic is not adopted retroactively.** Doing so would decide `F1_agg|small`, complete coverage at 7 of 7 and make SC6 clause 2 evidenceable. That is precisely the reason it is refused: the statistic would have been **selected because it produces the preferred outcome, on data already seen**. The confirmatory result was committed first, at `7937db8`, before this entry existed.
+
+**4 — What this entry does NOT decide.** It does not amend DEC-040, DEC-042 or DEC-043; does not restate, relax or withdraw SC6 clause 2 or the 5% gate; does not amend `docs/PLAN.md`; authorizes no Spark execution, no TRAIN cell, no TEST cell and no AQE-on run; does not repair `F3_rdd|medium`; re-analyses no recorded observation; and decides no EXP-005b, EXP-008, EXP-010 or EXP-011 matter.
+
+**Status.** **DECIDED.** Operator **APPROVED** D1–D6 (provenance above). `F1_agg|small = INCONCLUSIVE`. `SC6 clause 2 = UNEVIDENCED as a whole`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-043) = **UNCHANGED**. Supervisor counter-signature: **ABSENT** — never simulated; not a prerequisite under DEC-018 Decision A. **This entry performs 0 Spark executions and trains nothing.**

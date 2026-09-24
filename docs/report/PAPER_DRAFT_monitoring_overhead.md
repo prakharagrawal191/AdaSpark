@@ -1,7 +1,8 @@
 # A Pre-Registered Measurement of Monitoring Overhead in Apache Spark, and the Failure of the √n Repetition Model
 
-**Status:** DRAFT v1 — internal. Not submitted. All figures traceable to committed artifacts.
-**Evidence commit:** `7937db8` (execution), `7fee020` (prior-art record).
+**Status:** DRAFT v2 — internal. Not submitted. All figures traceable to committed artifacts.
+**Evidence commit:** `7937db8` (execution), `7fee020` (prior-art record), `DEC-044` (reporting
+status of Appendix A).
 **Audience:** systems / performance-measurement venue (ISMM, ICPE, OOPSLA-style artifact track).
 
 ---
@@ -348,12 +349,12 @@ data they govern.
 
 ---
 
-## Appendix A — [PENDING: include only if DEC-044 §D2 is signed]
+## Appendix A — Exploratory: a paired statistic
 
-> **Draft note, not for submission.** The following is a *secondary, exploratory* analysis. Its
-> inclusion is contingent on DEC-044 §D2 being signed; as of this draft that decision is
-> unsigned, and this appendix must be removed if it is not adopted. It is **not** the registered
-> acceptance quantity and no verdict above derives from it.
+> **Secondary, exploratory analysis.** Reportable under DEC-044 §D2 (decided 2026-09-24), which
+> permits it **only** as a clearly-labelled secondary result, alongside and never instead of the
+> registered unpaired analysis, and never as deciding `F1_agg|small` or as satisfying the
+> budget. It is **not** the registered acceptance quantity and no verdict in §6 derives from it.
 
 Because the protocol interleaves conditions within each repetition, the repetitions are matched,
 and every level shift measured is common-mode. A paired statistic — the median over repetitions

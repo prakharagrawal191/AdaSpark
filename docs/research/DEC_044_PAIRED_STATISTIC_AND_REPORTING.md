@@ -1,10 +1,18 @@
-# DEC-044 (DRAFT) | EXP-009 overhead statistic — how the paired analysis may be reported, and what is pre-registered for future overhead work
+# DEC-044 | EXP-009 overhead statistic — how the paired analysis may be reported, and what is pre-registered for future overhead work
 
 **Decision ID:** DEC-044
 **Date drafted:** 2026-09-24 (Day 41)
-**Status:** **DRAFT — NOT SIGNED. THIS DOCUMENT AUTHORIZES NOTHING.**
-It is not appended to `DECISIONS.md` and confers no authorization until an operator signs it.
-Drafted following the DEC-014 precedent for a PENDING decision artifact.
+**Date decided:** 2026-09-24 (Day 41)
+**Status:** **DECIDED — operator APPROVED, scope-bound to §2.**
+**Authoritative log entry:** the appended DEC-044 section of `DECISIONS.md`; this document
+carries the same decision content, self-contained.
+
+**Authorization provenance, recorded exactly.** The operator authorized this entry **by name**
+on 2026-09-24 — *"i am giving you authorizations for DEC-044"* — having been given the §2 clause
+summary (D1–D6) but while away from the system and without confirming a reading of the full
+standalone artifact. An earlier, broader instruction to sign decisions on assumed consent was
+**declined** and is not the basis for this entry. **Supervisor counter-signature: ABSENT —
+never simulated.** No signature in this repository has been simulated.
 **Scope:** the reporting status of the paired diagnostic, and the pre-registration of a
 statistic for *future* overhead measurement. **Nothing else.**
 
@@ -104,7 +112,10 @@ execution of any kind.
 
 ---
 
-**Status.** **DRAFT. NOT SIGNED. AUTHORIZES NOTHING.** Operator signature: **ABSENT** — never
-simulated. Until signed, the paired analysis remains a diagnostic only (`DAY39…§3.5`), and
-every EXP-009 verdict rests on the frozen DEC-040 §7 statistic. Historical decisions
-(DEC-001 … DEC-026, DEC-030 … DEC-043) = **UNCHANGED**.
+**Status.** **DECIDED.** Operator **APPROVED** D1–D6 on 2026-09-24 (provenance above). Every
+EXP-009 verdict continues to rest on the frozen DEC-040 §7 statistic; `F1_agg|small` remains
+**INCONCLUSIVE**; **SC6 clause 2 remains unevidenced as a whole**. `SC6 cap = 500, NOT raised`.
+`SC6 ledger = 483 / 17, unchanged`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`.
+Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-043) = **UNCHANGED**. Supervisor
+counter-signature: **ABSENT** — never simulated; not a prerequisite under DEC-018 Decision A.
+**This entry performs 0 Spark executions and trains nothing.**
