@@ -89,9 +89,17 @@ assumption in JIT benchmarking. The regime structure we observe (§6.2) and the 
 of one cell (§6.3) are instances of the same phenomenon in a different setting: a JVM-based
 distributed data engine driven from Python, rather than a VM benchmark loop.
 
-**Mytkowicz et al.** and the broader measurement-bias literature establish that plausible
-experimental setups can yield systematically wrong conclusions. Our withdrawn FAIL (§1) is a
-concrete instance.
+**Mytkowicz et al.** [ASPLOS 2009] establish that a seemingly innocuous choice of experimental
+setup can introduce enough measurement bias to invert a conclusion. Our withdrawn FAIL (§1) is a
+concrete instance of the hazard they describe.
+
+**Chen and Revels** [2016] address a neighbouring problem — timer error, OS jitter and other
+environmental fluctuation — and propose robust estimators insensitive to the resulting
+non-ideal statistics. Their concern is the *marginal* distribution of timings; ours is the
+*serial* structure across repetitions, which a robust marginal estimator does not address. The
+two are complementary: §6.3 shows a case where a robust (median-based) estimator is correctly
+insensitive to outliers yet still fails, because the failure is sequential rather than
+distributional.
 
 **What is comparatively under-served** is Spark monitoring overhead itself. Apache Spark's
 documentation describes its metrics and instrumentation interfaces, and practitioner reports
@@ -302,7 +310,20 @@ first PASS would have been wrong on at least two of seven cells. The over-provis
 
 ---
 
-## 7. Threats to Validity
+## 7. Figures
+
+**Figure 1** — `docs/figures/exp009_ci_halfwidth_vs_reps.svg`. CI half-width against
+repetitions per condition, log–log, one colour per cell. Solid = observed; dashed = the
+pre-registered 1/√n reference from that cell's own n = 5 half-width; the ~2 pp target is a
+horizontal reference. Excursions are drawn, not smoothed.
+
+**Figure 2** — `docs/figures/exp009_regime_structure.svg`. Execution time against repetition
+index for four representative cells, all three conditions overlaid, with the five anchor
+repetitions shaded.
+
+---
+
+## 8. Threats to Validity
 
 **Single host.** All measurements come from one machine, one OS, one Spark version. The
 overhead magnitudes should not be generalized; the *methodological* finding is more portable,
@@ -328,7 +349,7 @@ misleadingly better-behaved — result.
 
 ---
 
-## 8. Conclusion
+## 9. Conclusion
 
 We pre-registered a standard √n repetition model, ran 4,842 Spark jobs to test it, and it failed
 on every cell. The mechanism is measurable: repetitions on a real system are episodically
@@ -343,20 +364,7 @@ many repetitions were performed.
 
 ---
 
-## 8b. Figures
-
-**Figure 1** — `docs/figures/exp009_ci_halfwidth_vs_reps.svg`. CI half-width against
-repetitions per condition, log–log, one colour per cell. Solid = observed; dashed = the
-pre-registered 1/√n reference from that cell's own n = 5 half-width; the ~2 pp target is a
-horizontal reference. Excursions are drawn, not smoothed.
-
-**Figure 2** — `docs/figures/exp009_regime_structure.svg`. Execution time against repetition
-index for four representative cells, all three conditions overlaid, with the five anchor
-repetitions shaded.
-
----
-
-## 9. Artifact
+## 10. Artifact
 
 **In the source repository.** The analysis code, both figures, the derived analysis artifact
 (`exp009_ext_analysis.json`, carrying every per-cell interval, prefix trajectory and
@@ -422,6 +430,7 @@ work instead.
    doi:10.1145/2464157.2464160
 2. E. Barrett, C. F. Bolz-Tereick, R. Killick, S. Mount, L. Tratt. *Virtual Machine Warmup Blows
    Hot and Cold.* Proc. ACM Program. Lang. 1, OOPSLA, 2017. doi:10.1145/3133876
-3. T. Mytkowicz, A. Diwan, M. Hauswirth, P. F. Sweeney. *Producing Wrong Data Without Doing
-   Anything Obviously Wrong!* ASPLOS 2009. — [VERIFY citation before submission]
-4. Apache Spark. *Monitoring and Instrumentation*, Spark 3.5.x documentation.
+3. T. Mytkowicz, A. Diwan, M. Hauswirth, P. F. Sweeney. *Producing wrong data without doing
+   anything obviously wrong!* ASPLOS 2009. doi:10.1145/1508284.1508275
+4. J. Chen and J. Revels. *Robust benchmarking in noisy environments.* arXiv:1608.04295, 2016.
+5. Apache Spark. *Monitoring and Instrumentation*, Spark 3.5.x documentation.
