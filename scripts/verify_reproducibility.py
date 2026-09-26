@@ -9,7 +9,9 @@ today reproduce the committed derived artifacts?*
   L1  the frozen inputs are unchanged (sha256 against the value each analysis
       artifact declares for its own input);
   L2  every committed analyzer re-derives its artifact byte-for-byte (or
-      content-identically where the artifact carries a deliberate timestamp);
+      content-identically where the artifact carries a deliberate timestamp,
+      or - for EXP-007 only - once the checkout path it records is mapped
+      back to the recorded one, DEC-045);
   L3  the derived artifacts on disk are untouched by this script.
 
 WHY IT IS NOT SC7. SC7 is "re-run reproducibility within +/-5% median" and
@@ -275,6 +277,58 @@ def _snapshot(paths: tuple[Path, ...]) -> dict[str, str]:
     return {str(p): sha256_file(p) for p in paths if p.exists()}
 
 
+# The one machine-dependent field (DEC-045). EXP-007's artifact records the
+# absolute directory it was derived from and hashes it into its own
+# analysis_fingerprint, so a re-derivation in any other checkout differs in
+# exactly that string - and, through it, in the fingerprint.
+CHECKOUT_PATH_FIELDS: dict[str, tuple[str, str, str]] = {
+    # artifact: (section, key, directory the analyzer defaults the key to)
+    "exp007_analysis.json": ("inputs", "training_root", "results/training"),
+}
+
+
+def refingerprint(report: dict[str, Any]) -> str:
+    """analyze_exp007.py's analysis_fingerprint, recomputed for `report`.
+
+    Mirrors analyze_exp007.py:539-542: canonical JSON of the whole report
+    with analysis_fingerprint set to None. A unit test pins it against the
+    committed artifact, so drift from the analyzer's recipe FAILS there.
+    """
+    body = dict(report, analysis_fingerprint=None)
+    payload = json.dumps(body, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=True)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def map_checkout_path(mod: Any, out_name: str, fresh: bytes,
+                      stored: bytes) -> bytes | None:
+    """The fresh artifact with the recorded checkout path put back, or None.
+
+    Only the path is substituted, and only when the fresh value is this
+    checkout's own directory and the recorded value is a different one. The
+    fingerprint is then recomputed and the report re-serialized with the
+    analyzer's own report_json(), so every other byte - every result, claim
+    and the fingerprint over them - must still equal the stored file. Any
+    failed precondition returns None: a real difference cannot be mapped away.
+    """
+    spec = CHECKOUT_PATH_FIELDS.get(out_name)
+    if spec is None:
+        return None
+    section, key, rel = spec
+    try:
+        new = json.loads(fresh.decode("utf-8"))
+        old = json.loads(stored.decode("utf-8"))
+        got, recorded = new[section][key], old[section][key]
+    except (ValueError, KeyError, TypeError):
+        return None
+    here = str((Path(mod.PROJECT) / rel).resolve())
+    if got != here or not isinstance(recorded, str) or recorded == here:
+        return None
+    new[section][key] = recorded
+    new["analysis_fingerprint"] = refingerprint(new)
+    return mod.report_json(new).encode("utf-8")
+
+
 def check_analyzer_bytes(label: str, filename: str, out_name: str,
                          module_name: str, out_dir: Path,
                          show: bool, argstyle: str = "out") -> None:
@@ -305,9 +359,19 @@ def check_analyzer_bytes(label: str, filename: str, out_name: str,
     if rc != 0 or not dst.exists():
         check("L2 %s" % label, False, "analyzer exited %s, no output" % rc)
         return
-    same = dst.read_bytes() == target.read_bytes()
-    check("L2 %s" % label, same,
-          "byte-identical (%s...)" % sha256_file(dst)[:16] if same else
+    fresh, stored = dst.read_bytes(), target.read_bytes()
+    if fresh == stored:
+        check("L2 %s" % label, True,
+              "byte-identical (%s...)" % sha256_bytes(fresh)[:16])
+        return
+    mapped = map_checkout_path(mod, out_name, fresh, stored)
+    if mapped is not None and mapped == stored:
+        section, key, _ = CHECKOUT_PATH_FIELDS[out_name]
+        check("L2 %s" % label, True,
+              "byte-identical once %s.%s is mapped to the recorded checkout "
+              "(%s...)" % (section, key, sha256_bytes(mapped)[:16]))
+        return
+    check("L2 %s" % label, False,
           "RE-DERIVED OUTPUT DIFFERS from %s" % out_name)
 
 

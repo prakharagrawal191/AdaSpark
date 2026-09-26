@@ -1,3 +1,5 @@
 * text=auto
 *.png binary
 *.parquet binary
+# analyze_exp007.py writes LF explicitly; keep every checkout byte-identical to it (DEC-045)
+results/evaluation/exp007_analysis.json text eol=lf

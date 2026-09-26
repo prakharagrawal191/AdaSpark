@@ -11,7 +11,10 @@ they pin the properties the harness's verdict depends on:
     copy of the artifact, not the artifact;
   * the "< 5 usable reps = INCOMPLETE" median rule really excludes a cell
     rather than quietly averaging four observations;
-  * a stale or edited stored artifact FAILS the byte comparison.
+  * a stale or edited stored artifact FAILS the byte comparison;
+  * EXP-007's recorded checkout path is the ONLY thing ever mapped (DEC-045):
+    a relocated artifact passes, a relocated one with an edited result and a
+    matching recomputed fingerprint still fails.
 
 No Spark, no TEST row, no write outside tmp_path, 0 charged to SC6.
 """
@@ -274,6 +277,83 @@ def test_analyzer_byte_comparison_detects_an_edited_artifact(
     vrfy.check_analyzer_bytes("t", "analyze_exp007.py", "exp007_analysis.json",
                               "t_exp007_bad", tmp_path / "out", False)
     assert _outcomes(vrfy)[0] == ("L2 t", "FAIL")
+
+
+# --- L2: EXP-007's recorded checkout path (DEC-045) --------------------------
+
+EXP007_ARTIFACT = PROJECT / "results" / "evaluation" / "exp007_analysis.json"
+ELSEWHERE = "X:\\elsewhere\\PDS PROJECT\\results\\training"
+
+
+def test_refingerprint_reproduces_the_committed_fingerprint(vrfy):
+    """The verifier's copy of the fingerprint recipe must match the analyzer's.
+
+    If it drifted, the mapped comparison would silently compare against a
+    different formula; this pins it to the value the analyzer actually wrote.
+    """
+    art = json.loads(EXP007_ARTIFACT.read_text(encoding="utf-8"))
+    assert vrfy.refingerprint(art) == art["analysis_fingerprint"]
+
+
+def _exp007_bytes(mod, vrfy, root: str, mutate=None) -> bytes:
+    """The committed exp-007 report as the analyzer would write it at `root`."""
+    art = json.loads(EXP007_ARTIFACT.read_text(encoding="utf-8"))
+    art["inputs"]["training_root"] = root
+    if mutate is not None:
+        mutate(art)
+    art["analysis_fingerprint"] = vrfy.refingerprint(art)
+    return mod.report_json(art).encode("utf-8")
+
+
+def _relocated_copy(vrfy, tmp_path: Path, mutate=None) -> Path:
+    """A stored exp-007 artifact as if recorded in a different checkout."""
+    mod = vrfy.load_module("t_exp007_ser", "analyze_exp007.py")
+    eval_dir = tmp_path / "eval"
+    eval_dir.mkdir(exist_ok=True)
+    (eval_dir / "exp007_analysis.json").write_bytes(
+        _exp007_bytes(mod, vrfy, ELSEWHERE, mutate))
+    return eval_dir
+
+
+def test_exp007_recorded_in_another_checkout_passes_once_mapped(
+        vrfy, tmp_path, monkeypatch):
+    monkeypatch.setattr(vrfy, "EVAL", _relocated_copy(vrfy, tmp_path))
+    vrfy.check_analyzer_bytes("t", "analyze_exp007.py", "exp007_analysis.json",
+                              "t_exp007_moved", tmp_path / "out", False)
+    (name, status, detail), = _verdicts(vrfy)
+    assert status == "PASS", detail
+    assert "mapped to the recorded checkout" in detail
+
+
+def test_exp007_mapping_does_not_hide_a_changed_result(vrfy, tmp_path,
+                                                      monkeypatch):
+    """A relocated artifact with an edited result - and a fingerprint
+    recomputed to match it - must still FAIL: only the path is ever mapped."""
+    def mutate(data):
+        data["validation"]["total_live_executions"] += 1
+    monkeypatch.setattr(vrfy, "EVAL", _relocated_copy(vrfy, tmp_path, mutate))
+    vrfy.check_analyzer_bytes("t", "analyze_exp007.py", "exp007_analysis.json",
+                              "t_exp007_forged", tmp_path / "out", False)
+    assert _outcomes(vrfy)[0] == ("L2 t", "FAIL")
+
+
+def test_map_checkout_path_refuses_every_other_difference(vrfy):
+    mod = vrfy.load_module("t_exp007_map", "analyze_exp007.py")
+    here = str((mod.PROJECT / "results" / "training").resolve())
+    local, moved = (_exp007_bytes(mod, vrfy, here),
+                    _exp007_bytes(mod, vrfy, ELSEWHERE))
+    name = "exp007_analysis.json"
+    # an artifact with no recorded checkout path is never mapped
+    assert vrfy.map_checkout_path(mod, "exp006_analysis.json", local, moved) is None
+    # the fresh value must be this checkout's own directory
+    assert vrfy.map_checkout_path(
+        mod, name, _exp007_bytes(mod, vrfy, "Y:\\other"), moved) is None
+    # a stored value that already is this checkout leaves nothing to map
+    assert vrfy.map_checkout_path(mod, name, local, local) is None
+    # unreadable input is refused, not guessed at
+    assert vrfy.map_checkout_path(mod, name, b"not json", moved) is None
+    # the legitimate case lands exactly on the stored bytes
+    assert vrfy.map_checkout_path(mod, name, local, moved) == moved
 
 
 def test_exp002_gate_is_compared_without_its_volatile_fields(vrfy, tmp_path):
