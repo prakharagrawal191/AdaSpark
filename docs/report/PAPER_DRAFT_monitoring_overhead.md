@@ -4,6 +4,14 @@
 **Evidence commit:** `7937db8` (execution), `7fee020` (prior-art record), `DEC-044` (reporting
 status of Appendix A).
 **Audience:** systems / performance-measurement venue (ISMM, ICPE, OOPSLA-style artifact track).
+**Source of record:** the submitted text is `docs/paper/icpe2027/main.tex` (ICPE 2027 research
+track), built and page-checked by `docs/paper/icpe2027/build.py`. This Markdown draft is the
+internal report, and it is the second document `scripts/verify_paper_claims.py` checks, so a figure
+that drifts here is caught too. Where the two disagree, `main.tex` governs the submission.
+**Number revisions 2026-09-28**, all re-derived from the committed artifact: the abstract's ratio
+range (`0.12×–7.7×` → **0.18×–7.70×**, the ratio of observed to target half-width at the prescribed
+n), `75.4%` → **75.38%**, and the exact cost arithmetic (**992** repetitions past each decided
+cell's stabilisation, × 3 conditions, = **2,976** runs).
 
 ---
 
@@ -17,10 +25,10 @@ shrinks as 1/√n, and then executed 4,842 Spark job runs to test it.
 
 The prediction failed on every one of seven workload cells. No cell reached the predicted ~2
 percentage-point half-width at the repetition count the model prescribed; observed/predicted
-ratios spanned 0.12× to 7.7×, and no log–log slope was close to the predicted −0.5. The cause is
-measurable rather than inferred: lag-1 autocorrelation of execution time is +0.584…+0.886 in all
+ratios spanned **0.18× to 7.70×**. The cause is measurable rather than inferred: lag-1
+autocorrelation of execution time is +0.584…+0.886 in all
 21 condition-series. The runs are not noisy so much as *episodic* — within a quiet 20-run window
-the robust dispersion is 0.63–2.06%, while a contention window in the same series reaches 75.4%.
+the robust dispersion is 0.63–2.06%, while a contention window in the same series reaches 75.38%.
 
 The practical cost is large. The repetition counts the model prescribed overstated what was
 actually needed by 2.9–4.5× on five of six decided cells: roughly 3,000 of our 4,842 runs were
@@ -213,7 +221,7 @@ zero protocol deviations.
 | `F1_agg\|small` | 247 | +0.203% | [−14.680, +15.210] | **14.95 pp** | +1.110% | 15.41 pp | **INCONCLUSIVE** |
 | `F5_mixed\|small` | 721 | +0.143% | [−0.701, +1.015] | 0.86 pp | −0.047% | 0.90 pp | PASS |
 
-Six of seven cells are decided, all PASS. Every decided sysmon point estimate lies in
+Verdicts are reached on 6 of 7 cells, all PASS. Every decided sysmon point estimate lies in
 **−0.167% … +0.177%**, and every decided interval is contained within ±2.9 pp — far inside the
 5% budget.
 
@@ -235,14 +243,15 @@ overall — one cell remains undecided, so the criterion as a whole is unevidenc
 | `F5_mixed\|small` | 0.87 pp | 2.00 | 0.43× | −0.796 | no |
 
 No cell reached ~2 pp at its prescribed n. The model's error is not a mis-calibrated constant:
-it is wrong in **both directions**, four-to-six times too conservative on five cells and seven
-to eight times too optimistic on two. Six of seven trajectories are non-monotone — the interval
-does not even shrink reliably, let alone at the predicted rate.
+it is wrong in **both directions** — the prescribed n was 2.9–4.5× larger than the n at which the
+verdict was actually reached on five of the six decided cells, while on two cells the half-width at
+the prescribed n was still **7.11×** and **7.70×** the 2 pp target. Six of seven trajectories are
+non-monotone — the interval does not even shrink reliably, let alone at the predicted rate.
 
 **Why.** Lag-1 autocorrelation of execution time is **+0.584 … +0.886 in all 21 condition-series**
 (under independence it should be ≈ 0). The series are not uniformly noisy: within a quiet 20-run
 window the robust dispersion (IQR/median) is **0.63–2.06%**, while a contention window in the
-same series reaches **75.4%**. Excess variance arrives in *episodes spanning tens of consecutive
+same series reaches **75.38%**. Excess variance arrives in *episodes spanning tens of consecutive
 runs*. `F1_agg|medium` illustrates it: dead stable at 30.5 s with a windowed IQR of 0.3 s across
 runs 66–105, a contention episode over runs 106–151 peaking at 111 s, then dead stable again
 through run 207.
@@ -299,7 +308,9 @@ Comparing the prescribed counts against the n at which each verdict became PASS 
 | `F1_agg\|small` | 242 | never | — |
 | `F5_mixed\|small` | 716 | 220 | 3.3× |
 
-Approximately **3,000 of the 4,842 runs were not needed** to reach the verdicts reached.
+Approximately **3,000 of the 4,842 runs were not needed** to reach the verdicts reached. The
+arithmetic behind that approximation is exact: **992** repetitions beyond the point at which each
+decided cell's system-monitor verdict had stabilised, times the three conditions, is **2,976** runs.
 
 **This is retrospective and is not a stopping rule**, and we stress the distinction because it
 is the tempting misreading. The figure is knowable only after running to the prescribed n, and
@@ -369,7 +380,7 @@ many repetitions were performed.
 **In the source repository.** The analysis code, both figures, the derived analysis artifact
 (`exp009_ext_analysis.json`, carrying every per-cell interval, prefix trajectory and
 diagnostic), the decision log, and the test suite — including the i.i.d. estimator control of
-§5 and a checker that re-derives all 73 headline figures in this paper from the analysis
+§5 and a checker that re-derives all 55 headline figures in this paper from the analysis
 artifact and fails if any is not traceable to it.
 
 **Not in the source repository.** The 4,842 **raw** observation records

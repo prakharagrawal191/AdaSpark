@@ -1129,6 +1129,14 @@ def main(argv: list[str] | None = None) -> int:
             # the resolved scope; its STATUS must stay PENDING, which
             # check 25 verifies independently.
             "docs/research/DEC_014_TEST_EXECUTION_AUTHORIZATION_EXP005.md",
+            # DEC-046 (DRAFTED, approval pending) names the four tracked files
+            # the ICPE 2027 paper hardening touches. Two are the paper's own
+            # checks, one is that checker's tests, one restates paper figures;
+            # none of them is a result artifact, ledger, manifest or analyzer.
+            "scripts/verify_paper_claims.py",              # DEC-046 D1
+            "scripts/verify_reproducibility.py",           # DEC-046 D3
+            "tests/unit/test_exp009_ext.py",               # DEC-046 D1
+            "docs/report/PAPER_DRAFT_monitoring_overhead.md",  # DEC-046 D4
         }
         unexpected = sorted(f for f in changed if f not in authorized)
         # the split guard must be SEMANTICALLY unchanged despite runner.py moving

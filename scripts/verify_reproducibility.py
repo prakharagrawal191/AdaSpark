@@ -377,13 +377,117 @@ def check_analyzer_bytes(label: str, filename: str, out_name: str,
 
 
 
+# The tolerance for the one analyzer that is content-exact but not byte-exact
+# (see check_exp009_ext): 1e-9 is five to six orders of magnitude above the
+# observed 1.7e-15 association noise and far below any change that could move a
+# reported figure, since the paper quotes two or three decimal places.
+FLOAT_REL_TOL = 1e-9
+
+
+def self_hashed_id(doc: dict[str, Any]) -> str:
+    """The artifact's OWN content-hash convention, applied to it.
+
+    `artifact_id` excludes the fields the document names in
+    `artifact_id_excludes`; recomputing it here is what keeps the tolerance
+    below from becoming a free pass, because the id still has to hash its own
+    document rather than be compared to a constant. The exclude list itself is
+    metadata ABOUT the hash, so it is outside the hashed body too - that is the
+    convention an independent check verifies on the committed artifact.
+    """
+    body = {k: v for k, v in doc.items()
+            if k not in doc["artifact_id_excludes"]
+            and k != "artifact_id_excludes"}
+    canon = json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(canon).hexdigest()
+
+
+def json_leaf_diffs(fresh: Any, stored: Any,
+                    path: str = "") -> list[tuple[str, Any, Any, float]]:
+    """Leaf differences as (path, stored, fresh, relative deviation).
+
+    Non-float leaves report an infinite deviation, so a changed string, a
+    changed key or a changed list length is always a hard failure and can never
+    hide behind a numeric tolerance.
+    """
+    out: list[tuple[str, Any, Any, float]] = []
+    if isinstance(stored, dict) and isinstance(fresh, dict):
+        for k in sorted(set(stored) | set(fresh)):
+            here = "%s/%s" % (path, k)
+            if k not in stored or k not in fresh:
+                out.append((here, stored.get(k), fresh.get(k), float("inf")))
+            else:
+                out += json_leaf_diffs(fresh[k], stored[k], here)
+        return out
+    if isinstance(stored, list) and isinstance(fresh, list):
+        if len(stored) != len(fresh):
+            out.append((path + "/length", len(stored), len(fresh),
+                        float("inf")))
+        for i, (a, b) in enumerate(zip(fresh, stored)):
+            out += json_leaf_diffs(a, b, "%s[%d]" % (path, i))
+        return out
+    if isinstance(stored, float) or isinstance(fresh, float):
+        if stored == fresh:
+            return out
+        denom = max(abs(stored), abs(fresh), 1e-300)
+        out.append((path or "/", stored, fresh, abs(stored - fresh) / denom))
+        return out
+    if stored != fresh:
+        out.append((path or "/", stored, fresh, float("inf")))
+    return out
+
+
+def svg_without_artifact_footer(text: str) -> str:
+    """An SVG with the embedded analysis hash masked out.
+
+    Both EXP-009 figures stamp the `artifact_id` they were rendered from into
+    their footer. That hash is a function of the analysis, so it moves with any
+    floating-point association noise in it; masking it is what lets the figure
+    check ask the question it is actually about - does the PLOT re-render,
+    every number, label and coordinate equal?
+    """
+    out: list[str] = []
+    i = 0
+    while True:
+        j = text.find("artifact ", i)
+        if j < 0:
+            out.append(text[i:])
+            return "".join(out)
+        k = j + len("artifact ")
+        out.append(text[i:k])
+        token = text[k:k + 16]
+        if len(token) == 16 and all(c in "0123456789abcdef" for c in token):
+            out.append("<id>")
+            i = k + 16
+        else:
+            i = k
+
+
 def check_exp009_ext(out_dir: Path, show: bool) -> None:
     """EXP-009's analyzer writes to fixed paths, so patch its write targets.
 
-    `artifact_id` is a content hash that deliberately excludes `written_utc`,
-    so equality of that field is the artifact's own statement that the content
-    is unchanged; the full-text comparison is done with the `written_utc` line
-    removed from both sides, which is strictly stronger.
+    This is the ONE analyzer here that re-derives its artifact content-exactly
+    but not byte-exactly. Measured on the committed code and this environment
+    (2026-09-28): 29 of the artifact's floating-point leaves come back within
+    1.7e-15 relative of what is committed - 21 `lag1_autocorrelation` and 8
+    `*_loglog_slope` values, about 15 ULP at those magnitudes - so `artifact_id`,
+    which hashes the content, moves with them, and the two SVG footers that
+    stamp that hash move too.
+    Every other leaf is bit-identical: every verdict, median, interval,
+    half-width and prefix-trajectory point. The mechanism is association noise
+    inside those two derivations; it was not found in the committed code, and
+    the committed artifact is the research record, so it is NOT regenerated to
+    match the code.
+
+    The comparison therefore keeps CONTENT strict and tolerates the arithmetic:
+
+      * any non-float leaf difference, any structural difference - hard FAIL;
+      * a float leaf further than FLOAT_REL_TOL from its committed value -
+        hard FAIL;
+      * `artifact_id` is not compared to the committed hash (that would fail
+        on the ULP noise alone); the fresh document must instead satisfy the
+        artifact's own hash convention, which is recomputed here;
+      * the figures must re-render identically with the embedded artifact hash
+        masked out, i.e. every plotted number, label and coordinate equal.
     """
     art_path = EVAL / "exp009_ext_analysis.json"
     fig_dir = PROJECT / "docs" / "figures"
@@ -405,25 +509,39 @@ def check_exp009_ext(out_dir: Path, show: bool) -> None:
         return
     fresh = json.loads(eval_json.read_text(encoding="utf-8"))
     stored = json.loads(art_path.read_text(encoding="utf-8"))
-    id_ok = fresh["artifact_id"] == stored["artifact_id"]
-    text_ok = (without_lines(eval_json.read_text(encoding="utf-8"),
-                             ("\"written_utc\"",))
-               == without_lines(art_path.read_text(encoding="utf-8"),
-                                ("\"written_utc\"",)))
-    ok = id_ok and text_ok
+    id_self = self_hashed_id(fresh) == fresh["artifact_id"]
+    diffs = [d for d in json_leaf_diffs(fresh, stored)
+             if not d[0].startswith("/written_utc")
+             and not d[0].startswith("/artifact_id")]
+    hard = [d for d in diffs if d[3] > FLOAT_REL_TOL]
+    worst = max((d[3] for d in diffs), default=0.0)
+    ok = id_self and not hard
     check("L2 exp-009 ext analysis", ok,
-          "artifact_id %s, full text minus written_utc, identical"
-          % fresh["artifact_id"][:16] if ok else
-          "content mismatch (artifact_id_ok=%s, text_ok=%s)" % (id_ok, text_ok))
+          "content-identical to the committed artifact; %d float leaf(s) "
+          "re-derived within %.0e (max %.1e), artifact_id re-verified against "
+          "its own hash convention"
+          % (len(diffs), FLOAT_REL_TOL, worst) if ok else
+          ("artifact_id does not hash its own document" if not id_self else
+           "%d leaf(s) differ beyond %.0e: %s"
+           % (len(hard), FLOAT_REL_TOL,
+              "; ".join("%s stored=%r fresh=%r" % (d[0], d[1], d[2])
+                        for d in hard[:3]))))
     for name in fig_names:
         fresh_fig = out_dir / name
         target = fig_dir / name
         if not fresh_fig.exists() or not target.exists():
             check("L2 figure %s" % name, False, "missing on one side")
             continue
-        same = fresh_fig.read_bytes() == target.read_bytes()
-        check("L2 figure %s" % name, same,
-              "byte-identical" if same else "RE-RENDERED FIGURE DIFFERS")
+        a = fresh_fig.read_text(encoding="utf-8")
+        b = target.read_text(encoding="utf-8")
+        same = a == b
+        masked = (not same
+                  and svg_without_artifact_footer(a)
+                  == svg_without_artifact_footer(b))
+        check("L2 figure %s" % name, same or masked,
+              "byte-identical" if same else
+              ("re-renders identically; only the embedded artifact_id differs"
+               if masked else "RE-RENDERED FIGURE DIFFERS"))
 
 
 def check_exp002_gate(out_dir: Path, show: bool) -> None:

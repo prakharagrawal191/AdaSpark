@@ -268,16 +268,14 @@ def verifier():
     return _load("t_verify_paper_claims", "verify_paper_claims.py")
 
 
+def _run(verifier):
+    """Run the checker with an explicit argv (no sys.argv juggling)."""
+    return verifier.main([])
+
+
 def test_verifier_passes_on_the_real_write_ups(verifier):
     """The committed documents must agree with the committed artifact."""
-    assert verifier.main.__call__ is not None
-    import sys as _sys
-    argv = _sys.argv
-    _sys.argv = ["verify_paper_claims.py"]
-    try:
-        assert verifier.main() == 0
-    finally:
-        _sys.argv = argv
+    assert _run(verifier) == 0
 
 
 def test_verifier_actually_fails_on_a_wrong_document(verifier, tmp_path,
@@ -285,25 +283,142 @@ def test_verifier_actually_fails_on_a_wrong_document(verifier, tmp_path,
     """A checker that cannot fail is worse than no checker.
 
     Feed it a document that contradicts the artifact and require a non-zero
-    exit, so a future vacuous pass cannot go unnoticed.
+    exit, so a future vacuous pass cannot go unnoticed. The paper is pointed at
+    the same bad document: it is checked too, so a control that left the real
+    paper in place would pass for the wrong reason.
     """
     bad = tmp_path / "wrong.md"
     bad.write_text("The overhead was 99.999% and nothing else.",
                    encoding="utf-8")
     monkeypatch.setattr(verifier, "DOCS", (bad,))
-    import sys as _sys
-    argv = _sys.argv
-    _sys.argv = ["verify_paper_claims.py"]
-    try:
-        assert verifier.main() == 1
-    finally:
-        _sys.argv = argv
+    monkeypatch.setattr(verifier, "PAPER_TEX", bad)
+    assert _run(verifier) == 1
+
+
+def test_verifier_fails_when_only_the_paper_is_wrong(verifier, tmp_path,
+                                                     monkeypatch):
+    """The tables are checked in the SUBMITTED source, not just anywhere.
+
+    One figure in the prediction table is moved by a hundredth. Nothing else
+    changes, so the only way to notice is the row check that requires a cell's
+    figures to sit on that cell's row in the paper.
+    """
+    text = verifier.PAPER_TEX.read_text(encoding="utf-8")
+    tampered = text.replace("14.21 pp", "14.22 pp")
+    assert tampered != text
+    bad = tmp_path / "main_tampered.tex"
+    bad.write_text(tampered, encoding="utf-8")
+    monkeypatch.setattr(verifier, "DOCS", ())
+    monkeypatch.setattr(verifier, "PAPER_TEX", bad)
+    assert _run(verifier) == 1
+
+
+def test_verifier_ignores_figures_inside_latex_comments(verifier, tmp_path,
+                                                        monkeypatch):
+    """A number that survives only in a comment is not in the paper.
+
+    This is the control for the comment-stripping half of tex_norm: without it
+    a paper whose figures had been commented out would still verify.
+    """
+    assert verifier.tex_norm("75.38\\%") == "75.38%"
+    assert verifier.tex_norm("% 75.38%") == ""
+    commented = tmp_path / "commented.tex"
+    commented.write_text("% ratios spanned 0.18× to 7.70×\n"
+                         "% Verdicts are reached on 6 of 7 cells, all PASS\n",
+                         encoding="utf-8")
+    monkeypatch.setattr(verifier, "DOCS", ())
+    monkeypatch.setattr(verifier, "PAPER_TEX", commented)
+    assert _run(verifier) == 1
+
+
+def test_tex_norm_unwraps_markup_and_latex_dashes(verifier):
+    """Figures are wrapped in markup that the raw source does not show."""
+    assert verifier.tex_norm("\\textbf{14.95\\%}") == "14.95%"
+    assert verifier.tex_norm("\\cell{F1\\_agg|small}") == "F1_agg|small"
+    assert verifier.tex_norm("\\textbf{\\emph{nested}}") == "nested"
+    assert verifier.tex_norm("2.9--4.5×") == "2.9\u20134.5×"
+    assert verifier.tex_norm("a \\% b") == "a % b"
 
 
 def test_verifier_normalises_typographic_minus(verifier):
     """Negative numbers are written with U+2212 in the prose, not '-'."""
     assert verifier.norm("\u22120.167%") == "-0.167%"
     assert verifier.norm("7.11\u00d7") == "7.11x"
+
+
+def test_row_claims_reject_a_reordered_trajectory(verifier):
+    """An ordered row is a sequence, not a bag of numbers.
+
+    The point of the trajectory check is that the prefix grid is in execution
+    order; the same numbers in another order say something different about the
+    series.
+    """
+    toks = ["13.90", "5.14", "18.43"]
+    assert verifier._row_ok("half-width (pp) & 13.90 & 5.14 & 18.43 \\\\",
+                            toks, True)
+    assert not verifier._row_ok("half-width (pp) & 5.14 & 13.90 & 18.43 \\\\",
+                                toks, True)
+    # a cell of a LaTeX row is matched whole: 28 must not be met by 128
+    assert not verifier._row_ok("Cell & 128 & 28 pp \\\\", ["28"], False)
+
+
+def test_verifier_refuses_a_missing_paper(verifier, monkeypatch):
+    """A checker that skips a missing paper is checking no paper at all."""
+    monkeypatch.setattr(verifier, "PAPER_TEX", Path("no") / "such.tex")
+    with pytest.raises(SystemExit):
+        _run(verifier)
+
+
+def test_verifier_refuses_a_divergent_working_copy(verifier, tmp_path,
+                                                   monkeypatch):
+    """The tracked artifact is authoritative; a divergent twin is a fork.
+
+    The comparison is JSON, not bytes: the twin carries a wall-clock timestamp
+    that always differs, so a byte compare would report a fork on every run.
+    """
+    doc = json.loads(verifier.ANALYSIS.read_text(encoding="utf-8"))
+    doc["cells"][0]["overhead_sysmon_pct"] = 99.0
+    twin = tmp_path / "twin.json"
+    twin.write_text(json.dumps(doc), encoding="utf-8")
+    monkeypatch.setattr(verifier, "TWIN", twin)
+    with pytest.raises(SystemExit):
+        verifier.load()
+    monkeypatch.undo()
+    assert verifier.load()["artifact_id"]      # the real twin is accepted
+
+
+def test_verifier_counts_the_claims_it_registers(verifier):
+    """The count the paper quotes is the count the checker enforces.
+
+    A claim added to the registry must change the number the paper has to
+    carry; a total maintained by hand beside the set drifts the first time
+    somebody adds a claim.
+    """
+    pres, rowl = verifier.registry(verifier.load(), verifier.load_baseline())
+    statement = [c for c in pres if c[0] == "headline-figure count statement"]
+    assert len(statement) == 1
+    assert statement[0][1] == ["all %d headline figures"
+                               % (len(pres) + len(rowl))]
+    assert statement[0][2] == "paper"
+
+
+def test_verifier_registers_no_forbidden_symbol(verifier):
+    """scripts/ is scanned by validate_day31.py check 21; stay clean.
+
+    The verifier is executable code, so it is subject to the same scan as every
+    other script: this pins that the rewrite introduced no cache, orchestrator
+    or deep-RL symbol and no future experiment id.
+    """
+    import re as _re
+    text = Path(verifier.__file__).read_text(encoding="utf-8")
+    banned = _re.compile(
+        r"\b(dqn|ppo|a2c|a3c|sac|td3|actor_critic|policy_gradient|reinforce"
+        r"|target_network|torch|tensorflow|keras|stable_baselines"
+        r"|cachekey|cacheentry|cache_hit|cache_lookup|execution_cache"
+        r"|executioncache|durable_orchestrator|orchestrator"
+        r"|exp003|exp-003|exp005|exp-005|exp005b|exp-005b|exp006|exp-006)\b",
+        _re.IGNORECASE)
+    assert not banned.search(text)
 
 
 def test_ext_artifact_id_is_a_content_hash(ana):
