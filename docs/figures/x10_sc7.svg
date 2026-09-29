@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360">
+<desc>Source of record: results/evaluation/x10_sc7_analysis.json</desc>
+<text x="320" y="24" text-anchor="middle" font-size="15">X10 SC7 pilot: fresh vs EXP-005 medians (s), ±5% rule</text>
+<rect x="60.0" y="96.8" width="46" height="203.2" fill="#4472C4"><title>F4_ski B0 EXP-005 9.871</title></rect>
+<text x="83.0" y="92" font-size="9" text-anchor="middle">9.87</text>
+<rect x="114.0" y="91.3" width="46" height="208.7" fill="#ED7D31"><title>F4_ski B0 fresh 10.138</title></rect>
+<text x="137.0" y="87" font-size="9" text-anchor="middle">10.14</text>
+<text x="114.0" y="316" font-size="10" text-anchor="middle">F4_ski B0</text>
+<rect x="186.0" y="266.7" width="46" height="33.3" fill="#4472C4"><title>F4_ski B1 EXP-005 1.620</title></rect>
+<text x="209.0" y="262" font-size="9" text-anchor="middle">1.62</text>
+<rect x="240.0" y="265.1" width="46" height="34.9" fill="#ED7D31"><title>F4_ski B1 fresh 1.697</title></rect>
+<text x="263.0" y="261" font-size="9" text-anchor="middle">1.70</text>
+<text x="240.0" y="316" font-size="10" text-anchor="middle">F4_ski B1</text>
+<rect x="312.0" y="252.3" width="46" height="47.7" fill="#4472C4"><title>F4_ski B0 EXP-005 2.319</title></rect>
+<text x="335.0" y="248" font-size="9" text-anchor="middle">2.32</text>
+<rect x="366.0" y="249.0" width="46" height="51.0" fill="#ED7D31"><title>F4_ski B0 fresh 2.477</title></rect>
+<text x="389.0" y="245" font-size="9" text-anchor="middle">2.48</text>
+<text x="366.0" y="316" font-size="10" text-anchor="middle">F4_ski B0</text>
+<rect x="438.0" y="290.5" width="46" height="9.5" fill="#4472C4"><title>F4_ski B1 EXP-005 0.460</title></rect>
+<text x="461.0" y="286" font-size="9" text-anchor="middle">0.46</text>
+<rect x="492.0" y="289.4" width="46" height="10.6" fill="#ED7D31"><title>F4_ski B1 fresh 0.514</title></rect>
+<text x="515.0" y="285" font-size="9" text-anchor="middle">0.51</text>
+<text x="492.0" y="316" font-size="10" text-anchor="middle">F4_ski B1</text>
+<text x="14" y="180" font-size="10" transform="rotate(-90 14 180)">median execution_time_s</text>
+</svg>

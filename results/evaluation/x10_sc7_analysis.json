@@ -1,0 +1,46 @@
+{
+ "experiment_id": "X10-SC7-PILOT",
+ "authorized_by": "DEC-049",
+ "rule": "within \u00b15% median",
+ "n_runs": 20,
+ "sc6_charge": 0,
+ "arms": [
+  {
+   "cell": "F4_ski|medium|s4",
+   "arm": "B0",
+   "n": 5,
+   "fresh_median": 10.13791809999384,
+   "exp005_median": 9.870819,
+   "diff_pct": 2.71,
+   "pass": true
+  },
+  {
+   "cell": "F4_ski|medium|s4",
+   "arm": "B1",
+   "n": 5,
+   "fresh_median": 1.6966568999923766,
+   "exp005_median": 1.619826,
+   "diff_pct": 4.74,
+   "pass": true
+  },
+  {
+   "cell": "F4_ski|small|s4",
+   "arm": "B0",
+   "n": 5,
+   "fresh_median": 2.4770057999994606,
+   "exp005_median": 2.318799,
+   "diff_pct": 6.82,
+   "pass": false
+  },
+  {
+   "cell": "F4_ski|small|s4",
+   "arm": "B1",
+   "n": 5,
+   "fresh_median": 0.5143247999949381,
+   "exp005_median": 0.460338,
+   "diff_pct": 11.73,
+   "pass": false
+  }
+ ],
+ "verdict": "PARTIAL 2/4"
+}

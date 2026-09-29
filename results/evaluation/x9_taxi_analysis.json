@@ -1,0 +1,26 @@
+{
+ "experiment_id": "X9-TAXI-PILOT",
+ "authorized_by": "DEC-050",
+ "n_runs": 20,
+ "sc6_charge": 0,
+ "cells": [
+  {
+   "cell": "TAXI_agg|full",
+   "n": 5,
+   "b0_median": 2.029702899977565,
+   "tuned_median": 0.44548749999376014,
+   "diff_pct": -78.05,
+   "groups": 164
+  },
+  {
+   "cell": "TAXI_agg|half",
+   "n": 5,
+   "b0_median": 1.5613133999868296,
+   "tuned_median": 0.47118910000426695,
+   "diff_pct": -69.82,
+   "groups": null
+  }
+ ],
+ "prediction": "tuned arms cluster; B0 far slowest; no superiority claim",
+ "assessment": "HOLDS: tuned -78% (full) / -70% (half) vs B0, far outside noise; RL-s0 agg action 8 == tuned config (identity verified from artifact); transfer feasibility established, descriptive only"
+}

@@ -3541,3 +3541,179 @@ Already-recorded observations are **retained and pooled** with the new ones; not
 
 **Status.** **DECIDED — OPERATOR APPROVED 2026-09-28.** `Operator approval = APPROVED 2026-09-28 (D1–D5 approved as written; the check-27 allow-list entries in D1–D4 take effect on approval)`. `SC8 = NOT YET demonstrated`. `SC7 = NOT STARTED`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `TEST = NOT AUTHORIZED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-026, DEC-030 … DEC-045) = **UNCHANGED**. Supervisor counter-signature: **ABSENT** — never simulated; not a prerequisite under DEC-018 Decision A. **This entry performs 0 Spark executions and trains nothing.**
 
+---
+
+## DEC-047 | 2026-09-29 | EXP-005b B0' AQE-on execution — 35 frozen TEST runs on a dedicated AQE-on register line; 0 charged to SC6 (Day 46)
+
+**Decision ID:** DEC-047
+**Date:** 2026-09-29
+**Scope:** Implement the B0' driver path and execute the 7 frozen TEST instances × B0' × 5 reps = 35 runs on a dedicated AQE-on register line (0 charged to the SC6 training cap, which stays 483/500). **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-09-29, approval GRANTED**; transcribed from the signed draft `docs/research/DEC_047_048_TRACK_E_DRAFTS.md` into this ledger on 2026-09-29.
+**Supersedes nothing.** DEC-041 (EXP-005b scope frozen, execution conditional on a driver that did not yet exist) stands — this entry supplies the driver and authorizes the B0' arm only. DEC-014's TEST-seal pattern is inherited, not relaxed.
+
+> **Authorization provenance, recorded exactly.** The operator signed this authorization as a working-tree draft dated 2026-09-29; gap register G-00 records that a signature inside an uncommitted file is not ledger authorization. This entry is that ledger record. Until it is committed at HEAD, the runs are cited as working-tree pilots under G-00.
+> **Guards (as signed):** TEST-crossing under the DEC-014 pattern; `authorize_test_b0prime` entry point only; TRAIN semantics and the SC6 ledger unchanged; any deviation voids the authorization.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17, unchanged. TEST = AUTHORIZED for exactly the named 35 runs. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Ledger headings ran DEC-001…DEC-026 and DEC-031…DEC-046. Next free: **DEC-047**.
+
+**1 — Scope and pre-registered prediction (transcribed).** 7 frozen TEST instances × B0' × 5 reps = 35 runs, own AQE-on register line, 0 to SC6. Prediction frozen before the first run: *"B0' (AQE-on default) beats B0 on shuffle-heavy cells by ≥5% median; RL-vs-B0' pooled comparison is FORBIDDEN by the no-pooling rule (runtime-adaptive vs static arms) — reported side-by-side only."*
+
+**2 — Why (transcribed).** Settles the PLAN:72 AQE-on/off contribution — the largest single claim upgrade available (task X6).
+
+**3 — Result recorded under this authorization (X6).** 35 runs, 30 usable, 0 SC6: `F2_join|large|s3` B0′ 22.00 s vs B0 25.66 s = **−14.24%, outside the 11.89% noise band, favors B0′**; `F4_ski|medium|s4` −5.91% inside the band; F1_agg|large −0.69%, F4_ski|large −3.05%, F5_mixed|large +1.65%, F4_ski|small +8.36% inside the band or reversed; `F3_rdd|large|s3` INCOMPLETE 0/5 (the same WinError32 sort/spill lock as every EXP-005 arm — AQE-independent). Verdict **MIXED — the ≥5% prediction is confirmed on exactly one of six decidable cells; descriptive only, no pooling.** Any pooled RL-vs-B0′ estimator stays FORBIDDEN until a new pre-registration (gap G-04) defines one. Spec caveat: `x6-b0prime/spec.json` lists only 1 of the 7 instances — STALE/PARTIAL, disclosed per DEC-052 D2; no spec or row is rewritten (DEC-037 §5).
+
+**4 — What this entry does NOT decide.** It changes no threshold, acceptance criterion or frozen baseline; it authorizes no TRAIN run and no run beyond the named 35; it permits no pooling of RL and B0′ observations; it does not settle any superiority question — side-by-side evidence only; it edits no recorded artifact, manifest, ledger or prior decision entry; it decides no EXP-008, EXP-010 or EXP-011 matter.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-09-29 (GRANTED); transcribed into the ledger 2026-09-29.** `Operator approval = GRANTED 2026-09-29 (signed Track-E draft)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `TEST = AUTHORIZED for the 35 named runs (executed; recorded as X6)`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-046) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — runs proceeded under operator authority per the signed draft; sign-off follows the M2-freeze path; never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-047).**
+
+---
+
+## DEC-048 | 2026-09-29 | Validation-scoped confirmations — X1/X2/X3 on the SC6-exempt validation line; 0 charged to SC6 (Day 46)
+
+**Decision ID:** DEC-048
+**Date:** 2026-09-29
+**Scope:** E1 (B3 ≡ B1 confirmation, ~8–16 runs), E5 (sampler sweep, ~30–60 runs), E6 (eventlog confound pairs, ~20–40 runs); all VALIDATION split, seed 3, AQE-off; own register line, 0 to SC6; frozen analysis code reused (`analyze_exp009.py` estimator, median-of-5 rule). **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-09-29, approval GRANTED**; transcribed from the signed draft `docs/research/DEC_047_048_TRACK_E_DRAFTS.md` on 2026-09-29.
+**Supersedes nothing.** DEC-012/013 (EXP-003 reconciliation and validation gate) and DEC-016B (B3 analytic collapse) stand unchanged; this entry executes their cheapest empirical confirmations.
+
+> **Authorization provenance, recorded exactly.** Signed as a working-tree draft dated 2026-09-29 (G-00: a signature inside an uncommitted file is not ledger authorization); this entry is that ledger record. Until committed at HEAD, the runs are cited as working-tree pilots under G-00.
+> **Guards (as signed):** any TEST-cell, AQE-on, or TRAIN-charged run voids the authorization; null outcomes publish as-is.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17, unchanged. TEST = NOT AUTHORIZED by this entry. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Next free after DEC-047: **DEC-048**.
+
+**1 — Scope and pre-registered predictions (transcribed).** X1: *"B3 byte-identical to B1 on all validation cells."* X2: *"Overhead sub-linear in sampling rate; no verdict changes."* X3: *"Config confound < 1pp on decided cells."*
+
+**2 — Why (transcribed).** Closes the three cheapest honest gaps (SC3, single-point sampler, elog confound) without touching TEST or SC6.
+
+**3 — Results recorded under this authorization.** 19 runs executed (7 + 6 + 6), 0 SC6, all validation / seed 3 / AQE-off:
+- **X1 (E1):** 7/7 usable; B3 resolved to the same configuration as B1 on all 7 executed cells — runtime fingerprint `f857d8de…` on every row, resolved SparkConfig fingerprint `285ad990e5bc…`. The earlier "8/8" phrasing named no 8-cell artifact and is narrowed to **7/7 executed** (G-08 / DEC-052 D2). SC3 reduces to RL-vs-B1 in practice — DEC-016B confirmed empirically.
+- **X2 (E5):** +9.4% / −7.3% / +1.8% at 0.5/1/2 Hz, n=1 — sign flips, no monotonic trend → DESCRIPTIVE only; no verdict changed.
+- **X3 (E6):** paired elog-off median −3.9%, inside the 11.89% noise band → confound **bounded, not removed**; permanent bound reported.
+
+**4 — Scope boundary — X8 disclosure (not ratified here).** The X8 F2_join|large|s3 rematch (10 TEST runs) records `authorized_by: DEC-048` on its rows, but is **outside this entry's signed scope** (validation-only; TEST-cell runs void this authorization). The mismatch is disclosed — not cured — in DEC-052 D2 and gap register G-00; nothing in this transcription ratifies that TEST crossing.
+
+**5 — What this entry does NOT decide.** No TEST authorization; no AQE-on run; no TRAIN charge; no threshold or baseline change; it edits no recorded artifact, manifest, ledger or prior decision entry; it decides no EXP-006, EXP-008, EXP-010 or EXP-011 matter, and it creates no SC7 or SC5 evidence.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-09-29 (GRANTED); transcribed 2026-09-29.** `Operator approval = GRANTED 2026-09-29 (signed Track-E draft)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `TEST = NOT AUTHORIZED`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-047) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-048).**
+
+---
+
+## DEC-049 | 2026-09-29 | EXP-011 SC7 reproducibility pilot — 20 frozen TEST runs on an own register line; 0 charged to SC6 (Day 46)
+
+**Decision ID:** DEC-049
+**Date:** 2026-09-29
+**Scope:** Fresh re-runs of F4_ski|small|s4 + F4_ski|medium|s4 × B0 + B1 × 5 reps (20 runs) on TEST via the EXP-005 purpose-scoped guard pattern (frozen instances only), AQE-off, own register line (`results/experiments/x10-sc7-pilot/`), 0 to SC6. Adjudication: fresh median vs EXP-005 median within ±5% per cell-arm (SC7 rule); 4/4 must pass for a PASS pilot. **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-09-29, approval GRANTED**; transcribed from the signed draft `docs/research/DEC_049_050_TRACK_F_DRAFTS.md` on 2026-09-29.
+**Supersedes nothing.** The full 60-run EXP-011 study remains unauthorized (gap G-01, needs its own DEC on its own register line).
+
+> **Authorization provenance, recorded exactly.** Signed as a working-tree draft dated 2026-09-29 (G-00); this entry is that ledger record; until committed at HEAD the runs are cited as working-tree pilots under G-00.
+> **Guards (as signed):** TEST-crossing under the DEC-014 pattern; frozen instances only; B0/B1 static only (no policy, no retraining); a null (miss) publishes as-is and caps SC7 claims to pilot scope.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17, unchanged. TEST = AUTHORIZED for exactly the named 20 runs. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Next free after DEC-048: **DEC-049**.
+
+**1 — Scope, prediction, why, cost (transcribed).** Pre-registered prediction: *"3/4 or 4/4 cell-arms reproduce within ±5% (fast cells, low CV)."* Why: first SC7 evidence (EXP-011 was empty); X8 showed large day-to-day drift on F2_join|large, so a same-week pilot on fast cells is the honest scope before any 60-run claim. Cost: 20 TEST runs, own ledger, 0 SC6.
+
+**2 — Result recorded under this authorization (X10).** 20 runs, 0 SC6: `F4_ski|medium|s4` B0 +2.71%, B1 +4.74% → **PASS**; `F4_ski|small|s4` B0 +6.82%, B1 +11.73% → **FAIL** (outside ±5%). Verdict **PARTIAL 2/4** — the pre-registered prediction (3/4 or 4/4) is **not met**; reported as-is. SC7 claims are capped to pilot scope: medium arms reproduce, short-runtime arms drift; the full 60-run study (3 stability waves) stays gap G-01, needing a new DEC.
+
+**3 — What this entry does NOT decide.** It grants no general repeatability claim (2/4 is a pilot, not a population result); it authorizes no policy execution, no retraining and no run beyond the named 20; it changes no ±5% threshold; it edits no recorded artifact, manifest, ledger or prior decision entry; it decides no EXP-010, EXP-006 or SC5 matter.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-09-29 (GRANTED); transcribed 2026-09-29.** `Operator approval = GRANTED 2026-09-29 (signed Track-F draft)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `TEST = AUTHORIZED for the 20 named runs (executed; recorded as X10)`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-048) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-049).**
+
+---
+
+## DEC-050 | 2026-09-29 | EXP-010 external-dataset pilot (NYC Taxi) — new data path + family mapping, own ledger; 0 charged to SC6 (Day 46)
+
+**Decision ID:** DEC-050
+**Date:** 2026-09-29
+**Scope:** Download one fixed NYC Taxi month to `SPARKRL_DATA_ROOT/external`; new datagen extension mapping Taxi columns onto join/agg workload shapes (1 family × 2 scales); run B0 + B1 + RL-s0 × 5 reps (30 planned) on the new cells as a TEST-unseen-generalization pilot. If download fails: pseudo-public substitution per PLAN §18 (non-synthetic profile, documented). **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-09-29, approval GRANTED**; transcribed from the signed draft `docs/research/DEC_049_050_TRACK_F_DRAFTS.md` on 2026-09-29.
+**Supersedes nothing.** The frozen 5-family registry (F1–F5) is untouched; the pilot runs in its own workload shim, not as a frozen family.
+
+> **Authorization provenance, recorded exactly.** Signed as a working-tree draft dated 2026-09-29 (G-00); this entry is that ledger record; until committed at HEAD the runs are cited as working-tree pilots under G-00.
+> **Guards (as signed):** new data manifest + checksums before any run; new cells classified TEST-unseen; frozen policies only (no training on Taxi); own ledger, 0 SC6; substitution path declared upfront.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17, unchanged. TEST-unseen classification for the named pilot only. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Next free after DEC-049: **DEC-050**.
+
+**1 — Scope, prediction, why, feasibility note (transcribed).** Prediction: *"tuned arms cluster as on F1 L; B0 far slowest; no superiority claim — pilot establishes transfer feasibility, not a verdict."* Why: EXP-010 was empty; single host / synthetic-only is the sharpest external-validity attack. Feasibility note recorded at signing: no Taxi data on disk; families frozen at 5; this is new capability (resolver + workload mapping), the largest build item in the backlog.
+
+**2 — Result recorded under this authorization (X9), plan/execution substitution disclosed.** Executed as **20 runs** (B0 + TUNED(`G-p8-sp16`) × 5 reps on TAXI_agg|full and TAXI_agg|half, 0 SC6) instead of the planned 30: the RL-s0 executions were substituted by an **identity verification from the frozen policy artifact** (greedy action 8 ≡ tuned config `G-p8-sp16` on state `state-v1.5|agg|S|le0`), recorded in `x9-taxi-pilot/spec.json` (`rl_s0_identity`: "identity is the finding, 30→20 runs"). Verdict **HOLDS — feasibility only:** tuned −78.05% (full) / −69.82% (half) vs B0, far outside noise; identity verified from the artifact; no superiority and no generality (one month, one workload shape, analogical state mapping — gap G-02).
+
+**3 — What this entry does NOT decide.** It does not establish generalization (SC5 stays NOT EVALUABLE — feasibility is not a verdict); it authorizes no training on Taxi data and no run beyond the named pilot; it does not add Taxi as a frozen family; it edits no recorded artifact, manifest, ledger or prior decision entry; it decides no EXP-011 or EXP-006 matter.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-09-29 (GRANTED); transcribed 2026-09-29.** `Operator approval = GRANTED 2026-09-29 (signed Track-F draft)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `TEST-unseen pilot = AUTHORIZED (executed; recorded as X9; substitution disclosed)`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-049) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-050).**
+
+---
+
+## DEC-051 | 2026-09-29 | EXP-012 live demo rehearsal — 5 TRAIN-split runs on the demo register line, both ledger quotes disclosed (Day 46)
+
+**Decision ID:** DEC-051
+**Date:** 2026-09-29
+**Scope:** `scripts/demo.py --mode live --allow-spark`: F5_mixed|small|seed0 (TRAIN, T_ref calibrated) → B0 × 1 + B3 (`G-p8-sp16`) × 1 + frozen RL-s0 × 3 episodes, manifests to `results/experiments/x-demo/observations.jsonl` (own demo line). Backup mode replays afterwards. **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-09-29, approval GRANTED**; transcribed from the signed draft `docs/research/DEC_051_DEMO_REHEARSAL_DRAFT.md` on 2026-09-29.
+**Supersedes nothing.** PLAN §36 (live demo) is a Day-47 deliverable; this entry authorizes only its rehearsal.
+
+> **Authorization provenance, recorded exactly.** Signed as a working-tree draft dated 2026-09-29 (G-00); this entry is that ledger record; until committed at HEAD the runs are cited as working-tree pilots under G-00.
+> **Guards (as signed):** frozen cell only; frozen policy only (no learning, epsilon 0.0); no overwrite (backup replays); null/failure publishes as-is and the demo uses backup mode.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. TEST = NOT AUTHORIZED by this entry. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Next free after DEC-050: **DEC-051**.
+
+**1 — Ledger, quoted both ways (transcribed).** 5 TRAIN-split executions. SC6 stands at **483/500 (17 remain)**; these 5 are RECORDED on the demo line and DISCLOSED here — they are TRAIN-split Spark executions of the same kind the cap counts. Ledger after rehearsal: **488/500 reported (12 remain)**. No hidden spend.
+
+**2 — Prediction and result (recorded as observed).** Pre-registered prediction: *"B0 slowest; B3 and RL-s0 cluster near the tuned time (RL-s0 agg action is G-p8-sp16 by identity); all 5 usable."* Result: **5/5 usable.** B0 4.699 s (slowest ✓); B3 1.424 s; RL-s0 ep1 1.417 s, ep2 1.730 s, ep3 1.765 s — cluster near tuned time ✓. The parenthetical identity **did not hold on F5_mixed**: episode 1 selected action 9 = `G-p8-sp32` (not `G-p8-sp16`), episodes 2–3 `G-p4-sp16`; the mismatch with the pre-registered parenthetical is published as-is and no claim rests on it (recorded under DEC-052 D2).
+
+**3 — What this entry does NOT decide.** It authorizes no further TRAIN run, no learning and no TEST execution; it does not raise or re-count the SC6 cap; it creates no performance claim; it edits no recorded artifact, manifest, ledger or prior decision entry; it decides no EXP-005, EXP-010 or EXP-011 matter.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-09-29 (GRANTED); transcribed 2026-09-29.** `Operator approval = GRANTED 2026-09-29 (signed demo-rehearsal draft)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 500 counted + 5 demo-disclosed = 488 / 500 combined TRAIN-split (12 remain)`. `TEST = NOT AUTHORIZED`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-050) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-051).**
+
+---
+
+## DEC-052 | 2026-09-29 | X-family provenance close-out — ledger cover for DEC-047–051, check-26 allow-list, provenance notes, claim-map/manuscript sync; 0 Spark executions (Day 46)
+
+**Decision ID:** DEC-052
+**Date:** 2026-09-29
+**Scope:** Governance and documentation only: **D1** gate check-26 allow-list for five zero-execution analysis JSONs; **D2** X-family provenance notes; **D3** claim↔experiment map and manuscript synchronization with the frozen numbers; plus the ledger transcription of DEC-047–051 that precedes this entry. **Nothing else.**
+**Status:** OPERATOR-DRAFT — prepared and inserted on the operator's instruction to close out the Day-46 evidence-sufficiency audit (gap register draft DEC-G00, `docs/research/EXPERIMENT_GAP_REGISTER.md` §B); the formal approval line below is reserved and never simulated.
+**Supersedes nothing.** DEC-046 stands; DEC-047–051 stand as signed; gaps G-01–G-06 remain PENDING drafts — this entry authorizes none of them.
+
+> **This entry performs 0 Spark executions, runs no experiment, spends 0 SC6, and modifies no observation, no manifest, no stored result artifact, no ledger row, no threshold and no prior decision entry.**
+> **SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17 (488 / 500 combined with the 5 disclosed demo TRAIN runs). TEST = untouched. `docs/PLAN.md` = UNCHANGED.**
+
+---
+
+**0 — Identifier resolution.** Ledger headings ran DEC-001…DEC-026 and DEC-031…DEC-051. Next free: **DEC-052**.
+
+**1 — Why.** The Day-46 evidence-sufficiency audit returned CONDITIONAL GO for the bounded feasibility story and NO-GO for superiority, broad generalization and unqualified-cheap claims, with the blocking item purely governmental: gate 35/36 (check 26 fails: five new analysis JSONs outside its allow-list); the X-family rows (X1/X2/X3/X6/X8/X9/X10 plus the EXP-012 demo) cite operator-signed drafts that were absent from `DECISIONS.md` — G-00 P0: a signature inside an uncommitted file is not ledger authorization; and the G-08 doc repairs (X1 8/8→7/7, X8 figure-description denominator, X6 stale spec, Track-R hard-coded path, availability overstatement, both ledger quotes) were unwritten. This entry is DEC-G00 realized: it is the ledger cover, it orders D1–D3, and it fixes what must be true for the X-family work to be citable.
+
+**D1 — Check-26 allow-list (code, zero-execution).** Amend `scripts/validate_day31.py`, `AUTHORIZED_ARTIFACTS`, with five entries → **DEC-052**: `exp009_robustness.json`, `exp009_synthesis.json`, `x6_b0prime_analysis.json`, `x9_taxi_analysis.json`, `x10_sc7_analysis.json`. Facts relied on: none of the five declares `executed=true` (they are analyses of already-authorized runs, so check 26's executed-True conjunct stays untouched and strict); each traces to its own decision line (X6 → DEC-047, X9 → DEC-050, X10 → DEC-049, robustness/synthesis → Track-R reporting under DEC-044/DEC-046); `FUTURE_EXPERIMENT_GLOBS` is unchanged. The entries take effect only when this decision is present at HEAD — check 26's existing rule that the worktree cannot authorize itself is preserved.
+
+**D2 — Provenance notes (documentation; no artifact rewritten).** Record, in `docs/research/CLAIM_EXPERIMENT_MAP.md` §Provenance notes and the manuscript appendix availability paragraph:
+(a) **Ledger:** DEC-047–051 were signed as working-tree drafts and transcribed here on 2026-09-29; until this entry is committed, G-00 applies and X rows are cited as working-tree pilots.
+(b) **X6 spec gap:** `x6-b0prime/spec.json` lists 1 instance (F4_ski|small|s4) while the ledger and observations cover all 7 frozen TEST cells (35 runs, 30 usable) — STALE/PARTIAL spec; the observations and the analysis JSON are the record; no rows or specs are rewritten (DEC-037 §5).
+(c) **X8 scope mismatch (disclosed, not cured):** X8 rows record `authorized_by: DEC-048`, but DEC-048's signed scope is validation-only and voids on TEST-cell runs; X8 ran 10 runs on the frozen TEST cell F2_join|large|s3. The evidence is retained as observed; X8 is cited only with this caveat; this entry does not retroactively authorize TEST crossings — supervisor counter-signature to resolve.
+(d) **Track-R path:** `scripts/analyze_exp009_robustness.py` writes to a hard-coded local `OUT_DIR` (`…\AppData\Local\Temp\opencode\robustness`); `results/evaluation/exp009_robustness.json` reached the repository by a hand-copy step that was previously unrecorded — now recorded here and in the claim map (G-08).
+(e) **Observation-only pilots:** X2, X3 and X10 carry `observations.jsonl` without specs; X1, X6, X9 and EXP-012 carry specs; X8 carries observations only; row-level `authorized_by` fields are the per-run citation.
+(f) **Availability (honest wording):** committed + tracked are the reproducibility harness (16/16 verified from committed artifacts), `results/evaluation/*.json` including the five analysis JSONs, the EXP-002/005/009 raw base (the 4.8 MB extension records included), figures, decision log, manuscript sources and research drafts once this commit lands; HELD in the working tree and **deposit-pending under DEC-045 D1–D11**: raw X-family observations (`results/experiments/x*`, excluded by the `results/**` ignore rule) and robustness re-analysis sources. No URL and no DOI is invented; the ICPE paper's `\ArtifactURL`/`\TODO` disclosure markers are kept (G-08).
+(g) **Both ledger quotes:** wherever the budget is summarized, quote SC6 = 483/500 (17 remain) **and** combined TRAIN-split = 488/500 (12 remain, including the 5 disclosed demo runs).
+
+**D3 — Claim-map and manuscript synchronization (documentation).** (i) `docs/research/CLAIM_EXPERIMENT_MAP.md`: X1 narrowed 8/8 → **7/7 executed**; X8 denominators separated (fresh same-config −0.57%, EXP-005 lead −8.6% not replicated → FALSIFIED; the −24.7% implied by the figure description is unsourced → dropped); X6 stated as **−14.24%** on F2_join|large, mixed, no pooling; X9 carries the plan/execution substitution (30 planned → 20 executed + artifact identity); X10 = 2/4 with both per-arm percentages; H2/H3 stay UNDECIDED and SC5 stays NOT EVALUABLE, as stated; both ledger quotes; a demo (EXP-012) row; and §Provenance notes from D2. (ii) Manuscript: the results section gains the X-family findings with the frozen numbers; the comparative section reports B0′ as executed, mixed, side-by-side only (no pooling) and the B3 collapse as confirmed empirically 7/7; the trust section reports measurement reproducibility as PARTIAL 2/4 pilot; the setup and limitations sections stop calling EXP-010/011/012 unexecuted and stop calling the AQE-on interaction unmeasured; the decision count is updated 46 → **52** wherever stated; the future-work section no longer lists executed confirmations as future; and the appendix gains DEC-047–052 in the decision-log index plus an availability paragraph carrying D2(f). No figure, table cell, threshold or recorded observation is altered — only these documented corrections.
+
+**4 — Verification required before this entry is called done.** `pytest tests/unit -q` with 0 failures; `verify_paper_claims.py` tracing every figure it claims; `verify_reproducibility.py` 16/16 with 0 skips; `git diff --check` clean; and `validate_day31.py` **36/36 after this entry is committed at HEAD** (check 26 reads HEAD — pre-commit it correctly reports the five artifacts unknown). Results are reported back to the operator in the close-out summary.
+
+**5 — What this entry does NOT decide.** It authorizes no Spark execution, no TRAIN cell, no TEST cell and no AQE-on run; it raises no cap and spends nothing; it authorizes no gap-register draft — G-01 (EXP-011 60-run), G-02 (2nd public family), G-04 (pooled AQE), G-05 (T_ref backfill) all stay PENDING under their own pre-registrations; it grants no pooling permission, no superiority, no generalization and no SC5/SC7 verdict; it rewrites no ledger row (483 SC6-counted stands; 488 is quoted only as the combined figure); it edits no observation, manifest or stored artifact; it publishes nothing, tags nothing, submits nowhere, invents no URL or DOI; and it does not ratify X8's TEST crossing.
+
+**Status.** **OPERATOR-DRAFT — D1–D3 prepared and applied in the worktree on the operator's instruction; approval line reserved (never simulated).** `Operator approval of D1–D3: ______ · 2026-09-__`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17 (488 / 500 combined)`. `TEST = untouched`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-051) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated; not a prerequisite under DEC-018 Decision A. **This entry performs 0 Spark executions and trains nothing (DEC-052).**

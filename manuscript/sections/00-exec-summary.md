@@ -1,0 +1,22 @@
+# Executive Summary and Abstract
+
+Big-data programming on Apache Spark remains dominated by static decisions: a workload is submitted under a default or hand-tuned configuration, and that configuration stays fixed while data volumes, skew profiles, and operator mixes change underneath it. With on the order of two hundred exposed parameters, manual tuning is expert labour that goes stale as workloads drift, while built-in adaptivity (Adaptive Query Execution) covers only a subset of runtime decisions. The result is a persistent gap between the performance a cluster could deliver and the performance it does deliver — paid for in longer job times, wasted executor capacity, and repeated tuning effort.
+
+This report presents **AdaSpark**, a self-adaptive big-data programming framework that closes the loop around Spark execution with reinforcement learning. An RL agent observes a compact workload-context and runtime-feedback state, selects a discrete execution configuration (shuffle partitions × execution parallelism) before each run, and learns from the measured outcome under a strictly bounded training budget (≤500 executions). The design follows the Monitor–Analyze–Plan–Execute–Knowledge (MAPE-K) pattern: a monitoring layer instruments every run, the RL optimization layer plans configuration decisions, and a governance layer constrains what the agent is ever allowed to submit — including a hard rule that failed configurations are never rewarded.
+
+The framework was evaluated on a frozen single-node backend (PySpark 3.5.9, Java 17, Windows 11) across five parameterized workload families (aggregation, join, RDD sort/filter, skew join, mixed pipeline) at three data scales, plus a monitoring-overhead study of 4,842 Spark runs. Key findings, reported exactly as measured: (i) configuration choice moves median execution time by ≥10% on all four tested families, confirming the decision problem is real; (ii) training consumed 483 of the 500 budgeted executions with zero failed submitted configurations; (iii) the learned policies are competitive with equal-budget random search but did not beat a well-chosen static tuning, and cross-seed policy agreement failed (0.20 vs 0.70 threshold) — so three replicate policies were evaluated as separate arms rather than promoting a single winner; (iv) monitoring overhead (1 Hz system sampler, Spark event log) sits below the 5% budget on six of seven tested cells by 95% interval adjudication; and (v) a pre-registered prediction that confidence-interval width shrinks as 1/√n failed on all seven cells because repetitions are serially correlated (lag-1 autocorrelation +0.58…+0.89), a negative result with direct practical cost — roughly 3,000 of the 4,842 runs were unnecessary.
+
+Organizationally, AdaSpark converts tuning from recurring expert labour into a governed, auditable control loop: every decision is traceable to a policy checkpoint, every measurement carries provenance, and every limitation — including the failed agreement gate and the unevaluated AQE-on condition — is recorded in an explicit decision log rather than silently dropped. The report closes with industry mappings, a cost–benefit framing, and a future agenda (multi-agent RL, federated optimization, LLM-assisted tuning) grounded in what the evidence actually supports.
+
+## Table 1: Executive Summary of Contributions and Outcomes
+
+| # | Contribution | Outcome (measured) |
+|---|---|---|
+| C1 | RL-driven self-adaptive Spark configuration loop (MAPE-K) | Implemented; 12-action space; tabular Q-learning + Q0 offline init |
+| C2 | Bounded-budget learning (≤500 executions) | 483 SC6-counted spent, 17 remaining (488/500 combined incl. 5 disclosed demo runs); 0 failed submitted configs |
+| C3 | Sensitivity feasibility gate (EXP-002) | PASS — ≥10% spread on 4/4 families |
+| C4 | Main comparison vs 7 baselines incl. random search (EXP-005) | 245/245 runs; RL ≈ random search; static tuning best — H2/H3 UNDECIDED |
+| C5 | Generalization study (EXP-006) | Partial (high failure on unseen cells); SC5 not evaluable |
+| C6 | Monitoring-overhead measurement (EXP-009) | 6/7 cells PASS vs 5% budget (interval-adjudicated) |
+| C7 | Pre-registered √n falsification (4,842 runs) | Failed 7/7 — serial dependence measured, cost quantified |
+| C8 | Governance: decision log, provenance, sealed test discipline | 52 decisions; immutable manifests; reproducible artifact |

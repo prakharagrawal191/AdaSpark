@@ -1,0 +1,3 @@
+# Datasets folder
+
+Seeded synthetic datasets (5 families × S/M/L, dataset seed 0) with checksummed manifests live in the repository (`results/workloads/`, `docs/DATASET_INVENTORY.md`, generation code `src/sparkrl/datagen/`). This folder carries the submission-time dataset package: manifests + generation recipes + verification checksums. Raw 4,842-row observation record: `results/experiments/exp-009/ext/observations_ext.jsonl` (4.8 MB). Identifying machine metadata is withheld during review per the Data Availability statement; the versioned archive with per-file SHA-256 is deposited with a DOI at camera-ready.

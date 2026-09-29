@@ -231,7 +231,8 @@ def _applied_settings(spark) -> dict[str, Any]:
     }
 
 
-def verify_applied(run_spec: RunSpec, applied: dict[str, Any]) -> list[str]:
+def verify_applied(run_spec: RunSpec, applied: dict[str, Any],
+                   *, allow_aqe: bool = False) -> list[str]:
     """Return mismatches between the requested grid point and the live session."""
     problems: list[str] = []
     point = run_spec.config
@@ -244,7 +245,7 @@ def verify_applied(run_spec: RunSpec, applied: dict[str, Any]) -> list[str]:
             f"shuffle.partitions: requested {want_sp}, session reports "
             f"{applied.get('spark.sql.shuffle.partitions')!r}")
     got_aqe = str(applied.get("spark.sql.adaptive.enabled")).lower()
-    if got_aqe != "false":
+    if not allow_aqe and got_aqe != "false":
         problems.append(f"AQE must be OFF, session reports {got_aqe!r}")
     # Checked for EVERY point, including B0. B0 declares default_parallelism=None
     # ("leave it to Spark"), whose correct local-mode value is N from local[N]; not
@@ -265,6 +266,7 @@ def execute_run(run_spec: RunSpec, base_config, *,
                 sysmon_enabled: bool = True,
                 version: str | None = None,
                 split_guard: Callable[[str, str, int], None] = assert_train_only,
+                allow_aqe: bool = False,
                 ) -> tuple[RunMetrics, dict[str, Any]]:
     """Execute exactly one measured observation. Returns (metrics, provenance).
 
@@ -278,12 +280,18 @@ def execute_run(run_spec: RunSpec, base_config, *,
     ``sparkrl.evaluation.spec.authorize_validation_cell`` instead, which admits
     VALIDATION cells and nothing else. No guard admits TEST: the test split stays
     sealed behind ``TestSplitSealed`` until EXP-005/006.
+
+    ``allow_aqe`` is the AQE execution gate (DEC-047, Model-B pattern, default
+    False so every pre-existing caller keeps the frozen AQE-off refusal). The
+    EXP-005b B0' stage passes ``allow_aqe=True`` together with its own TEST-only
+    guard; AQE-on runs are then measured on their own register line, never pooled
+    with the AQE-off main study (no-pooling rule).
     """
     split_guard(run_spec.family, run_spec.scale, run_spec.seed)
 
     cfg = run_spec.config.apply_to(base_config).with_overrides(
         timeout_seconds=run_spec.timeout_seconds)
-    if cfg.aqe_enabled:
+    if cfg.aqe_enabled and not allow_aqe:
         raise RuntimeError("AQE became enabled after config application (PLAN section 7)")
 
     resolved = resolve_dataset(run_spec.family, run_spec.scale, run_spec.seed)
@@ -310,7 +318,8 @@ def execute_run(run_spec: RunSpec, base_config, *,
         spark_version = spark.version
         applied = _applied_settings(spark)
         provenance["applied_settings"] = applied
-        provenance["applied_mismatches"] = verify_applied(run_spec, applied)
+        provenance["applied_mismatches"] = verify_applied(
+            run_spec, applied, allow_aqe=allow_aqe)
         run_result = spark_runner.run_workload(spark, workload, cfg)
     finally:
         spark_session.stop_session(spark)

@@ -481,6 +481,16 @@ def test_execute_run_split_guard_defaults_to_the_untouched_train_guard():
     assert default is assert_train_only
 
 
+def test_execute_run_allow_aqe_defaults_to_false_preserving_the_aqe_off_refusal():
+    """DEC-047: the AQE gate is opt-in; pre-existing callers keep the refusal."""
+    import inspect
+
+    from sparkrl.experiments.runner import execute_run, verify_applied
+
+    assert inspect.signature(execute_run).parameters["allow_aqe"].default is False
+    assert inspect.signature(verify_applied).parameters["allow_aqe"].default is False
+
+
 def test_the_train_guard_itself_is_semantically_unchanged():
     """assert_train_only must still refuse validation AND test, and accept train."""
     from sparkrl.experiments.spec import assert_train_only

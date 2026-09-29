@@ -1,0 +1,64 @@
+{
+ "experiment_id": "X6-B0PRIME-AQEON",
+ "authorized_by": "DEC-047",
+ "n_runs": 35,
+ "sc6_charge": 0,
+ "noise_band_pct": 11.89,
+ "cells": [
+  {
+   "cell": "F1_agg|large|s3",
+   "n": 5,
+   "b0prime_median": 48.88595930003794,
+   "b0_median": 49.227439,
+   "diff_pct": -0.69,
+   "outside_noise": false
+  },
+  {
+   "cell": "F2_join|large|s3",
+   "n": 5,
+   "b0prime_median": 22.00484950002283,
+   "b0_median": 25.658124,
+   "diff_pct": -14.24,
+   "outside_noise": true
+  },
+  {
+   "cell": "F4_ski|large|s3",
+   "n": 5,
+   "b0prime_median": 16.67439599998761,
+   "b0_median": 17.198124,
+   "diff_pct": -3.05,
+   "outside_noise": false
+  },
+  {
+   "cell": "F4_ski|medium|s4",
+   "n": 5,
+   "b0prime_median": 9.287762099993415,
+   "b0_median": 9.870819,
+   "diff_pct": -5.91,
+   "outside_noise": false
+  },
+  {
+   "cell": "F4_ski|small|s4",
+   "n": 5,
+   "b0prime_median": 2.5127460999647155,
+   "b0_median": 2.318799,
+   "diff_pct": 8.36,
+   "outside_noise": false
+  },
+  {
+   "cell": "F5_mixed|large|s3",
+   "n": 5,
+   "b0prime_median": 38.73380950000137,
+   "b0_median": 38.106132,
+   "diff_pct": 1.65,
+   "outside_noise": false
+  },
+  {
+   "cell": "F3_rdd|large|s3",
+   "n": 0,
+   "status": "INCOMPLETE 0/5 structural WinError32, consistent with all EXP-005 arms"
+  }
+ ],
+ "prediction": "B0' beats B0 on shuffle-heavy cells by >=5% median",
+ "assessment": "mixed, descriptive only, no pooling: F2 L -14.2% outside noise (favors B0'), F4 M -5.9% inside noise, F1/F4L/F5/F4S inside noise or reversed"
+}

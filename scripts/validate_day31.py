@@ -1058,6 +1058,18 @@ def main(argv: list[str] | None = None) -> int:
         # The DEC-040 artifact above is NOT superseded - it is the n=5
         # record DEC-042 adjudicated, and both remain on disk.
         "exp009_ext_analysis.json": "DEC-043",
+        # DEC-052 D1: the five zero-execution analysis JSONs of the
+        # X-family / Track-R work (Day-46 audit, G-00/G-08). None
+        # declares executed=True - they analyze runs already authorized
+        # on their own decision lines (X6 -> DEC-047, X9 -> DEC-050,
+        # X10 -> DEC-049, robustness/synthesis -> DEC-044/046
+        # reporting machinery). Like every carve-out this entry is
+        # gated on DEC-052 being committed at HEAD.
+        "exp009_robustness.json": "DEC-052",
+        "exp009_synthesis.json": "DEC-052",
+        "x6_b0prime_analysis.json": "DEC-052",
+        "x9_taxi_analysis.json": "DEC-052",
+        "x10_sc7_analysis.json": "DEC-052",
     }
 
     def _authorized(name: str) -> bool:
@@ -1137,6 +1149,10 @@ def main(argv: list[str] | None = None) -> int:
             "scripts/verify_reproducibility.py",           # DEC-046 D3
             "tests/unit/test_exp009_ext.py",               # DEC-046 D1
             "docs/report/PAPER_DRAFT_monitoring_overhead.md",  # DEC-046 D4
+            # DEC-047 (SIGNED 2026-09-29) authorizes the additive allow_aqe gate
+            # in runner.py (already listed above via DEC-013) plus its default
+            # pin in tests/unit/test_day31_evaluation.py (already listed above)
+            # and this allow-list note itself. No new file needed.
         }
         unexpected = sorted(f for f in changed if f not in authorized)
         # the split guard must be SEMANTICALLY unchanged despite runner.py moving

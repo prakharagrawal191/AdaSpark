@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360">
+<desc>Source of record: results/evaluation/x6_b0prime_analysis.json</desc>
+<text x="320" y="24" text-anchor="middle" font-size="15">X6: B0' (AQE-on) vs B0 medians, TEST (s)</text>
+<rect x="60.0" y="91.3" width="35" height="208.7" fill="#4472C4"><title>F1_agg B0 49.227</title></rect>
+<text x="77.5" y="87" font-size="9" text-anchor="middle">49.23</text>
+<rect x="103.0" y="92.8" width="35" height="207.2" fill="#ED7D31"><title>F1_agg B0' 48.886</title></rect>
+<text x="120.5" y="88" font-size="9" text-anchor="middle">48.89</text>
+<text x="103.0" y="316" font-size="10" text-anchor="middle">F1_agg</text>
+<rect x="164.0" y="191.2" width="35" height="108.8" fill="#4472C4"><title>F2_join B0 25.658</title></rect>
+<text x="181.5" y="187" font-size="9" text-anchor="middle">25.66</text>
+<rect x="207.0" y="206.7" width="35" height="93.3" fill="#ED7D31"><title>F2_join B0' 22.005</title></rect>
+<text x="224.5" y="202" font-size="9" text-anchor="middle">22.00</text>
+<text x="207.0" y="316" font-size="10" text-anchor="middle">F2_join</text>
+<rect x="268.0" y="227.1" width="35" height="72.9" fill="#4472C4"><title>F4_ski B0 17.198</title></rect>
+<text x="285.5" y="223" font-size="9" text-anchor="middle">17.20</text>
+<rect x="311.0" y="229.3" width="35" height="70.7" fill="#ED7D31"><title>F4_ski B0' 16.674</title></rect>
+<text x="328.5" y="225" font-size="9" text-anchor="middle">16.67</text>
+<text x="311.0" y="316" font-size="10" text-anchor="middle">F4_ski</text>
+<rect x="372.0" y="258.2" width="35" height="41.8" fill="#4472C4"><title>F4_ski B0 9.871</title></rect>
+<text x="389.5" y="254" font-size="9" text-anchor="middle">9.87</text>
+<rect x="415.0" y="260.6" width="35" height="39.4" fill="#ED7D31"><title>F4_ski B0' 9.288</title></rect>
+<text x="432.5" y="256" font-size="9" text-anchor="middle">9.29</text>
+<text x="415.0" y="316" font-size="10" text-anchor="middle">F4_ski</text>
+<rect x="476.0" y="290.2" width="35" height="9.8" fill="#4472C4"><title>F4_ski B0 2.319</title></rect>
+<text x="493.5" y="286" font-size="9" text-anchor="middle">2.32</text>
+<rect x="519.0" y="289.3" width="35" height="10.7" fill="#ED7D31"><title>F4_ski B0' 2.513</title></rect>
+<text x="536.5" y="285" font-size="9" text-anchor="middle">2.51</text>
+<text x="519.0" y="316" font-size="10" text-anchor="middle">F4_ski</text>
+<rect x="580.0" y="138.5" width="35" height="161.5" fill="#4472C4"><title>F5_mixed B0 38.106</title></rect>
+<text x="597.5" y="134" font-size="9" text-anchor="middle">38.11</text>
+<rect x="623.0" y="135.8" width="35" height="164.2" fill="#ED7D31"><title>F5_mixed B0' 38.734</title></rect>
+<text x="640.5" y="131" font-size="9" text-anchor="middle">38.73</text>
+<text x="623.0" y="316" font-size="10" text-anchor="middle">F5_mixed</text>
+<text x="14" y="180" font-size="10" transform="rotate(-90 14 180)">median execution_time_s</text>
+</svg>

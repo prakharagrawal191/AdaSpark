@@ -1,0 +1,114 @@
+{
+ "experiment_id": "EXP-009-SYNTHESIS",
+ "authorized_by": [
+  "DEC-040",
+  "DEC-042",
+  "DEC-043",
+  "DEC-048"
+ ],
+ "sc6_charge": 0,
+ "base_n5": {
+  "cells": 7,
+  "verdict": "INCONCLUSIVE",
+  "note": "all 7 cells INCONCLUSIVE at n=5 (half-widths same order as 5% gate)"
+ },
+ "ext_pooled": {
+  "cells_decided": 6,
+  "cells_total": 7,
+  "sysmon": [
+   [
+    "F5_mixed|medium",
+    "PASS"
+   ],
+   [
+    "F3_rdd|small",
+    "PASS"
+   ],
+   [
+    "F2_join|medium",
+    "PASS"
+   ],
+   [
+    "F2_join|small",
+    "PASS"
+   ],
+   [
+    "F1_agg|medium",
+    "PASS"
+   ],
+   [
+    "F1_agg|small",
+    "INCONCLUSIVE"
+   ],
+   [
+    "F5_mixed|small",
+    "PASS"
+   ]
+  ],
+  "eventlog": [
+   [
+    "F5_mixed|medium",
+    "PASS"
+   ],
+   [
+    "F3_rdd|small",
+    "PASS"
+   ],
+   [
+    "F2_join|medium",
+    "PASS"
+   ],
+   [
+    "F2_join|small",
+    "PASS"
+   ],
+   [
+    "F1_agg|medium",
+    "PASS"
+   ],
+   [
+    "F1_agg|small",
+    "INCONCLUSIVE"
+   ],
+   [
+    "F5_mixed|small",
+    "PASS"
+   ]
+  ]
+ },
+ "robustness": {
+  "seeds_stable": true,
+  "bca_agrees_iid": true,
+  "block_bootstrap_flips": [
+   "F5_mixed|medium->INCONCLUSIVE at L=5/10/20",
+   "F5_mixed|small->INCONCLUSIVE at L=10/20"
+  ],
+  "lag1_range": "0.584..0.886 over 21 series",
+  "warning": "i.i.d. CIs overstate precision under serial dependence; block CIs are the honest interval"
+ },
+ "x2_rate_sweep_n1": {
+  "0.5": {
+   "full_s": 4.280268900038209,
+   "nosysmon_s": 3.912588999955915,
+   "overhead_pct": 9.4
+  },
+  "1.0": {
+   "full_s": 3.8589666999760084,
+   "nosysmon_s": 4.164111899968702,
+   "overhead_pct": -7.33
+  },
+  "2.0": {
+   "full_s": 3.882570600020699,
+   "nosysmon_s": 3.813375699974131,
+   "overhead_pct": 1.81
+  }
+ },
+ "x2_assessment": "sign flips across rates at n=1; no monotonic scaling; overhead within run-to-run noise at all rates",
+ "x3_confound_pair_n3": {
+  "nosysmon_median": 4.057581299974117,
+  "neither_median": 3.8984480000217445,
+  "pair_diff_pct": -3.92
+ },
+ "x3_assessment": "pair diff inside 11.89% noise band; confound bounded not removed (no no-config-change removal exists)",
+ "overall": "monitoring overhead (sysmon+eventlog) is small (decided-cell points <1pp at pooled n) but i.i.d. CIs overstate certainty; dependence-aware intervals can flip 2/7 sysmon verdicts; rate scaling and elog-confound pilots show no effect outside noise at pilot n"
+}
