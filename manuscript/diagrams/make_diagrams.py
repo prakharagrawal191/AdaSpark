@@ -454,84 +454,8 @@ def fig20_eval():
     save(fig, "Fig 20 Evaluation Framework.png")
 
 
-def fig21_benchmarks():
-    import numpy as np
-    cells = ["F1-L", "F2-L", "F4-L", "F5-L", "F4-s", "F4-m"]
-    arms = {"B1": [10.09, 4.89, 4.42, 8.84, 0.46, 1.62],
-            "B4": [18.56, 4.03, 4.31, 9.33, 0.45, 1.67],
-            "RL-s0": [14.57, 3.71, 7.46, 8.92, 0.57, 2.92],
-            "RL-s1": [15.65, 3.68, 7.01, 9.47, 0.60, 2.80]}
-    b0 = [49.23, 25.66, 17.20, 38.11, 2.32, 9.87]
-    x = np.arange(len(cells))
-    fig, ax = plt.subplots(figsize=(10, 4.5))
-    for i, (name, vals) in enumerate(arms.items()):
-        ax.bar(x + (i - 1.5) * 0.18, vals, 0.18, label=name)
-    ax.set_xticks(x)
-    ax.set_xticklabels(cells)
-    ax.set_ylabel("Median seconds (n=5)")
-    ax.set_title("Figure 21: Performance Benchmark Results", weight="bold")
-    ax.legend()
-    ax.text(0.98, 0.96,
-            "B0 default off-scale: " + ", ".join("%.1f" % v for v in b0),
-            transform=ax.transAxes, ha="right", va="top", fontsize=7,
-            bbox=dict(facecolor="white", edgecolor="gray"))
-    save(fig, "Fig 21 Performance Benchmark Results.png")
-
-
-def fig22_utilization():
-    import numpy as np
-    cells = ["F5-m", "F3-s", "F2-m", "F2-s", "F1-m", "F1-s", "F5-s"]
-    full = [16.44, 12.70, 12.44, 1.59, 30.58, 16.27, 3.04]
-    nosys = [16.41, 12.72, 12.44, 1.59, 30.53, 16.24, 3.03]
-    neith = [16.43, 12.72, 12.44, 1.59, 30.48, 16.06, 3.04]
-    x = np.arange(len(cells))
-    fig, ax = plt.subplots(figsize=(10, 4.5))
-    ax.bar(x - 0.22, full, 0.22, label="FULL")
-    ax.bar(x, nosys, 0.22, label="NO-SYSMON")
-    ax.bar(x + 0.22, neith, 0.22, label="NEITHER")
-    ax.set_xticks(x)
-    ax.set_xticklabels(cells)
-    ax.set_ylabel("Median seconds (pooled)")
-    ax.set_title("Figure 22: Resource Utilization Analysis", weight="bold")
-    ax.legend()
-    save(fig, "Fig 22 Resource Utilization Analysis.png")
-
-
-def fig23_convergence():
-    import numpy as np
-    seeds = ["seed 0", "seed 1", "seed 2"]
-    eps = [84, 49, 42]
-    floors = [0.050, 0.081, 0.116]
-    fig, ax = plt.subplots(figsize=(10, 4.5))
-    bars = ax.bar(seeds, eps, color=["#2e7d32", "#ef6c00", "#ef6c00"])
-    ax.set_ylabel("Episodes")
-    ax.set_title("Figure 23: RL Convergence Analysis", weight="bold")
-    for b, f, full in zip(bars, floors, [True, False, False]):
-        ax.text(b.get_x() + b.get_width() / 2, b.get_height() + 1,
-                "eps=%.3f%s" % (f, "" if full else " (early stop)"),
-                ha="center", fontsize=8)
-    save(fig, "Fig 23 RL Convergence Analysis.png")
-
-
-def fig24_radar():
-    import numpy as np
-    cells = ["F1-L", "F2-L", "F4-L", "F5-L", "F4-s", "F4-m"]
-    arms = {"B1": [1, 0.759, 0.975, 1, 0.978, 1],
-            "B4": [0.544, 0.921, 1, 0.947, 1, 0.970],
-            "RL-s0": [0.693, 1, 0.578, 0.991, 0.789, 0.555]}
-    angles = np.linspace(0, 2 * np.pi, len(cells), endpoint=False).tolist()
-    angles += angles[:1]
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
-    for name, vals in arms.items():
-        v = vals + vals[:1]
-        ax.plot(angles, v, label=name)
-        ax.fill(angles, v, alpha=0.08)
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels(cells)
-    ax.set_title("Figure 24: Comparative Radar Chart\n(best-normalized, outward=better)",
-                 weight="bold", pad=20)
-    ax.legend(loc="upper right")
-    save(fig, "Fig 24 Comparative Radar Chart.png")
+# Figures 21-24 are data-driven and live in make_result_figures.py, which reads the
+# committed analysis artifacts instead of hand-typed values.
 
 
 def fig25_reliability():
@@ -700,10 +624,6 @@ if __name__ == "__main__":
     fig18_governance()
     fig19_testbed()
     fig20_eval()
-    fig21_benchmarks()
-    fig22_utilization()
-    fig23_convergence()
-    fig24_radar()
     fig25_reliability()
     fig26_manufacturing()
     fig27_finance()

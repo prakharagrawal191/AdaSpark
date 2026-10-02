@@ -4,7 +4,9 @@ The business case rests on converting recurring tuning labour and wasted compute
 
 ROI framing must stay inside the evidence. Measured costs: one full adjudication study ≈ 57 wall-clock hours on a single commodity node plus analyst time, against which ~3,000 unnecessary runs (≈60% of the study) are avoidable with dependence-aware stopping — a direct saving for any team running repetition studies. Unmeasured and therefore excluded from ROI: cluster-scale savings, multi-tenant effects, and any AQE-on interaction. The cost–benefit table below labels each line as measured or projected.
 
-## Table 15: Cost–Benefit Analysis
+Two external reference points bound the projection. A study of ML-based configuration tuning on an enterprise Oracle deployment with a real workload trace measured a 45% improvement over enterprise-grade configurations [64] — evidence that tuning gains can survive production conditions, but for a different system class and a far larger tuning budget than AdaSpark's. Reinforcement learning is also being reviewed as a route to data-centre energy efficiency [133]; this report measures execution time only, so no energy saving is claimed.
+
+## Table 15: Cost-Benefit Analysis
 
 | Line | Basis | Value |
 |---|---|---|
