@@ -92,7 +92,8 @@ class SplitAuthorization(PermissionError):
 
 
 def sha256_file(rel: str) -> str:
-    return hashlib.sha256((PROJECT / rel).read_bytes()).hexdigest()
+    """LF-normalised digest (DEC-037 s4): CRLF and LF checkouts of the same code agree."""
+    return hashlib.sha256((PROJECT / rel).read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def cell_key(cell: tuple[str, str, int]) -> str:

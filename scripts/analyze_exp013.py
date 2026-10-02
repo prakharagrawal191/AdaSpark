@@ -41,7 +41,8 @@ FROZEN_FILES = ("scripts/analyze_exp013.py", "src/sparkrl/analysis/inference.py"
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    """LF-normalised digest (DEC-037 s4): CRLF and LF checkouts of the same file agree."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def cell_of(row: dict) -> str:
