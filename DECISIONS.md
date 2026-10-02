@@ -3741,3 +3741,25 @@ Already-recorded observations are **retained and pooled** with the new ones; not
 **3 — What this entry does NOT decide.** No threshold, baseline, policy or arm changes; no TRAIN execution; no pooling of B0′ with RL; no SC5 verdict; no edit to any EXP-005 record (DEC-037 §5); no EXP-014 matter (separate pre-registration and signature).
 
 **Status.** **DECIDED — OPERATOR SIGNED 2026-10-02 (GRANTED, full scope A–D).** `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `TEST = AUTHORIZED for the 900 frozen EXP-013 queue entries`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-052) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-053).**
+
+---
+
+## DEC-054 | 2026-10-02 | EXP-014 monitoring-overhead confirmation under DEC-044 D3's pre-registered paired statistic — VALIDATION split, 0 charged to SC6 (Day 47)
+
+**Decision ID:** DEC-054
+**Date:** 2026-10-02
+**Scope:** Execute the EXP-014 queue frozen in `docs/research/DEC_054_EXP014_OVERHEAD_CONFIRMATION.md`: the 7 EXP-009 analysed VALIDATION cells (seed 3; `F3_rdd|medium` stays excluded per DEC-040 §6) × FULL / NO-SYSMON / NEITHER (B0, AQE OFF, conditions and guard reused from `scripts/run_exp009.py`) × per-cell repetitions fixed from precision alone (10/15/10/10/10/15/20; **270 runs, queue fingerprint `709d2024a62599466d297c77a6b52178a0f6b238ed787c64852f73d541c13ed9`**), analysed only by the frozen `scripts/analyze_exp014.py`. Runs only after EXP-013 has finished. **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-10-02, approval GRANTED**, in-session (*"Sign; run after EXP-013 (Recommended)"*, recorded as the operator signature for exactly this scope).
+**Supersedes nothing.** DEC-040, DEC-042, DEC-043 and DEC-044 stand; no EXP-009 verdict or statistic is reopened (DEC-044 D1); EXP-014 is the *future* measurement for which DEC-044 D3 pre-registered the paired statistic as primary.
+
+> **Primary statistic (DEC-044 D3, fixed 2026-09-24):** per cell and component, the median over repetitions of the per-repetition relative difference, 95% percentile bootstrap (4000 resamples, seed 0), DEC-042 whole-interval rule against the unchanged 5% gate; components reported separately (DEC-040 §4); D4 steady-state screen reported, nothing excluded.
+> **Predictions:** Q1 sysmon and Q2 eventlog — PASS on ≥ 6 of 7 cells with 0 FAIL; Q3 — EXP-009's recorded paired medians inside the fresh CIs on ≥ 12 of 14 cell-components. A FAIL or refutation is published as observed.
+> **This transcription performs 0 Spark executions. SC6 cap = 500, NOT raised. SC6 ledger = 483 / 17 (488 / 500 combined with the 5 disclosed demo runs), unchanged. TEST = untouched. A5 = DISABLED. `docs/PLAN.md` = UNCHANGED.**
+
+**0 — Identifier resolution.** Next free after DEC-053: **DEC-054**. Next free experiment: **EXP-014**.
+
+**1 — Close-out obligations (zero-execution).** `results/evaluation/exp014_analysis.json` (executed=false) is produced by the frozen analyzer and added to check 26's `AUTHORIZED_ARTIFACTS` → DEC-054 (effective only with this entry at HEAD); results are synchronized into the claim map and manuscript.
+
+**2 — What this entry does NOT decide.** It does not reopen any EXP-009 verdict, change the 5% gate, authorize any TRAIN or TEST cell or AQE-on run, or state whether SC6 clause 2 is evidenced "as a whole" — that is for the close-out to state from the recorded verdicts.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-10-02 (GRANTED).** `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `VALIDATION only; TEST untouched`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-053) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-054).**
