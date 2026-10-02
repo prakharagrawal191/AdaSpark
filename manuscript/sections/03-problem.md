@@ -12,9 +12,9 @@ The feasibility of treating this as a learning problem was established empirical
 |---|---|---|
 | P1 | Static/default configs ignore workload + drift | Confirmed; motivates RL loop (RQ0 gate PASS 4/4) |
 | P2 | Rule heuristics break silently | Observed: B3 ≡ B1 byte-identical at studied volumes (analytic; confirmed 7/7 executed validation cells, X1) |
-| P3 | Learned policies must beat strong baselines | Open: H2/H3 UNDECIDED (RL ≈ random search; static best) |
+| P3 | Learned policies must beat strong baselines | Decided (EXP-013): 4.0× faster than defaults (H2 accepted); 1.22× slower than static tuning and random search (H3 rejected) |
 | P4 | Policies must generalize (scale, skew, new data) | Partial: unseen-cell failures high; SC5 not evaluable |
 | P5 | Learning must fit a practical budget | Met: 483/500 executions; 0 failed submitted configs |
 | P6 | Monitoring must be cheap enough to leave on | Met on 6/7 cells vs 5% budget (interval-adjudicated) |
 | P7 | Repetition statistics must handle dependence | Failed honestly: √n model falsified 7/7; block-CI widens 2 verdicts |
-| P8 | Interaction with built-in AQE | Side-by-side pilot measured (X6, DEC-047): mixed, one above-noise cell; pooled interaction unevaluated |
+| P8 | Interaction with built-in AQE | Interleaved re-test (EXP-013): AQE-on faster on 0/6 cells, X6's one-cell lead not replicated; pooled interaction unevaluated |

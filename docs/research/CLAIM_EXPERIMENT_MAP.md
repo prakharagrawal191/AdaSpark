@@ -17,11 +17,15 @@ at n=6/3 with no frozen mapping (DAY34 §5) — comparisons below are descriptiv
 
 | Claim | EXP | Evidence | Status |
 |---|---|---|---|
-| B1 lowest 6-cell descriptive sum | EXP-005 | 30.32 vs RL-s0 38.15 ≈ B4 38.34 | DESCRIPTIVE |
+| B1 lowest 6-cell descriptive sum | EXP-005 | 30.32 vs RL-s0 38.15 ≈ B4 38.34 | DESCRIPTIVE — ordering superseded by EXP-013 (queue-position artifact) |
 | Only above-noise RL-vs-static pattern: F4 p2-vs-p8 | EXP-005 | F4 L/M/S outside noise; rest inside 11.89% | DESCRIPTIVE |
 | F2 L RL-s1 lead replicates | X8 | fresh same-day rematch B1 2.964 vs RL-s1 2.947 s = **−0.57%** (recomputed −0.565%); EXP-005's −8.6% lead (RL-s1 vs B4, in-noise, different baseline) NOT replicated; the −24.7% implied cross-day (B1 4.888 vs 3.678) is an unsourced figure description → dropped (audit §9A) | FALSIFIED (drift) |
-| H2/H3/SC2–SC4 decided | — | frozen tests not runnable at n=6/3 | UNDECIDED (stated) |
-| AQE-on beats AQE-off ≥5% on shuffle-heavy | X6 | F2_join\|large **−14.24%** outside noise (favors B0′); 5/6 other decidable cells inside noise or reversed; F3\|large INCOMPLETE 0/5 (WinError32) | MIXED (1/6), no pooling — side-by-side only; pooled estimator gated (G-04) |
+| H2 decided (RL vs defaults) | EXP-013 (DEC-053) | 42 TEST cells, 790 usable executions, randomized interleaved blocks; RL/B0 GMR 0.249 (CI 0.212–0.295); ≥10% faster on 36/37 cells; one-sided exact Wilcoxon, Holm p = 4.4×10⁻¹¹ | ACCEPTED (P1 AFFIRMED) |
+| H3 decided (RL vs heuristic and random search) | EXP-013 | RL/B3≡B1 1.218 (CI 1.128–1.319); RL/B4 1.206 (CI 1.115–1.309); worse beyond noise on 16 cells (15 F4_ski + F5_mixed\|medium), better on 1 (F3_rdd\|small, 0.75×) | REJECTED (P2 AFFIRMED: RL did not beat static) |
+| F4 parallelism pattern | EXP-013 | RL (`G-p2-sp16`) 1.60× slower than B1 on 15/15 F4 cells; RL ≡ B1 configuration on F1/F2 (ratio 1.01) | AFFIRMED (P3) |
+| Identical configurations agree (A/A) | EXP-013 | B4 vs B1 (same configuration): median gap 2.0%, max 9.7%, 38/38 within 11.89%, Wilcoxon p = 0.19; RL vs B1 on same-config cells: 14/14 within | AFFIRMED (P5) — EXP-005's 2.16× same-config spreads were queue position |
+| RL competitive with random search | EXP-013 | B4 resolves to B1's configuration on every TEST cell; RL/B4 1.206, CI lower end 1.115 touches the 1.119 band edge | INCONCLUSIVE by the pre-registered interval rule (P4); direction contradicts the claim |
+| AQE-on beats AQE-off ≥5% on shuffle-heavy | X6 → EXP-013 | X6 (cross-day): F2_join\|large −14.24%; EXP-013 interleaved re-test: B0′ faster beyond noise on 0/6 cells, F2_join\|large +1.8% | X6 lead NOT REPLICATED (P7 REFUTED); no pooling (G-04) |
 
 ## Generalization (RQ3: H4, SC5)
 
@@ -52,7 +56,7 @@ at n=6/3 with no frozen mapping (DAY34 §5) — comparisons below are descriptiv
 
 | Claim | EXP | Evidence | Status |
 |---|---|---|---|
-| Re-runs within ±5% | X10 | 2/4: F4 medium +2.71% / +4.74% PASS; F4 small +6.82% / +11.73% FAIL; full 60-run EXP-011 still empty (G-01) | PARTIAL 2/4 (pilot) |
+| Re-runs within ±5% | X10; EXP-013 secondary | X10 2/4; EXP-013 fresh vs EXP-005 medians: 18/39 cell-arms within ±5%, misses concentrated on queue-inflated EXP-005 medians; X10's size pattern did not recur | PARTIAL (P8 REFUTED for the size pattern) |
 | Same-config drift bounds | EXP-005+X8 | B1-vs-B4 ≤84% F1L; X8 same-day ≈0% | DISCLOSED |
 
 ## Failures (structural, never rankings)
@@ -60,6 +64,8 @@ at n=6/3 with no frozen mapping (DAY34 §5) — comparisons below are descriptiv
 | Claim | EXP | Evidence |
 |---|---|---|
 | F3\|large\|s3 WinError32 all arms + B0' | EXP-005+X6 | 35+5 identical sort/spill lock failures, AQE-independent |
+| F3_rdd\|large at seeds 0,1,2,4 | EXP-013 probes | B0 and RL probes fail at every seed; cells STRUCTURAL-INCOMPLETE (P6 AFFIRMED) |
+| F3_rdd\|medium\|s4: default and RL choice fail | EXP-013 (DEC-055) | B0 and RL (`G-p4-sp128`) fail 5/5 (WinError 32); B1/B4/B2 succeed 5/5 — the policy's rdd_sort rule fails on a cell it never trained on |
 | F3_rdd\|medium T_ref null | EXP-002+X5 | missing B0 reference; backfill needs TRAIN DEC |
 
 ## Demo rehearsal (EXP-012)

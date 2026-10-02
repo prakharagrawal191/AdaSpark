@@ -1070,6 +1070,12 @@ def main(argv: list[str] | None = None) -> int:
         "x6_b0prime_analysis.json": "DEC-052",
         "x9_taxi_analysis.json": "DEC-052",
         "x10_sc7_analysis.json": "DEC-052",
+        # DEC-053 s2 / DEC-054 s1 close-out: the zero-execution analyses
+        # of the two confirmatory studies, written by their frozen
+        # analyzers (executed=false; the runs are on their own register
+        # lines, 0 charged to SC6). Gated on each DEC being at HEAD.
+        "exp013_analysis.json": "DEC-053",
+        "exp014_analysis.json": "DEC-054",
     }
 
     def _authorized(name: str) -> bool:

@@ -6,6 +6,8 @@ Evaluation scenarios span twelve experiments: EXP-001 noise calibration, EXP-002
 
 A confirmatory study closes the evaluation. EXP-013 (DEC-053) was pre-registered before any of its data existed. It re-runs the frozen arms on the full frozen TEST identity: 42 of the 43 frozen cells (`F3_rdd|large|s3` excluded after 40/40 prior structural failures), five repetitions each, in randomized complete blocks — every (cell, repetition) block executes all of its units back-to-back in a seeded random order, so slow drift and queue position fall on every arm alike instead of on whichever arm happened to run last. Units are B0; B1, which also stands for the rule heuristic B3 because both resolve to the same configuration on every TEST cell; B4 executed separately as an A/A control, since it too resolves to B1's configuration on every TEST cell; the frozen RL policy, whose three seeds resolve to one configuration per cell on TEST; B2 where it differs; and the AQE-on arm B0′ on the six executable EXP-005 instances. The 900 queue entries run in four stages that can be stopped only at stage boundaries, with the queue frozen by fingerprint before the first run. The study runs on its own register line, charges nothing to the training cap, and follows the quiet-machine protocol of PLAN §23 on a single dedicated host — the same platform control that published cloud and stream-processing benchmarking studies apply before comparing configurations [115][116][117].
 
+A second confirmatory study re-measures monitoring overhead. EXP-014 (DEC-054) repeats EXP-009's protocol on its seven validation cells — FULL, NO-SYSMON and NEITHER conditions, the B0 configuration, AQE off — with the three conditions randomized within each (cell, repetition) block and per-cell repetition counts (10–20; 270 runs) fixed from measurement precision alone. It is analysed with the paired statistic of Equation (13), which DEC-044 fixed as primary for any future overhead measurement before such data existed, so the overhead conclusion is tested under the stricter statistic rather than re-derived from EXP-009's data.
+
 ## Table 9: Experimental Configuration Details
 
 | Item | Setting |
@@ -17,3 +19,5 @@ A confirmatory study closes the evaluation. EXP-013 (DEC-053) was pre-registered
 | Budget | SC6 ≤500 training executions — 483/500 SC6-counted (17 remain); 488/500 combined incl. the 5 disclosed demo TRAIN runs (12 remain) |
 | Repetitions | Median of exactly 5 usable reps (evaluation); n=2 (EXP-002); n=1 (selection) |
 | Test discipline | Frozen instances; sealed TEST; authorization guards |
+| Confirmatory evaluation (EXP-013) | 42 frozen TEST cells × units B0, B1 (= B3), B4 (A/A), RL, B2 where distinct, B0′ on 6 cells; 5 reps; randomized complete blocks; seed 20261001; 900 queue entries |
+| Overhead confirmation (EXP-014) | 7 validation cells × FULL / NO-SYSMON / NEITHER; 10–20 reps per cell (270 runs); conditions randomized per block; paired statistic (Equation 13) |

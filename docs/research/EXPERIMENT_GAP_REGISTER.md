@@ -95,3 +95,12 @@ frozen code; halt on fragility. Cost TBD TRAIN (fits 17 only if ≤17 else own l
 Each: metric/baseline/comparison/stopping/interpretation fixed above; data
 retained as observed; negative publishable; budget fits or own line; TEST seal
 per guards.
+
+## C. Status after EXP-013 (DEC-053/055, 2026-10-02)
+
+- **H2/H3 (formerly UNDECIDED):** decided by EXP-013 — H2 ACCEPTED, H3 REJECTED (see CLAIM_EXPERIMENT_MAP.md).
+- **G-01 (SC7):** partially addressed — one fresh wave over 39 cell-arms of the EXP-005 cells (18/39 within ±5%); the 3-wave EXP-011 design remains open.
+- **G-04 (AQE):** side-by-side re-test done; X6's lead not replicated; pooled estimator still unregistered.
+- **G-10 (new) — state cannot perceive scale:** every input in the study is size bin S (<512 MiB); a size-aware state is needed before any scale-generalization claim. Design work, 0 runs.
+- **G-11 (new) — F3_rdd file lock:** WinError 32 on `F3_rdd` (large: all configurations; medium: default and `G-p4-sp128`); root cause undiagnosed. Zero-execution diagnosis first.
+
