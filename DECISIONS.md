@@ -3763,3 +3763,21 @@ Already-recorded observations are **retained and pooled** with the new ones; not
 **2 — What this entry does NOT decide.** It does not reopen any EXP-009 verdict, change the 5% gate, authorize any TRAIN or TEST cell or AQE-on run, or state whether SC6 clause 2 is evidenced "as a whole" — that is for the close-out to state from the recorded verdicts.
 
 **Status.** **DECIDED — OPERATOR SIGNED 2026-10-02 (GRANTED).** `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged`. `VALIDATION only; TEST untouched`. `EXP-008 execution authorization = NO`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-053) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **Transcribing this entry performs 0 Spark executions and trains nothing (DEC-054).**
+
+---
+
+## DEC-055 | 2026-10-02 | DEC-053 Amendment 1 — two-consecutive-failure halt waived for F3_rdd|medium|s4 only; diagnosis recorded; 0 charged to SC6 (Day 47)
+
+**Decision ID:** DEC-055
+**Date:** 2026-10-02
+**Scope:** One execution rule of DEC-053 §5, for one TEST cell. **Nothing else.**
+**Status:** DECIDED — operator **SIGNED 2026-10-02, approval GRANTED**, in-session (*"Resume; waive halt for this cell (Recommended)"*, asked as the signed DEC-053 amendment for exactly this scope).
+**Amends** DEC-053 §5 for `F3_rdd|medium|s4` only. Every other DEC-053 provision, the frozen queue (fingerprint `fe159085…`) and the frozen driver and analysis code (sha256-bound in `spec.json`) are unchanged.
+
+**1 — What happened (recorded as observed).** EXP-013 halted at queue entry 443 under DEC-053 §5 after `B0` failed in repetitions 1 and 2 on `F3_rdd|medium|s4`; `RL` (frozen policy, `G-p4-sp128`) had also failed in repetition 1. All three failures carry the same signature — `WinError 32`, a Spark block-manager temporary file locked by another process — the documented Windows sort/spill file-lock failure (EXP-005 `F3_rdd|large|s3` 35/35 failed; X6 5/5; EXP-002 `F3_rdd|medium` 18 of 26 failed; DEC-040 §6). On the same cell the static `G-p8-sp16` units (B1, B4) and `G-p8-sp64` (B2) completed (22.3–22.8 s). At the halt, 443 of 900 entries were recorded: stages A and B complete, no other failure.
+
+**2 — Decision.** The two-consecutive-failure halt is **waived for `F3_rdd|medium|s4` only**. Its remaining queue entries execute exactly as frozen — no skip, no retry, no reordering — and every failure is recorded as an observation. Units with fewer than five usable repetitions are INCOMPLETE and excluded from every comparison involving them, as DEC-053 §3 pre-registered. The halt remains in force for every other cell, and the `F3_rdd|large` probe rule is unchanged. Implementation: the operational chain runner resumes the unchanged driver only when its halt message names `F3_rdd|medium|s4`; the frozen code is untouched.
+
+**3 — Reporting obligation.** The configuration-dependent failure is a finding in its own right and is reported as such, not absorbed by the INCOMPLETE rule: on this TEST cell the frozen RL policy's rdd_sort choice (`G-p4-sp128`) and the Spark default (B0) fail, while the validation-tuned static configurations succeed. The agent never trained on `F3_rdd|medium` (T_ref null, DEC-040 §6), so its choice for this cell was never exercised before TEST.
+
+**Status.** **DECIDED — OPERATOR SIGNED 2026-10-02 (GRANTED).** `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17, unchanged` (all EXP-013 executions are TEST-split). `TEST = AUTHORIZED only within the DEC-053 queue`. `A5 = DISABLED`. `docs/PLAN.md = UNCHANGED`. Historical decisions (DEC-001 … DEC-054) = **UNCHANGED**. Supervisor counter-signature: **PENDING** — never simulated. **This entry performs 0 Spark executions (DEC-055).**

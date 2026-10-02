@@ -132,3 +132,7 @@ At the separate close-out step:
 - EXP-005's recorded result stands as recorded.
 
 **Status.** **SIGNED.** `Operator approval = GRANTED 2026-10-02 (in-session, full scope A–D)`. `SC6 cap = 500, NOT raised`. `SC6 ledger = 483 / 17`. `TEST = AUTHORIZED for exactly the 900 frozen queue entries (fingerprint fe159085…)`. Supervisor counter-signature: PENDING (never simulated).
+
+---
+
+**Amendment 1 (DEC-055, signed 2026-10-02).** The §5 two-consecutive-failure halt fired on `F3_rdd|medium|s4` (B0 failed reps 1–2, RL rep 1; all `WinError 32`, the documented Windows Spark file-lock failure; B1/B4/B2 succeeded). The halt is waived for that cell only: its remaining entries run exactly as frozen and failures are recorded; INCOMPLETE units are excluded from comparisons as §3 pre-registered; the halt stays in force for every other cell. The RL policy's failure on this cell is reported as a structural finding. Frozen code unchanged.
