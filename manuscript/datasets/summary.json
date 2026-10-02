@@ -1,0 +1,28 @@
+{
+  "bytes_by_scale": {
+    "large": 3575402827,
+    "medium": 1178850441,
+    "small": 348547934
+  },
+  "bytes_by_seed": {
+    "0": 1021010849,
+    "1": 1018580920,
+    "2": 1021094847,
+    "3": 1021053958,
+    "4": 1021060628
+  },
+  "lineitem_bytes_by_family": {
+    "F1_agg": 2532969340,
+    "F2_join": 2532969340,
+    "F3_rdd": 2532969340,
+    "F4_ski": 1928165664,
+    "F5_mixed": 2532969340
+  },
+  "missing_physical": 0,
+  "total_bytes": 5102801202,
+  "total_gib": 4.7524,
+  "total_logical": 75,
+  "total_physical": 30,
+  "total_rows": 537500000,
+  "valid_physical": 30
+}

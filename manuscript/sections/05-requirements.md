@@ -19,4 +19,4 @@ The requirement set mirrors what the self-adaptive-systems literature identifies
 | NFR2 | Sealed test discipline (authorization guards) | Non-functional | Day-31 gate 36/36 |
 | NFR3 | Byte-reproducible analysis (seeded, frozen code) | Non-functional | 16/16 corroboration |
 | NFR4 | No failed submitted configurations | Non-functional | 0 failures in training; F-FAIL invariant |
-| NFR5 | Full audit trail (decisions, provenance, manifests) | Non-functional | 52 DEC entries; immutable artifacts |
+| NFR5 | Full audit trail (decisions, provenance, manifests) | Non-functional | 54 DEC entries; immutable artifacts |

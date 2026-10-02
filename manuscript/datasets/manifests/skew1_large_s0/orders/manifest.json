@@ -1,0 +1,19 @@
+{
+  "checksum": "856e8aae32146cff",
+  "code_version": "matrix-d14",
+  "dataset_id": "orders-skew1_large_s0",
+  "file_count": 75,
+  "file_format": "parquet",
+  "generation_fingerprint": "ac506e1eef63df107008b78fb1953fa344deb7abbc5969633f53ae395a45c629",
+  "generation_timestamp": "2026-09-09T16:46:51.004620+00:00",
+  "generator_version": "datagen-v1",
+  "key_cardinality": 10000,
+  "row_count": 7500000,
+  "scale": "large",
+  "schema_fingerprint": "30e92d8c6a1cc03dab5887c2928ff4f3e283ba7ea694710e567ff08401627c84",
+  "schema_version": "datagen-v1",
+  "seed": 0,
+  "table": "orders",
+  "total_bytes": 47609043,
+  "zipf_parameter": 1.0
+}

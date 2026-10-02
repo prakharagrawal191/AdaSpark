@@ -14,4 +14,4 @@ Trust is assessed claim by claim, each paired with its evidence and verdict (Fig
 | Monitoring is cheap | 6/7 PASS (i.i.d.); 4/7 under blocks | Qualified support |
 | Analysis reproduces | 16/16; seeds/BCa stable | Supported |
 | Measurements reproduce | X10 pilot 2/4 (medium +2.7/+4.7% pass, small +6.8/+11.7% fail); full EXP-011 empty | PARTIAL (pilot) |
-| Process is auditable | 36/36 gate; 52 decisions | Supported |
+| Process is auditable | 36/36 gate; 54 decisions | Supported |

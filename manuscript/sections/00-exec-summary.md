@@ -19,4 +19,4 @@ Organizationally, AdaSpark converts tuning from recurring expert labour into a g
 | C5 | Generalization study (EXP-006) | Partial (high failure on unseen cells); SC5 not evaluable |
 | C6 | Monitoring-overhead measurement (EXP-009) | 6/7 cells PASS vs 5% budget (interval-adjudicated) |
 | C7 | Pre-registered √n falsification (4,842 runs) | Failed 7/7 — serial dependence measured, cost quantified |
-| C8 | Governance: decision log, provenance, sealed test discipline | 52 decisions; immutable manifests; reproducible artifact |
+| C8 | Governance: decision log, provenance, sealed test discipline | 54 decisions; immutable manifests; reproducible artifact |

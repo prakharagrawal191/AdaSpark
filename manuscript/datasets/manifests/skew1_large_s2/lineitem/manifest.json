@@ -1,0 +1,19 @@
+{
+  "checksum": "31ed7d60f96bcb2b",
+  "code_version": "matrix-d14",
+  "dataset_id": "lineitem-skew1_large_s2",
+  "file_count": 300,
+  "file_format": "parquet",
+  "generation_fingerprint": "d1aac479636ad113ac1543938d56a71f5133a5031c9e30b5f7d39e2e5d9f066d",
+  "generation_timestamp": "2026-09-09T17:09:52.958127+00:00",
+  "generator_version": "datagen-v1",
+  "key_cardinality": 7500000,
+  "row_count": 30000000,
+  "scale": "large",
+  "schema_fingerprint": "548eab4f23fae926cae6391064c3f5424bddbeddc8f81d25837062897e12d585",
+  "schema_version": "datagen-v1",
+  "seed": 2,
+  "table": "lineitem",
+  "total_bytes": 356622724,
+  "zipf_parameter": 1.0
+}
