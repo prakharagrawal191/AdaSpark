@@ -48,7 +48,7 @@ at n=6/3 with no frozen mapping (DAY34 §5) — comparisons below are descriptiv
 | Claim | EXP | Evidence | Status |
 |---|---|---|---|
 | Training ≤500 | ledger | SC6 483/500 (17 remain) + 5 demo-disclosed = **488/500 combined TRAIN-split** (12 remain); new work on own lines, 0 SC6 | HOLDS |
-| Overhead ≤5% | EXP-009+X2+X3 | 6/7 PASS pooled; block-bootstrap flips 2; pilots in-noise | QUALIFIED PASS |
+| Overhead ≤5% | EXP-009+X2+X3; EXP-014 (DEC-054) | EXP-009 6/7 PASS (unpaired); EXP-014 paired (DEC-044 D3): sampler 6/7 PASS, 0 FAIL (F1_agg\|small now PASS); event log 3/7 PASS, 0 FAIL, 4 INCONCLUSIVE; EXP-009 paired estimates inside fresh CIs 12/14 | Sampler AFFIRMED (Q1); event log 6/7 NOT re-established (Q2 REFUTED by rule, no FAIL); Q3 AFFIRMED. SC6 clause 2 remains not evidenced as a whole |
 | Sampler scales sub-linearly | X2 | sign flips at n=1, no monotonic trend | DESCRIPTIVE |
 | Elog confound <1pp | X3 | pair −3.9% inside noise; bounded not removed | DESCRIPTIVE |
 

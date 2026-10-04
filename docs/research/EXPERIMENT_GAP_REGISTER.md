@@ -103,4 +103,4 @@ per guards.
 - **G-04 (AQE):** side-by-side re-test done; X6's lead not replicated; pooled estimator still unregistered.
 - **G-10 (new) — state cannot perceive scale:** every input in the study is size bin S (<512 MiB); a size-aware state is needed before any scale-generalization claim. Design work, 0 runs.
 - **G-11 (new) — F3_rdd file lock:** WinError 32 on `F3_rdd` (large: all configurations; medium: default and `G-p4-sp128`); root cause undiagnosed. Zero-execution diagnosis first.
-
+- **Overhead (EXP-014, DEC-054):** sampler component evidenced on 6/7 cells under the paired statistic; event-log component inconclusive on 4/7 at n = 10–15 (0 FAIL) — a larger paired study of the event-log arm is the remaining gap (G-12, new).
