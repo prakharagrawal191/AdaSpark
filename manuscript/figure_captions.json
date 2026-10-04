@@ -1,0 +1,15 @@
+{
+ "_note": "Significance sentence appended to a figure's caption after its title (template: explain the significance of the figure in the caption). Figures without an entry carry the title only. Every value is taken from the section text or the committed results the figure is drawn from.",
+ "6": "Core figure, the self-adaptive big data programming architecture using reinforcement learning and Apache Spark: Spark execution at the base, RL optimization planning each configuration, scheduling and self-tuning enacting it, monitoring closing the MAPE-K loop, and explainability and governance spanning every decision.",
+ "7": "The training loop that runs through these layers: observe the state, select one of 12 actions, execute the Spark job, score R3 and update the Q-table, after Q0 initialization and inside the 500-execution budget.",
+ "21": "EXP-013 per-cell medians relative to B1 (log scale, lower is faster; grey band ±11.89% noise). B0 is above the band on 36 of its 37 completed cells; the policy is above it on all 15 F4_ski cells and F5_mixed|medium, below it on F3_rdd|small, and fails with B0 on F3_rdd|medium|s4.",
+ "22": "Per-family medians from the EXP-013 monitoring records over cells where B0, B1 and RL all completed: near-equal shuffle volume, higher CPU draw, and shorter sessions on four of five families for the tuned configurations (Section XV).",
+ "23": "Reward, |TD error| and ε per episode for the three training seeds (84, 49 and 42 episodes) under the 500-execution guard; ε decays toward its 0.05 floor (reached by seed 0 only), and with cross-seed agreement at 0.20 convergence is not claimed.",
+ "24": "Per-family geometric-mean speed relative to B1 (outward is faster; n = cells every arm completed): RL is within noise of B1 and B4 on F1, F2 and F5, falls inside them on F4, and leads only on the single matched F3 cell.",
+ "25": "Each trust claim passes from evidence to a recorded verdict (Table 13): seven supported, one rejected (H3), one partial and one not evaluable, with the event-log overhead not established.",
+ "26": "Prospective mapping of the F1/F2 workload patterns to manufacturing analytics; no industry deployment was executed (Section XVIII).",
+ "27": "Prospective mapping of the F5 pattern to end-of-day risk batches; no industry data were measured (Section XVIII).",
+ "28": "Measured values only (EXP-013, EXP-009); cluster-scale and multi-tenant savings are not measured and are excluded (Table 15).",
+ "31": "Prospective design in which language models propose configurations while measurement remains the authority (Section XXI).",
+ "32": "The governed loop (C1–C5, C8), the measurement record (C6–C7) and the honest bounds set by M8, H2 and H3 (Table 1)."
+}

@@ -6,6 +6,8 @@ Two requirements deserve emphasis because they shaped the engineering. First, th
 
 The requirement set mirrors what the self-adaptive-systems literature identifies as the hard parts of placing learning inside a feedback loop: knowing when a learned component is wrong, keeping adaptation decisions analyzable, and preserving evidence for later audit [85][87]. Trustworthiness requirements follow general trustworthy-ML practice, where robustness, transparency and accountability are properties to be demonstrated rather than asserted [92]. The lineage requirement (every decision traceable to code, data and policy versions) corresponds to ML lineage frameworks for production systems [91]. Reproducibility is specified at the strongest level a single-host study can support: re-running the analysis code over the frozen record reproduces every reported number, while re-running executions is a separately measured property (SC7), in line with graded definitions of computational reproducibility [93].
 
+By requirement class: performance is FR4 (gates SC1–SC4); scalability FR1's three data scales (cluster scale out of scope); adaptability FR3; reliability NFR4; governance NFR1, NFR2, NFR5; operations FR2 and FR5. Explainability holds by construction: every policy is an inspectable Q-table scored by (4) in Section X.
+
 ## Table 4: Functional and Non-Functional Requirements Matrix
 
 | ID | Requirement | Type | Verified by |
@@ -13,10 +15,10 @@ The requirement set mirrors what the self-adaptive-systems literature identifies
 | FR1 | Parameterized workloads (5 families × 3 scales, seeded) | Functional | EXP-002, EXP-006, dataset manifests |
 | FR2 | Per-run monitoring (system metrics + event logs) | Functional | EXP-009 (4,842 runs, 0 deviations) |
 | FR3 | State → configuration policy with offline init | Functional | EXP-004 training; policy store |
-| FR4 | Baseline comparison (default, static, heuristic, random) | Functional | EXP-005 (245/245 runs) |
-| FR5 | Generalization + ablation + overhead studies | Functional | EXP-006/007/008/009 |
+| FR4 | Baseline comparison (default, static, heuristic, random) | Functional | EXP-005 (245/245 runs); EXP-013 (790 usable; H2/H3 decided) |
+| FR5 | Generalization + ablation + overhead studies | Functional | EXP-006/007/008/009/014 |
 | NFR1 | Bounded training budget (≤500, counted) | Non-functional | SC6 ledger 483/500 |
 | NFR2 | Sealed test discipline (authorization guards) | Non-functional | Day-31 gate 36/36 |
-| NFR3 | Byte-reproducible analysis (seeded, frozen code) | Non-functional | 16/16 corroboration |
+| NFR3 | Byte-reproducible analysis (seeded, frozen code) | Non-functional | 16/16 corroboration (EXP-002/005/009) |
 | NFR4 | No failed submitted configurations | Non-functional | 0 failures in training; F-FAIL invariant |
-| NFR5 | Full audit trail (decisions, provenance, manifests) | Non-functional | 55 DEC entries; immutable artifacts |
+| NFR5 | Full audit trail (decisions, provenance, manifests) | Non-functional | Decision log DEC-001–DEC-055; immutable artifacts |

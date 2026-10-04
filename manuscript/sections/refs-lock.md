@@ -8,7 +8,7 @@
 [6] Herodotou et al., Starfish, CIDR 2011.
 [7] Van Aken et al., OtterTune, SIGMOD 2017.
 [8] Zhang et al., CDBTune, SIGMOD 2019.
-[9] Mao et al., Decima, EuroSys 2019.
+[9] Mao et al., Decima, SIGCOMM 2019.
 [10] Apache Spark Monitoring documentation (verified 2026).
 [11] Georges et al., OOPSLA 2007. [12] Kalibera & Jones, ISMM 2013.
 [13] Barrett et al., OOPSLA 2017. [14] Mytkowicz et al., ASPLOS 2009.
@@ -21,7 +21,7 @@
 [27] van Hoorn et al., Kieker, ICPE 2012. [28] Reichelt et al., ICPE Comp 2023.
 [29] Reichelt et al., ICPE Comp 2024. [30] Ren et al., IEEE Micro 2010.
 [31] Li et al., QTune, VLDB 2019. [32] Huebscher & McCann, ACM CSUR 2008.
-[33] Armbrust et al., Delta Lake, CIDR 2020. [34] Apache Spark AQE documentation.
+[33] Armbrust et al., Delta Lake, PVLDB 13(12) 2020. [34] Apache Spark AQE documentation.
 [35] Dean & Ghemawat, MapReduce, OSDI 2004. [36] Shvachko et al., HDFS, MSST 2010.
 [37] Lillicrap et al., DDPG, arXiv 2016. [38] Mnih et al., DQN, Nature 2015.
 [39] Schulman et al., PPO, arXiv 2017.

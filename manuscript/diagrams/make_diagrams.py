@@ -116,20 +116,26 @@ def fig04_taxonomy():
     ax.axis("off")
     ax.text(5, 4.6, "Figure 4: Literature Taxonomy Framework",
             ha="center", fontsize=10, weight="bold")
-    _block(ax, 3.75, 3.3, 2.5, 0.8, "Self-adaptive Spark (AdaSpark)",
+    _block(ax, 3.3, 3.3, 3.4, 0.8, "Self-adaptive Spark (AdaSpark)",
            "RL closed loop", color="#b03a2e")
-    branches = [
-        ("Spark\noptimization", "Starfish, OtterTune\nCDBTune, Decima, AQE"),
-        ("RL\nmethods", "Q-learning, bandits\nDQN/PPO contrast"),
-        ("Measurement\nmethodology", "Georges, Kalibera\nBarrett, Mytkowicz"),
-        ("Monitoring\noverhead", "Kieker, Reichelt\nGoogle profiling"),
+    branches = [  # the seven literature strands of Section III
+        ("Spark\noptimization", "Starfish, OtterTune,\nCDBTune, AQE"),
+        ("Config\nauto-tuning", "CausalConf,\nDeepCAT+, DOT"),
+        ("RL\nmethods", "Q-learning,\nDQN/PPO contrast"),
+        ("RL scheduling,\nautoscaling", "Decima, DeepHCM,\nASTRA"),
+        ("Measurement\nmethodology", "Georges, Kalibera,\nMytkowicz"),
+        ("Monitoring\noverhead", "Kieker,\nReichelt"),
+        ("Self-adaptive,\nDataOps, MLOps", "MAPE-K + ML,\nlineage"),
     ]
     for i, (title, sub) in enumerate(branches):
-        x = 0.15 + i * 2.48
-        _block(ax, x, 1.5, 2.25, 1.1, title, sub, color="#1f4e79")
-        ax.annotate("", xy=(x + 1.12, 2.6), xytext=(5.0, 3.3),
-                    arrowprops=dict(arrowstyle="->", lw=1.0,
-                                    connectionstyle="arc3,rad=0.1"))
+        x, y, w, h = 0.05 + i * 1.42, 1.0, 1.34, 1.6
+        ax.add_patch(mpatches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.03",
+                                             facecolor="#1f4e79", edgecolor="black"))
+        ax.text(x + w / 2, y + h * 0.72, title, ha="center", va="center", color="white",
+                fontsize=7.5, weight="bold")
+        ax.text(x + w / 2, y + h * 0.27, sub, ha="center", va="center", color="white", fontsize=6.5)
+        ax.annotate("", xy=(x + w / 2, y + h), xytext=(5.0, 3.3),
+                    arrowprops=dict(arrowstyle="->", lw=1.0))
     save(fig, "Fig 04 Literature Taxonomy Framework.png")
 
 
@@ -145,7 +151,7 @@ def fig05_requirements():
     _block(ax, 7.45, 3.0, 2.25, 0.9, "Non-functional", "NFR1-NFR5")
     _block(ax, 1.6, 1.5, 2.5, 0.9, "Architecture", "12 components",
            color="#2e7d32")
-    _block(ax, 5.9, 1.5, 2.5, 0.9, "Evaluation", "EXP-001..012",
+    _block(ax, 5.9, 1.5, 2.5, 0.9, "Evaluation", "EXP-001..014",
            color="#2e7d32")
     for x0, y0, x1, y1 in [(2.5, 3.45, 3.85, 3.45), (6.15, 3.45, 7.45, 3.45),
                            (5.0, 3.0, 2.85, 2.4), (5.0, 3.0, 7.15, 2.4)]:
@@ -189,11 +195,11 @@ def fig07_loop():
         x = 0.25 + i * 1.95
         _block(ax, x, 1.6, 1.7, 1.2, title, "", color=color)
         if i < 4:
-            ax.annotate("", xy=(x + 1.7, 2.2), xytext=(x + 1.7 + 0.25, 2.2),
+            ax.annotate("", xy=(x + 1.7 + 0.25, 2.2), xytext=(x + 1.7, 2.2),
                         arrowprops=dict(arrowstyle="->", lw=1.4))
-    ax.annotate("", xy=(0.4, 2.2), xytext=(9.9, 2.2),
+    ax.annotate("", xy=(1.1, 1.6), xytext=(8.75, 1.6),      # next episode: back to Observe
                 arrowprops=dict(arrowstyle="->", lw=1.0, ls="dashed",
-                                connectionstyle="angle3,angleA=0,angleB=-90"))
+                                connectionstyle="arc3,rad=-0.13"))
     ax.text(5, 0.7, "Q0 offline init -> online adapt (<=500) -> policy store",
             ha="center", fontsize=8, style="italic")
     save(fig, "Fig 07 Layered System Architecture.png")
@@ -277,7 +283,7 @@ def fig11_allocation():
     for x0, y0, x1, y1 in [(2.3, 2.7, 3.7, 2.7), (6.3, 2.7, 7.7, 2.7)]:
         ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
                     arrowprops=dict(arrowstyle="->", lw=1.4))
-    ax.text(5, 1.2, "session restart on parallelism change; cache kept for F5",
+    ax.text(5, 1.2, "session restart on parallelism change; F5 cache kept only when parallelism is unchanged",
             ha="center", fontsize=8, style="italic")
     save(fig, "Fig 11 Dynamic Resource Allocation Model.png")
 
@@ -289,11 +295,11 @@ def fig12_scheduling():
     ax.axis("off")
     ax.text(5, 4.6, "Figure 12: Adaptive Scheduling Framework",
             ha="center", fontsize=10, weight="bold")
-    _block(ax, 0.3, 3.0, 2.9, 0.9, "Static policies", "B0, B1, B2, B3")
-    _block(ax, 6.8, 3.0, 2.9, 0.9, "Adaptive policies", "B4, RL-s0/s1/s2")
-    _block(ax, 2.5, 1.5, 5.0, 0.9, "Frozen test instances × 5 reps", "",
+    _block(ax, 0.3, 3.0, 2.9, 0.9, "Static policies", "B0, B0′, B1, B2, B3")
+    _block(ax, 6.8, 3.0, 2.9, 0.9, "Search and learned", "B4 search, RL-s0/s1/s2")
+    _block(ax, 2.5, 1.5, 5.0, 0.9, "42 frozen TEST cells × 5 reps", "",
            color="#2e7d32")
-    _block(ax, 2.5, 0.3, 5.0, 0.8, "Median comparison (descriptive)", "",
+    _block(ax, 2.5, 0.3, 5.0, 0.8, "Interleaved blocks + exact tests (EXP-013)", "",
            color="#6a1b9a")
     for x0, y0, x1, y1 in [(1.75, 3.0, 3.5, 2.4), (8.25, 3.0, 6.5, 2.4),
                            (5.0, 1.5, 5.0, 1.1)]:
@@ -334,7 +340,7 @@ def fig14_lifecycle():
         _block(ax, x, 0.9, 1.7, 1.2, title, "",
                color="#1f4e79" if i < 4 else "#2e7d32")
         if i < 4:
-            ax.annotate("", xy=(x + 1.7, 1.5), xytext=(x + 1.94, 1.5),
+            ax.annotate("", xy=(x + 1.94, 1.5), xytext=(x + 1.7, 1.5),
                         arrowprops=dict(arrowstyle="->", lw=1.4))
     save(fig, "Fig 14 Parameter Optimization Lifecycle.png")
 
@@ -374,7 +380,7 @@ def fig16_decision():
         color = "#b03a2e" if i == 2 else ("#2e7d32" if i > 2 else "#1f4e79")
         _block(ax, x, 1.2, 1.76, 1.2, title, "", color=color)
         if i < 4:
-            ax.annotate("", xy=(x + 1.76, 1.8), xytext=(x + 1.96, 1.8),
+            ax.annotate("", xy=(x + 1.96, 1.8), xytext=(x + 1.76, 1.8),
                         arrowprops=dict(arrowstyle="->", lw=1.3))
     save(fig, "Fig 16 Decision Intelligence Workflow.png")
 
@@ -386,7 +392,7 @@ def fig17_monitoring():
     ax.axis("off")
     ax.text(5, 4.6, "Figure 17: Monitoring and Feedback Loop",
             ha="center", fontsize=10, weight="bold")
-    _block(ax, 0.3, 2.8, 2.2, 1.0, "Sampler", "~3 samples/s")
+    _block(ax, 0.3, 2.8, 2.2, 1.0, "Sampler", "1 Hz")
     _block(ax, 3.9, 2.8, 2.2, 1.0, "Event log", "COMPLETE req.")
     _block(ax, 7.5, 2.8, 2.2, 1.0, "Schema", "merge+validate")
     _block(ax, 1.5, 1.2, 3.0, 0.9, "Online: Q-update", "", color="#b03a2e")
@@ -409,7 +415,7 @@ def fig18_governance():
     _block(ax, 0.3, 2.8, 2.9, 1.0, "Policy enforcement", "budget, F-FAIL")
     _block(ax, 3.55, 2.8, 2.9, 1.0, "Access control", "split guards")
     _block(ax, 6.8, 2.8, 2.9, 1.0, "Fault tolerance", "stops, Plan B")
-    _block(ax, 1.5, 1.2, 7.0, 0.9, "Audit trail: 46 DEC entries + manifests + hashes",
+    _block(ax, 1.5, 1.2, 7.0, 0.9, "Audit trail: decision log DEC-001–055 + manifests + hashes",
            "", color="#6a1b9a")
     save(fig, "Fig 18 Security and Governance Architecture.png")
 
@@ -442,14 +448,14 @@ def fig20_eval():
     ax.axis("off")
     ax.text(5, 3.6, "Figure 20: Evaluation Framework",
             ha="center", fontsize=10, weight="bold")
-    steps = ["Median\ntime", "Gates\n10%/5%/.70", "Replicates\n3 arms",
-             "Intervals\n95% boot", "Ledger\n483/500"]
+    steps = ["Median\ntime", "Gates\n10%/5%/.70", "Exact tests\n+ A/A control",
+             "Intervals\n95% CI", "Ledger\n483/500"]
     for i, title in enumerate(steps):
         x = 0.2 + i * 1.96
         _block(ax, x, 1.2, 1.76, 1.2, title, "",
                color="#1f4e79" if i < 4 else "#2e7d32")
         if i < 4:
-            ax.annotate("", xy=(x + 1.76, 1.8), xytext=(x + 1.96, 1.8),
+            ax.annotate("", xy=(x + 1.96, 1.8), xytext=(x + 1.76, 1.8),
                         arrowprops=dict(arrowstyle="->", lw=1.3))
     save(fig, "Fig 20 Evaluation Framework.png")
 
@@ -465,21 +471,21 @@ def fig25_reliability():
     ax.axis("off")
     ax.text(5, 4.6, "Figure 25: Reliability Assessment Framework",
             ha="center", fontsize=10, weight="bold")
-    _block(ax, 0.3, 2.8, 2.0, 1.0, "Claim", "9 claims")
+    _block(ax, 0.3, 2.8, 2.0, 1.0, "Claim", "10 claims")
     _block(ax, 2.9, 2.8, 2.0, 1.0, "Evidence", "artifacts",
            color="#ef6c00")
-    _block(ax, 5.5, 2.8, 2.0, 1.0, "Verdict", "supp./open",
+    _block(ax, 5.5, 2.8, 2.0, 1.0, "Verdict", "Table 13",
            color="#2e7d32")
-    _block(ax, 7.9, 2.8, 1.8, 1.0, "Log", "46 DECs",
+    _block(ax, 7.9, 2.8, 1.8, 1.0, "Log", "DEC-001–055",
            color="#6a1b9a")
     for x0, y0, x1, y1 in [(2.3, 3.3, 2.9, 3.3), (4.9, 3.3, 5.5, 3.3),
                            (7.5, 3.3, 7.9, 3.3)]:
         ax.annotate("", xy=(x1, y1), xytext=(x0, y0),
                     arrowprops=dict(arrowstyle="->", lw=1.2))
-    ax.text(5, 1.6, "Supported: sensitivity, budget, defaults, analysis, audit",
-            ha="center", fontsize=8)
-    ax.text(5, 1.1, "Open: static-superiority, generalization, AQE, measurement-repro",
-            ha="center", fontsize=8)
+    ax.text(5, 1.6, "Supported: sensitivity, budget, defaults (H2), A/A noise floor, sampler overhead,"
+            " analysis reproducibility, auditability", ha="center", fontsize=8)
+    ax.text(5, 1.1, "Rejected: static/random superiority (H3)  ·  Partial: measurement reproducibility"
+            "  ·  Not evaluable: generalization  ·  Not established: event-log overhead", ha="center", fontsize=8)
     save(fig, "Fig 25 Reliability Assessment Framework.png")
 
 
@@ -524,15 +530,25 @@ def fig27_finance():
 
 
 def fig28_dashboard():
-    import numpy as np
-    cats = ["Tuning gap", "Study cost", "Avoidable runs"]
-    measured = [4.0, 57.0, 60.0]
-    fig, ax = plt.subplots(figsize=(10, 4.2))
-    ax.bar(cats, measured, color=["#1f4e79", "#ef6c00", "#b03a2e"])
-    ax.set_title("Figure 28: Business Impact Dashboard", weight="bold")
-    ax.set_ylabel("x faster / node-hours / % avoidable")
-    for i, v in enumerate(measured):
-        ax.text(i, v + 1, str(v), ha="center", fontsize=9)
+    # KPI tiles, not one bar axis: the four measures have different units (Section 19, Table 15)
+    tiles = [("4.0×", "faster than\nSpark defaults", "RL, 37 TEST cells (EXP-013)", "#1f4e79"),
+             ("1.22×", "slower than best\nstatic tuning", "the learner's bound (EXP-013)", "#c0392b"),
+             ("≈57 h", "for one overhead\nadjudication study", "single node (EXP-009)", "#ef6c00"),
+             ("≈60%", "of those runs\navoidable", "dependence-aware stopping", "#2e7d32")]
+    fig, ax = plt.subplots(figsize=(10, 3.2))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 3.2)
+    ax.axis("off")
+    ax.text(5, 2.95, "Figure 28: Business Impact Dashboard", ha="center", weight="bold", fontsize=11)
+    for i, (value, what, src, color) in enumerate(tiles):
+        x = 0.15 + i * 2.45
+        ax.add_patch(mpatches.FancyBboxPatch((x, 0.2), 2.25, 2.3, boxstyle="round,pad=0.03",
+                                             facecolor=color, edgecolor="black"))
+        ax.text(x + 1.125, 1.75, value, ha="center", va="center", color="white", fontsize=20,
+                weight="bold")
+        ax.text(x + 1.125, 1.0, what, ha="center", va="center", color="white", fontsize=8.5)
+        ax.text(x + 1.125, 0.55, src, ha="center", va="center", color="white", fontsize=7,
+                style="italic")
     save(fig, "Fig 28 Business Impact Dashboard.png")
 
 
@@ -544,7 +560,7 @@ def fig29_roadmap():
     ax.text(5, 4.6, "Figure 29: Challenges and Limitations Roadmap",
             ha="center", fontsize=10, weight="bold")
     items = ["Reward\ndesign", "Exploration\n483/500", "Single-node\nscale",
-             "Overhead\n~60% waste", "M8 0.20\nno winner", "AQE-on\nopen"]
+             "Overhead\n~60% waste", "M8 0.20\nno winner", "AQE-on\nno gain 0/6"]
     for i, title in enumerate(items):
         _block(ax, 0.15 + i * 1.64, 2.0, 1.5, 1.2, title, "",
                color="#b03a2e")
@@ -558,7 +574,7 @@ def fig30_future():
     ax.axis("off")
     ax.text(5, 4.6, "Figure 30: Future Research Roadmap",
             ha="center", fontsize=10, weight="bold")
-    _block(ax, 0.3, 2.4, 2.9, 1.1, "Near: AQE, B3,\nsweeps, backfill", "",
+    _block(ax, 0.3, 2.4, 2.9, 1.1, "Near: size-aware state,\nF3 lock, backfill", "",
            color="#2e7d32")
     _block(ax, 3.55, 2.4, 2.9, 1.1, "Mid: multi-agent,\nfederated, cluster",
            "", color="#ef6c00")
