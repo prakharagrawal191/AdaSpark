@@ -1,6 +1,8 @@
 # AdaSpark — Self-Adaptive Big Data Programming Using Reinforcement Learning and Spark
 
-M.Tech research project. **Status: Day 1 of the approved 50-day plan (Milestone M1 in progress).**
+M.Tech research project. **Status:** experiments EXP-001 to EXP-014 are reported in the case-study
+report (`manuscript/AdaSpark_CaseStudy_Report.docx`); every scope and verdict decision is in
+`DECISIONS.md` (DEC-001 to DEC-055).
 
 An RL agent observes workload context and Spark runtime feedback, selects an execution
 configuration (shuffle partitions, execution parallelism) before each run, and learns from
@@ -72,3 +74,7 @@ research findings). Design details: `docs/day03_timing_harness.md`.
 - No deep RL (DQN/PPO), no multi-node clusters, no Kubernetes — approved exclusions.
 - AQE is OFF in the main study; AQE-on is a separate comparison condition (EXP-005b).
 - The full approved planning document is committed as `docs/PLAN.md` (Day 2).
+
+## Contributors
+
+- [@prakharagrawal191](https://github.com/prakharagrawal191) — author and maintainer
