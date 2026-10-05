@@ -1,41 +1,77 @@
 # AdaSpark — Self-Adaptive Big Data Programming Using Reinforcement Learning and Spark
 
-AdaSpark is an M.Tech case study in self-adaptive big data programming. A reinforcement learning (RL)
-agent chooses the Spark execution configuration — execution parallelism and shuffle partitions — before
-each run, measures the outcome, and learns from it inside a hard budget of 500 training executions. The
-learned policy is then compared with Spark defaults, tuned static configurations, a rule heuristic and
-random search, under pre-registered statistics on a sealed test split.
+AdaSpark is a self-adaptive big data programming system, built and evaluated as an M.Tech case study. A
+reinforcement learning (RL) agent chooses Spark's execution parallelism and shuffle partitions before each
+run, measures the outcome and learns from it within a hard budget of 500 training executions. Under
+pre-registered statistics on a sealed test split, the learned policy ran **4.0× faster than Spark's default
+configuration**.
 
-The study ran from **2026-09-07 to 2026-10-04** on one Windows machine, following a 50-day plan
-(`docs/PLAN.md`), and is governed by a numbered decision log (`DECISIONS.md`, DEC-001 to DEC-055). The
-case-study report is [`manuscript/AdaSpark_CaseStudy_Report.docx`](manuscript/AdaSpark_CaseStudy_Report.docx).
+The study ran from **2026-09-07 to 2026-10-04** on one Windows machine — more than 7,400 Spark runs and
+54 hours of recorded Spark execution — following a 50-day plan (`docs/PLAN.md`) and a numbered decision
+log (`DECISIONS.md`, DEC-001 to DEC-055). The case-study report is
+[`manuscript/AdaSpark_CaseStudy_Report.docx`](manuscript/AdaSpark_CaseStudy_Report.docx).
 
-## At a glance
+## What this project achieved
 
-- **Configuration matters:** choosing a configuration moved median execution time by ≥10% on all four
-  tested workload families (EXP-002, gate **PASS**).
-- **Bounded learning:** training used 483 of the 500 budgeted executions, with no failed submitted
-  configuration.
-- **Against Spark defaults:** in the pre-registered confirmatory evaluation (EXP-013, 42 frozen test
-  cells) the learned policy was **4.0× faster** than Spark defaults, and at least 10% faster on 36 of 37
-  decidable cells — hypothesis H2 **accepted**.
-- **Against competent tuning:** the policy was **1.22× slower** than a tuned static configuration, to
-  which the rule heuristic and equal-budget random search also resolved — hypothesis H3 **rejected**.
-- **Limits stated, not hidden:** the three training seeds disagreed (agreement 0.20 against a 0.70
-  target), generalization was not evaluable, the event-log overhead pass was not re-established, and
-  the pre-registered √n prediction failed on all seven cells.
+- **A working self-adaptive Spark system.** An end-to-end monitor–analyze–plan–execute loop in which a
+  tabular Q-learning agent picks one of 12 configurations before every run and learns from the measured
+  result: 59 source modules (about 10,700 lines of Python), 61 experiment and analysis scripts, 704
+  automated tests and 17 validators.
+- **4.0× faster than Spark's defaults.** In a pre-registered confirmatory evaluation on 42 frozen test
+  cells the learned policy cut runtime to about a quarter of the default configuration's (geometric-mean
+  ratio 0.249, 95% CI 0.212–0.295) and was at least 10% faster on 36 of 37 decidable cells
+  (Holm-adjusted p = 4.4×10⁻¹¹).
+- **Expert-level settings without manual tuning.** On the aggregation and join workloads the agent
+  arrived by itself at the same configuration that validation-tuned static settings, a rule heuristic and
+  equal-budget random search all selected (runtime ratio 1.01).
+- **Learning within a hard budget, safely.** Training used 483 of the 500 allowed executions and never
+  submitted a configuration that failed; failed runs are learned from as penalized observations, never
+  rewarded.
+- **Configuration proven to matter.** A 208-attempt sensitivity grid showed that the 12 actions move
+  median runtime by at least 10% on all four tested workload families.
+- **Affordable monitoring.** The 1 Hz system sampler that feeds the loop stayed below 5% overhead on 6 of
+  7 cells in two independent studies.
+- **Real-data transfer.** On a month of NYC Taxi data, tuned configurations ran 70–78% faster than Spark's
+  defaults, and the learned policy chose the tuned configuration.
+- **A large, carefully measured study.** 14 experiments plus extension studies, more than 7,400 Spark
+  runs, 54 hours of recorded Spark execution and 5.1 GB of generated datasets — including an overhead
+  campaign that kept the machine running Spark for 30.5 hours with a single pause.
+- **A complete evidence trail.** 55 recorded decisions, two pre-registered confirmatory studies, 71
+  research and audit records, and a 140-reference case-study report.
+
+## What is new in this work
+
+1. **Governed self-adaptation.** The adaptive loop is wrapped in research governance — pre-registered
+   hypotheses and analysis code, a sealed test split, an append-only hash-chained decision log and an
+   execution-budget ledger — so every claim about the system can be audited back to the runs behind it.
+2. **Failure-aware learning on a real system.** Failed or timed-out Spark runs are first-class
+   observations with a fixed penalty (DEC-010), and the Q-table starts from an offline initialization
+   derived from the sensitivity grid, so a useful policy emerges from a few hundred real executions.
+3. **A benchmark that separates "beats defaults" from "beats tuning".** Randomized interleaved blocks with
+   an A/A control (two arms running the identical configuration) measure both: the policy is 4.0× faster
+   than defaults and matches competent tuning on aggregation and join workloads. The A/A control also
+   showed that same-configuration differences of up to 2.16× in an earlier, non-randomized comparison came
+   from queue position, not configuration.
+4. **A measurement-methodology finding.** Repeated Spark runs on one machine are serially correlated
+   (lag-1 autocorrelation +0.58 to +0.89), so the textbook rule that confidence intervals shrink with √n
+   failed on all seven cells and about 3,000 of 4,842 runs added no precision — a hidden cost for any
+   repetition-based performance study, and the basis of the ICPE 2027 paper draft.
+5. **Quantified monitoring cost.** A paired, pre-registered re-measurement confirms that the 1 Hz sampler
+   costs under 5% on six of seven cells, so the monitoring an adaptive loop needs is affordable.
 
 ## Contents
 
-1. [What the project is about](#what-the-project-is-about)
-2. [Key results](#key-results)
-3. [Day-wise progress](#day-wise-progress)
-4. [Decisions and why they were taken](#decisions-and-why-they-were-taken)
-5. [Experiments, runs and hours](#experiments-runs-and-hours)
-6. [How the study was governed](#how-the-study-was-governed)
-7. [Repository layout](#repository-layout)
-8. [Setup, tests and the report](#setup-tests-and-the-report)
-9. [Contributors](#contributors)
+1. [What this project achieved](#what-this-project-achieved)
+2. [What is new in this work](#what-is-new-in-this-work)
+3. [What the project is about](#what-the-project-is-about)
+4. [Results in detail](#results-in-detail)
+5. [Day-wise progress](#day-wise-progress)
+6. [Decisions and why they were taken](#decisions-and-why-they-were-taken)
+7. [Experiments, runs and compute time](#experiments-runs-and-compute-time)
+8. [How the study was governed](#how-the-study-was-governed)
+9. [Repository layout](#repository-layout)
+10. [Setup, tests and the report](#setup-tests-and-the-report)
+11. [Contributors](#contributors)
 
 ## What the project is about
 
@@ -75,30 +111,41 @@ and opened only by a recorded decision.
 **Scope.** Single-node local-mode Spark on Windows. Deep RL, multi-node clusters and Kubernetes are
 excluded by the approved plan.
 
-## Key results
+## Results in detail
 
-Verdicts are the project's own recorded verdicts (`docs/research/CLAIM_EXPERIMENT_MAP.md`).
+Verdicts are the project's own recorded verdicts (`docs/research/CLAIM_EXPERIMENT_MAP.md`). Negative and
+inconclusive outcomes are kept as recorded: they show where adaptive tuning pays off and where it does not.
 
 | Question | Evidence | Result | Verdict |
 |---|---|---|---|
 | Does configuration move runtime ≥10%? | EXP-002 | 4/4 tested families sensitive | **PASS** (SC1) |
 | Can training stay within 500 executions? | Budget ledger | 483/500 used; 488/500 including 5 disclosed demo runs | **HOLDS** |
-| Do the three training seeds agree (M8 ≥ 0.70)? | EXP-004 | Agreement 0.20 on training states; on test inputs the three policies act as one per-family rule | **FAILED** |
 | RL faster than Spark defaults (H2)? | EXP-013 | RL/B0 geometric-mean ratio 0.249 (95% CI 0.212–0.295), i.e. 4.0× faster; ≥10% faster on 36/37 cells; Holm-adjusted p = 4.4×10⁻¹¹ | **ACCEPTED** |
-| RL faster than the heuristic and random search (H3)? | EXP-013 | RL/B1 1.218 (CI 1.128–1.319); RL/B4 1.206 (CI 1.115–1.309); worse beyond noise on 16 cells, better on 1 | **REJECTED** |
 | Identical configurations agree (A/A control)? | EXP-013 | B4 vs B1: median gap 2.0%, 38/38 cells within the ±11.89% noise band | **AFFIRMED** |
+| Monitoring overhead ≤5% (SC6 clause 2)? | EXP-009, EXP-014 | 1 Hz sampler: 6/7 cells PASS in both studies; event log: 3/7 PASS, 4 inconclusive, 0 fail in the paired re-measurement | Sampler **AFFIRMED**; event log **not re-established** |
+| Does tuning transfer to real data? | X9 | NYC Taxi month: tuned arms −78.05% / −69.82% vs B0 | **FEASIBILITY** (pilot) |
+| Does the live demo run end to end? | EXP-012 | 5/5 runs usable with logged manifests | **HOLDS** |
+| RL faster than the heuristic and random search (H3)? | EXP-013 | RL/B1 1.218 (CI 1.128–1.319); RL/B4 1.206 (CI 1.115–1.309); worse beyond noise on 16 cells, better on 1 | **REJECTED** |
+| Do the three training seeds agree (M8 ≥ 0.70)? | EXP-004 | Agreement 0.20 on training states; on test inputs the three policies act as one per-family rule | **FAILED** |
 | Does the policy generalize to unseen cells (SC5)? | EXP-006 | 61 of 125 runs usable; heavy structural failures on unseen cells | **NOT EVALUABLE** |
 | Does AQE-on beat AQE-off on shuffle-heavy jobs? | X6 → EXP-013 | X6 lead (−14.24% on `F2_join` large) not replicated: 0/6 cells faster beyond noise | **NOT REPLICATED** |
 | Does the state representation matter (A1/A2)? | EXP-007 | 126 executions; cross-seed agreement 0/4 and 0/2 | **OBSERVED, not causal** |
 | Reward and action-space design (A3/A4) | EXP-008 | Derived from existing data only; multi-step A5 not run (DEC-011) | **DERIVED ONLY** |
-| Monitoring overhead ≤5% (SC6 clause 2)? | EXP-009, EXP-014 | 1 Hz sampler: 6/7 cells PASS in both studies; event log: 3/7 PASS, 4 inconclusive, 0 fail in the paired re-measurement | Sampler **AFFIRMED**; event log **not re-established** |
 | Does interval width shrink with √n? | EXP-009 | Failed on 7/7 cells: repetitions are serially correlated (lag-1 autocorrelation +0.58 to +0.89); about 3,000 of 4,842 runs were unnecessary | **FAILED** |
 | Do re-runs reproduce within ±5% (SC7)? | X10, EXP-013 | X10 2/4 cell-arms; EXP-013 vs EXP-005 medians 18/39 | **PARTIAL** |
-| Does tuning transfer to real data? | X9 | NYC Taxi month: tuned arms −78.05% / −69.82% vs B0 | **FEASIBILITY** (pilot) |
-| Does the live demo run end to end? | EXP-012 | 5/5 runs usable with logged manifests | **HOLDS** |
 
-`F3_rdd` at large scale fails structurally for every arm, from a Windows sort/spill file lock
-(`WinError 32`); these cells are recorded as structural failures, not as results.
+### Scope and limits
+
+- The policy's gain is over untuned defaults. Against a well-chosen static configuration it was 1.22×
+  slower overall, mainly on skew joins (`F4_ski`), so superiority over tuning (H3) was rejected.
+- The three training seeds disagreed on training states (agreement 0.20 against a 0.70 target), although
+  on test inputs they act as one per-family rule.
+- Generalization to unseen cells could not be evaluated. `F3_rdd` at large scale fails for every
+  configuration because of a Windows sort/spill file lock (`WinError 32`); those cells are recorded as
+  structural failures, not as results.
+- The event log's overhead pass was not re-established, the AQE-on lead did not replicate, and re-runs
+  reproduced within ±5% only partly.
+- Everything ran on one Windows machine in Spark local mode.
 
 ## Day-wise progress
 
@@ -189,14 +236,84 @@ DEC-027 to DEC-029 were never used (recorded in DEC-031); DEC-030 lives in
 | DEC-054 | 2026-10-02 | Pre-register and run EXP-014: overhead re-measured with the paired statistic | DEC-044 had pre-registered that statistic for future measurement |
 | DEC-055 | 2026-10-02 | Waive EXP-013's two-failure halt for `F3_rdd` medium seed 4 only | The halt was triggered by the documented Windows file-lock failure, while the static arms completed on the same cell |
 
-## Experiments, runs and hours
+## Experiments, runs and compute time
 
-Counts and times come from each study's run ledger under `results/experiments/` and the training
-manifests under `results/training/` (raw ledgers are kept outside Git; DEC-002, DEC-045). **Spark time**
-is the sum of recorded job execution times; **elapsed** is first-to-last run timestamp, including
-warm-ups and pauses.
+Hours come from three sources: Spark's own event logs (exact start and end of every Spark application
+with event logging on), the run ledgers under `results/experiments/` and `results/training/`, and the
+study records in `docs/research/`. Raw ledgers and event logs are kept outside Git (DEC-002, DEC-045).
 
-| Study | Date | Runs (usable) | Spark time | Elapsed | Outcome |
+### Compute at a glance
+
+- **54.0 hours of Spark execution** in 5,760 event-logged Spark sessions (5,717 complete) between
+  2026-09-07 and 2026-10-03, plus about 1,700 runs with event logging deliberately switched off (the
+  uninstrumented condition of the overhead studies), which that figure does not include.
+- **Longest uninterrupted run: 17.3 hours**, EXP-009 stage 5, from 2026-09-22 10:56 to 09-23 04:12 IST.
+- **Longest near-continuous stretch: 30.5 hours**, EXP-009 stages 1–5, from 2026-09-21 21:39 to
+  09-23 04:12 IST, with one 2.6-hour pause.
+- **The overhead campaign alone (EXP-009):** 4,842 runs, 42.2 hours of measured stage time and
+  57.4 hours from first to last run.
+
+### Longest Spark stretches
+
+Consecutive Spark sessions with no gap longer than 30 minutes (from the event logs; times in IST).
+
+| Start | End | Hours | What ran |
+|---|---|---|---|
+| 2026-09-22 10:56 | 2026-09-23 04:12 | 17.3 | EXP-009 stage 5 (`F1_agg` medium, 606 runs) |
+| 2026-09-21 21:39 | 2026-09-22 08:19 | 10.7 | EXP-009 stages 1–4 (1,362 runs) |
+| 2026-09-23 14:35 | 2026-09-24 00:20 | 9.8 | EXP-009 stage 6 and the start of stage 7 (823 runs) |
+| 2026-10-02 15:31 | 2026-10-03 00:53 | 9.4 | EXP-013 after the DEC-055 waiver, then all of EXP-014 (635 runs) |
+| 2026-09-24 01:13 | 2026-09-24 07:06 | 5.9 | EXP-009 stage 7 (1,889 runs) |
+| 2026-09-11 12:37 | 2026-09-11 16:18 | 3.7 | EXP-002 sensitivity grid (208 attempts) |
+| 2026-10-02 09:47 | 2026-10-02 12:45 | 3.0 | EXP-013 until its halt (443 runs) |
+
+### EXP-009 stages
+
+From `docs/research/DAY39_DEC043_EXP009_STAGES_1_7_EXECUTION.md`.
+
+| Stage | Cell | Runs | Hours |
+|---|---|---|---|
+| 1 | `F5_mixed` medium | 96 | 1.44 |
+| 2 | `F3_rdd` small | 348 | 3.84 |
+| 3 | `F2_join` medium | 423 | 4.55 |
+| 4 | `F2_join` small | 495 | 0.80 |
+| 5 | `F1_agg` medium | 606 | 17.30 |
+| 6 | `F1_agg` small | 726 | 8.39 |
+| 7 | `F5_mixed` small | 2,148 | 5.88 |
+| **Total** | | **4,842** | **42.20** |
+
+### Spark hours by day
+
+| Date (IST) | Spark sessions | Spark hours | Main activity |
+|---|---|---|---|
+| 2026-09-07 | 14 | 0.1 | Backend validation and timing harness |
+| 2026-09-08 | 4 | <0.1 | — |
+| 2026-09-09 | 16 | <0.1 | Dataset generation |
+| 2026-09-10 | 46 | 0.5 | Dataset matrix, workloads, B0 calibration |
+| 2026-09-11 | 290 | 3.2 | EXP-002 sensitivity grid |
+| 2026-09-12 | 252 | 1.1 | RL training (seeds 0/1/2) |
+| 2026-09-13 | 96 | 0.7 | B1/B2 validation grid (EXP-003) |
+| 2026-09-14 | 111 | 1.0 | B4 calibration, EXP-001 noise calibration |
+| 2026-09-15 | 224 | 3.0 | EXP-005 main comparison |
+| 2026-09-16 | 71 | 1.0 | EXP-006 generalization |
+| 2026-09-17 | 126 | 0.6 | EXP-007 ablation training |
+| 2026-09-19 | 29 | 0.1 | Test-suite runs (charged, DEC-033) |
+| 2026-09-20 | 36 | 0.1 | Test-suite runs (charged, DEC-038) |
+| 2026-09-21 | 195 | 2.8 | EXP-009 first pass; extension stages 1–2 |
+| 2026-09-22 | 1,088 | 13.9 | EXP-009 stages 2–5 |
+| 2026-09-23 | 705 | 10.4 | EXP-009 stages 5–7 |
+| 2026-09-24 | 1,320 | 3.8 | EXP-009 stage 7 |
+| 2026-09-29 | 106 | 1.4 | Extension studies and demo rehearsal |
+| 2026-10-02 | 944 | 9.8 | EXP-013, EXP-014 |
+| 2026-10-03 | 44 | 0.6 | EXP-014 (to 00:53) |
+| **Total** | **5,717** | **54.0** | |
+
+### Per study
+
+**Job time** is the sum of recorded Spark job execution times (what the statistics use); **elapsed** is
+first-to-last run timestamp, including warm-ups and pauses.
+
+| Study | Date | Runs (usable) | Job time | Elapsed | Outcome |
 |---|---|---|---|---|---|
 | EXP-001 noise calibration | 2026-09-14 | 20 (20) | 0.1 h | — | Noise band ±11.89% |
 | EXP-002 sensitivity grid | 2026-09-11 | 208 (189 completed, 19 failed) + 39 in a discarded first pass | 1.1 h | 2.7 h | SC1 PASS, 4/4 families |
@@ -218,10 +335,10 @@ warm-ups and pauses.
 | EXP-014 overhead confirmation | 2026-10-02 | 270 timing-valid (180 with event log) | 1.5 h | 4.8 h | Sampler affirmed; event log not re-established |
 | Smoke training runs | 2026-09-12 – 09-20 | 36 executions | — | 0.1 h | 21 of them charged as accidental (DEC-033, DEC-038) |
 
-**Totals.** About 22.2 hours of recorded Spark job time across the experiment ledgers, plus about
-1.7 hours of training and smoke episodes. The four long campaigns (EXP-002, EXP-009, EXP-013, EXP-014)
-took about 75 hours elapsed. The training budget ended at 483/500 (488/500 including the 5 disclosed
-demo runs); validation and test studies run on their own ledger lines outside that cap.
+**Totals.** About 22.2 hours of measured job time across the experiment ledgers, about 1.7 hours of
+training and smoke episodes, and 54.0 hours of Spark application time in the event logs. The training
+budget ended at 483/500 (488/500 including the 5 disclosed demo runs); validation and test studies run
+on their own ledger lines outside that cap.
 
 **Machine.** Windows 11 (build 10.0.26200), Intel CPU with 24 logical cores, 31.4 GB RAM, Python 3.11.9,
 Java 17.0.20.1, PySpark 3.5.9 in local mode.
