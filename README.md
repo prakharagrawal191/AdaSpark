@@ -237,6 +237,8 @@ Java 17.0.20.1, PySpark 3.5.9 in local mode.
 - **Budget ledger.** Training is capped at 500 executions; accidental runs are charged and disclosed,
   never deleted (DEC-033, DEC-038).
 - **Validators.** `scripts/validate_*.py` check the committed record against Git `HEAD`.
+- **Commit IDs.** IDs quoted in the records predate publication;
+  [`docs/COMMIT_ID_MAP.md`](docs/COMMIT_ID_MAP.md) maps each one to its published commit.
 - **Negative results kept.** Failed gates, refuted predictions and unreplicated leads stay in the record
   and the report.
 
