@@ -1,13 +1,17 @@
 #!/usr/bin/env python
-"""Run all AdaSpark environment checks and (re)generate the environment report.
+"""Run all AdaSpark environment checks; optionally regenerate the environment report.
 
 Usage (inside the project venv, from the repository root):
-    python scripts/env_check.py
+    python scripts/env_check.py                  # check this machine; writes nothing
+    python scripts/env_check.py --write-report   # also rewrite docs/ENVIRONMENT_REPORT.md
+                                                 # and docs/environment_report.json
 
+The committed report records the study machine, so it is rewritten only on request.
 Exit code 0 unless a check FAILED (verdict BLOCKED).
 """
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -19,5 +23,9 @@ if str(_SRC) not in sys.path:
 from sparkrl.utils import envcheck  # noqa: E402
 
 if __name__ == "__main__":
-    report = envcheck.run_all(write_report=True)
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--write-report", action="store_true",
+                    help="overwrite the committed environment report under docs/ with this machine's results")
+    args = ap.parse_args()
+    report = envcheck.run_all(write_report=args.write_report)
     sys.exit(0 if report["verdict"] != "BLOCKED" else 1)

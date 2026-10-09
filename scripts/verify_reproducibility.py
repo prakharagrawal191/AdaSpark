@@ -6,13 +6,25 @@ one question mechanically: *given the frozen observation ledgers and the
 analyzers committed to this repository, does re-running the analysis pipeline
 today reproduce the committed derived artifacts?*
 
+  I0  integrity from committed files alone: the confirmatory artifacts
+      (EXP-013, EXP-014) match their own content hash, their recorded
+      analysis-code digests match the code in this checkout, and the frozen
+      RL policies match their recorded fingerprints;
   L1  the frozen inputs are unchanged (sha256 against the value each analysis
       artifact declares for its own input);
   L2  every committed analyzer re-derives its artifact byte-for-byte (or
       content-identically where the artifact carries a deliberate timestamp,
       or - for EXP-007 only - once the checkout path it records is mapped
-      back to the recorded one, DEC-045);
+      back to the recorded one, DEC-045); EXP-013 and EXP-014 are re-derived
+      in memory through their analyzers' own analyze();
   L3  the derived artifacts on disk are untouched by this script.
+
+L1 and L2 need the raw research records under results/experiments/ and
+results/training/, which are git-ignored and await the DEC-045 deposit. In a
+fresh clone use --integrity-only: it runs I0 and the EXP-002 re-derivation (that
+record is committed) and states that the other re-derivations were not run. In
+the default mode a missing raw record is a FAIL, never a SKIP, so deleting a
+record from an installed deposit cannot pass.
 
 WHY IT IS NOT SC7. SC7 is "re-run reproducibility within +/-5% median" and
 `experiments/registry.csv` scopes it to EXP-011, planned day 45. That criterion
@@ -36,6 +48,7 @@ real artifacts and FAILS if any of them changed, so a patch that missed a write
 path is caught rather than assumed away.
 
   python scripts/verify_reproducibility.py          # check; exit 1 on any FAIL
+  python scripts/verify_reproducibility.py --integrity-only   # fresh clone
   python scripts/verify_reproducibility.py --keep   # keep the temp dirs
   python scripts/verify_reproducibility.py -v       # show per-analyzer output
 
@@ -614,7 +627,89 @@ def check_figures(out_dir: Path, show: bool) -> None:
 # --------------------------------------------------------------------------
 # L3 - this script changed nothing.
 # --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# EXP-013 / EXP-014, the confirmatory studies (DEC-053, DEC-054).
+# I0 uses committed files only; L1/L2 need the raw records. The re-derivation
+# calls each analyzer's own analyze() and compares in memory: nothing is
+# written, and the analyzers' frozen code is not touched.
+# --------------------------------------------------------------------------
+CONFIRMATORY: tuple[tuple[str, str, str, str], ...] = (
+    # label, analyzer, committed artifact, raw-record directory
+    ("exp-013", "analyze_exp013.py", "exp013_analysis.json", "results/experiments/exp-013"),
+    ("exp-014", "analyze_exp014.py", "exp014_analysis.json", "results/experiments/exp-014"),
+)
+RL_ARMS = PROJECT / "models" / "policies" / "exp005_rl_arms.json"
+
+
+def lf_sha256(path: Path) -> str:
+    """The analyzers' own LF-normalised digest (DEC-037 s4)."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def artifact_self_hash(doc: dict[str, Any]) -> str:
+    """artifact_id as both analyzers compute it: sha256 of the doc without it."""
+    body = {k: v for k, v in doc.items() if k != "artifact_id"}
+    return hashlib.sha256(json.dumps(body, sort_keys=True, default=str)
+                          .encode("utf-8")).hexdigest()
+
+
+def check_confirmatory_integrity() -> None:
+    for label, _, art, _ in CONFIRMATORY:
+        doc = json.loads((EVAL / art).read_text(encoding="utf-8"))
+        check("I0 %s artifact self-hash" % label,
+              artifact_self_hash(doc) == doc.get("artifact_id"),
+              "%s..." % str(doc.get("artifact_id"))[:16])
+        code = doc.get("analysis_code_sha256") or {}
+        drift = sorted(rel for rel, want in code.items()
+                       if not (PROJECT / rel).exists() or lf_sha256(PROJECT / rel) != want)
+        deviation = doc.get("analysis_code_deviation")
+        check("I0 %s analysis code = frozen digest" % label,
+              bool(code) and not drift and not deviation,
+              "drifted: %s" % ", ".join(drift) if drift else
+              "recorded deviation: %s" % deviation if deviation else
+              "%d file(s) match, no recorded deviation" % len(code))
+    sys.path.insert(0, str(PROJECT / "src"))
+    from sparkrl.agent.policy_store import policy_fingerprint
+    arms = json.loads(RL_ARMS.read_text(encoding="utf-8"))["arms"]
+    bad = [a["arm"] for a in arms if policy_fingerprint(json.loads(
+        (PROJECT / a["published_path"]).read_text(encoding="utf-8"))) != a["policy_id"]]
+    check("I0 frozen RL policies = recorded fingerprints", not bad,
+          "mismatch: %s" % ", ".join(bad) if bad else "%d policies match" % len(arms))
+
+
+def check_confirmatory_rederivation(show: bool) -> None:
+    for label, analyzer, art, raw in CONFIRMATORY:
+        spec_path = PROJECT / raw / "spec.json"
+        obs_path = PROJECT / raw / "observations.jsonl"
+        if not (spec_path.exists() and obs_path.exists()):
+            check("L1 input %s" % label, False,
+                  "missing %s/ (raw research record; see --integrity-only)" % raw)
+            continue
+        stored_text = (EVAL / art).read_text(encoding="utf-8")
+        stored = json.loads(stored_text)
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        obs_sha = lf_sha256(obs_path)
+        inputs_ok = (obs_sha == stored.get("input_observations_sha256")
+                     and spec.get("artifact_id") == stored.get("spec_artifact_id"))
+        check("L1 input %s" % label, inputs_ok,
+              "%s..." % obs_sha[:16] if inputs_ok else
+              "observations or spec differ from the digests the artifact declares")
+        if not inputs_ok:
+            continue
+        mod = load_module("_vrfy_" + analyzer[:-3], analyzer)
+        code = {rel: lf_sha256(PROJECT / rel) for rel in stored["analysis_code_sha256"]}
+        with redirect_stdout(sys.stdout if show else io.StringIO()):
+            doc = mod.analyze(spec, read_jsonl(obs_path), obs_sha, code)
+        fresh = json.dumps(doc, indent=1, sort_keys=True, default=str) + "\n"
+        same = fresh == stored_text.replace("\r\n", "\n")
+        check("L2 %s analysis re-derived" % label, same,
+              "content-identical (%s...)" % doc.get("artifact_id", "")[:16] if same
+              else "RE-DERIVED OUTPUT DIFFERS from %s" % art)
+
+
 GUARDED: tuple[Path, ...] = (
+    EVAL / "exp013_analysis.json",
+    EVAL / "exp014_analysis.json",
     EVAL / "exp002_configuration_sensitivity.json",
     EVAL / "exp005_analysis.json",
     EVAL / "exp006_analysis.json",
@@ -637,28 +732,52 @@ def main(argv: list[str] | None = None) -> int:
                     help="keep the temporary output directory")
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="show the analyzers' own stdout")
+    ap.add_argument("--integrity-only", action="store_true",
+                    help="fresh clone: check committed artifacts only (I0 and the "
+                         "committed EXP-002 record); skip re-derivations that need "
+                         "the raw research records")
     args = ap.parse_args(argv)
 
     print("EXP-011 corroboration - zero-execution reproduction of the derived "
-          "artifacts")
+          "artifacts" + (" (integrity only)" if args.integrity_only else ""))
     print("=" * 78)
+
+    def guarded(label: str, fn: Any, *fn_args: Any) -> None:
+        """Report a missing raw record as a FAIL that names it, not a traceback."""
+        try:
+            fn(*fn_args)
+        except FileNotFoundError as exc:
+            missing = Path(str(exc.filename))
+            try:
+                missing = missing.relative_to(PROJECT)
+            except ValueError:
+                pass
+            check(label, False, "missing %s (raw research record; see "
+                  "--integrity-only)" % missing.as_posix())
 
     before = _snapshot(GUARDED)
     out_dir = Path(tempfile.mkdtemp(prefix="exp011_repro_"))
     try:
-        check_frozen_inputs()
-        check_test_separation()
-        check_exp005_rederivation()
-        check_analyzer_bytes("exp-006 analysis byte-identical",
-                             "analyze_exp006.py", "exp006_analysis.json",
-                             "_vrfy_analyze_exp006", out_dir, args.verbose,
-                             argstyle="proj")
-        check_analyzer_bytes("exp-007 analysis byte-identical",
-                             "analyze_exp007.py", "exp007_analysis.json",
-                             "_vrfy_analyze_exp007", out_dir, args.verbose)
-        check_exp009_ext(out_dir, args.verbose)
-        check_exp002_gate(out_dir, args.verbose)
-        check_figures(out_dir, args.verbose)
+        check_confirmatory_integrity()
+        if args.integrity_only:
+            check_exp002_gate(out_dir, args.verbose)
+        else:
+            check_frozen_inputs()
+            guarded("L1 ext train/test separation", check_test_separation)
+            guarded("L2 exp-005 descriptive re-derivation (no analyzer)",
+                    check_exp005_rederivation)
+            guarded("L2 exp-006 analysis byte-identical", check_analyzer_bytes,
+                    "exp-006 analysis byte-identical", "analyze_exp006.py",
+                    "exp006_analysis.json", "_vrfy_analyze_exp006", out_dir,
+                    args.verbose, "proj")
+            guarded("L2 exp-007 analysis byte-identical", check_analyzer_bytes,
+                    "exp-007 analysis byte-identical", "analyze_exp007.py",
+                    "exp007_analysis.json", "_vrfy_analyze_exp007", out_dir,
+                    args.verbose)
+            guarded("L2 exp-009 ext analysis", check_exp009_ext, out_dir, args.verbose)
+            check_exp002_gate(out_dir, args.verbose)
+            guarded("L2 figures re-render", check_figures, out_dir, args.verbose)
+            check_confirmatory_rederivation(args.verbose)
         after = _snapshot(GUARDED)
         changed = sorted(p for p in set(before) | set(after)
                          if before.get(p) != after.get(p))
@@ -679,6 +798,9 @@ def main(argv: list[str] | None = None) -> int:
     print("0 Spark executions, 0 charged to SC6, TEST untouched.")
     print("This is NOT an SC7 verdict: SC7 needs fresh live executions "
           "compared within +/-5% median, and is not evaluated here.")
+    if args.integrity_only:
+        print("Integrity only: the L1/L2 re-derivations need the raw research "
+              "records (DEC-045 deposit) and were NOT run.")
     print("OVERALL: %s (%d checks, %d pass, %d fail, %d skip)"
           % ("FAIL" if failed else "PASS", len(results),
              len(results) - len(failed) - len(skipped), len(failed),

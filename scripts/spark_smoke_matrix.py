@@ -9,11 +9,13 @@ E Parquet write (small) · F Parquet read (small) · G Parquet round-trip 1M row
 H event-log generation · I event-log discovery · J clean shutdown ·
 K environment audit (HADOOP_HOME / winutils / bundled Hadoop client).
 
-Results: docs/smoke_matrix_report.md + .json (machine-generated). Exit 0 iff all PASS.
-Usage:  python scripts/spark_smoke_matrix.py
+Results print to the console; --write-report also rewrites the study machine's record
+docs/smoke_matrix_report.md + .json (machine-generated). Exit 0 iff all PASS.
+Usage:  python scripts/spark_smoke_matrix.py [--write-report]
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -192,8 +194,12 @@ def validate_event_log(elog: Path, app_id: str) -> None:
            f"{n_events} events parsed, {bad} bad lines; first={first_ev}, last={last_ev}")
 
 
-def write_report(audit: dict) -> bool:
+def write_report(audit: dict, write: bool = True) -> bool:
     all_pass = all(r["status"] == "PASS" for r in RESULTS)
+    if not write:
+        print("\n(report not written: docs/smoke_matrix_report.* records the study machine; "
+              "use --write-report to overwrite it)")
+        return all_pass
     doc = PROJECT / "docs"
     doc.mkdir(exist_ok=True)
     payload = {"generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -213,7 +219,11 @@ def write_report(audit: dict) -> bool:
     return all_pass
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="AdaSpark Day-2 Spark smoke matrix (tests A-K)")
+    ap.add_argument("--write-report", action="store_true",
+                    help="overwrite docs/smoke_matrix_report.md/.json with this machine's results")
+    args = ap.parse_args(argv)
     print("=== AdaSpark Day-2 Spark smoke matrix ===")
     audit = test_k_environment_audit()
     elog = eventlog_dir() / "smoke" / datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
@@ -238,7 +248,7 @@ def main() -> int:
                 spark.stop()
             except Exception:
                 pass
-    all_pass = write_report(audit)
+    all_pass = write_report(audit, write=args.write_report)
     n_fail = sum(1 for r in RESULTS if r["status"] != "PASS")
     print(f"\nOVERALL: {'PASS' if all_pass else 'FAIL'} ({len(RESULTS)} tests, {n_fail} not passing)")
     return 0 if all_pass else 1

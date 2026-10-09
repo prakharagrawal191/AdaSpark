@@ -80,16 +80,29 @@ def expected_spec(table: str, scale: str, seed: int, skew: float,
                           key_cardinality=None, chunk_rows=chunk_rows)
 
 
-def _disk_preflight() -> float:
+def disk_requirement_bytes(todo: list[tuple[float, str, int]]) -> int:
+    """Free bytes a run needs for the REQUESTED datasets: estimate + margin.
+
+    The estimate is the uncompressed size of the requested tables at 60 bytes
+    per row (Parquet output is 3-10x smaller). The margin, for Spark's
+    temporary files, equals the estimate clamped to 1-10 GiB. One small
+    dataset therefore needs about 1.2 GiB free; the full 30-dataset matrix
+    needs the same 40 GiB as the original full-matrix check.
+    """
+    rows = sum(SCALE_LINE_ROWS[sc] + SCALE_LINE_ROWS[sc] // LINEITEM_TO_ORDERS
+               for _, sc, _ in todo)
+    estimate = rows * 60
+    return estimate + min(10 * 1024**3, max(1024**3, estimate))
+
+
+def _disk_preflight(todo: list[tuple[float, str, int]]) -> float:
     free_gb = shutil.disk_usage(str(DATA_ROOT)).free / 1024**3
-    total_line_rows = sum(SCALE_LINE_ROWS[sc] for sc in SCALES) * 2 * len(SEEDS)
-    total_rows = total_line_rows + total_line_rows // LINEITEM_TO_ORDERS
-    est_raw_gib = total_rows * 60 / 1024**3
+    need_gb = disk_requirement_bytes(todo) / 1024**3
     print(f"[PREF] data_root={DATA_ROOT}")
-    print(f"[PREF] free={free_gb:.1f} GiB raw_est={est_raw_gib:.1f} GiB "
-          f"(parquet compresses ~3-10x)")
-    if free_gb < est_raw_gib + 10:
-        print("[FATAL] free disk < raw estimate + 10 GiB; stopping",
+    print(f"[PREF] free={free_gb:.1f} GiB need={need_gb:.1f} GiB for "
+          f"{len(todo)} dataset(s) (uncompressed estimate + Spark temp margin)")
+    if free_gb < need_gb:
+        print("[FATAL] free disk below the requirement; stopping",
               file=sys.stderr)
         sys.exit(2)
     return free_gb
@@ -307,10 +320,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.plan_only:
         return 0
 
-    _disk_preflight()
-    GENERATED_DIR.mkdir(parents=True, exist_ok=True)
-    DATASETS_DIR.mkdir(parents=True, exist_ok=True)
-
     todo = [(sk, sc, sd) for sk, sc, sd in ordered_matrix()
             if (args.scale is None or sc == args.scale)
             and (args.seed is None or sd == args.seed)
@@ -318,6 +327,9 @@ def main(argv: list[str] | None = None) -> int:
     if not todo:
         print("no matrix rows match the provided filters")
         return 2
+
+    DATASETS_DIR.mkdir(parents=True, exist_ok=True)  # also creates a new data root
+    _disk_preflight(todo)
 
     spark = _spark_session()
     try:
@@ -334,11 +346,16 @@ def main(argv: list[str] | None = None) -> int:
     index = build_index(entries)
     write_inventory(index)
     summary = write_summary(index)
-    print(f"\n[RESULT] {summary['valid_physical']}/{summary['total_physical']} "
-          f"physical datasets VALID; missing={summary['missing_physical']} "
+    requested = {phys_id(sk, sc, sd) for sk, sc, sd in todo}
+    valid = sum(1 for e in entries if e["id"] in requested and e["status"] == "VALID")
+    print(f"\n[RESULT] requested {valid}/{len(requested)} VALID; matrix "
+          f"{summary['valid_physical']}/{summary['total_physical']} physical "
+          f"datasets VALID; missing={summary['missing_physical']} "
           f"total_rows={summary['total_rows']:,} total_gib="
           f"{summary['total_gib']}")
-    return 0 if summary["missing_physical"] == 0 else 1
+    # A filtered run succeeds when everything it was asked for is valid; an
+    # unfiltered run asks for the whole matrix, as before.
+    return 0 if valid == len(requested) else 1
 
 
 if __name__ == "__main__":

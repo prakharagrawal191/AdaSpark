@@ -317,7 +317,7 @@ def _write_markdown(rep: dict[str, Any]) -> None:
         "",
         "- **Backend frozen (DEC-007): native Windows + Python 3.11.9 + PySpark 3.5.9 + winutils 3.3.6 shim.**",
         "- The Day-1 PySpark 4.0.4 attempt failed on the Windows native-IO gap — see `DECISIONS.md` DEC-006 and `docs/archive/requirements-pyspark404-py312.txt`.",
-        "- Regenerate at any time with: `python scripts/env_check.py` (plus `scripts/spark_smoke_matrix.py` for the full A–K matrix).",
+        "- Regenerate at any time with: `python scripts/env_check.py --write-report` (plus `scripts/spark_smoke_matrix.py --write-report` for the full A–K matrix).",
         "",
     ]
     (docs / "ENVIRONMENT_REPORT.md").write_text("\n".join(lines), encoding="utf-8")
